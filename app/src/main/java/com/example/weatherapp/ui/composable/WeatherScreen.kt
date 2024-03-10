@@ -140,7 +140,7 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
                 onClick = {
                     reset()
                 }) {
-                Text(text = "Réessayer", color = Color.White, fontSize = 18.sp)
+                Text(text = stringResource(R.string.retry), color = Color.White, fontSize = 18.sp)
             }
         }
     } else {
@@ -149,7 +149,7 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
                 .fillMaxSize()
                 .padding(32.dp), contentAlignment = Alignment.BottomCenter) {
             Column(horizontalAlignment = Alignment.CenterHorizontally){
-                Text(text = text, fontSize = 16.sp, textAlign = TextAlign.Center)
+                Text(text = text, fontSize = 16.sp, textAlign = TextAlign.Center, color = Purple40)
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(modifier = Modifier
                     .fillMaxWidth()
