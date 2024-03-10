@@ -6,10 +6,9 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -46,7 +44,7 @@ import java.util.TimerTask
 import kotlin.math.roundToInt
 
 @Composable
-fun CustomProgressBar(viewModel: WeatherViewModel) {
+fun WeatherScreen(viewModel: WeatherViewModel) {
 
     val timer = Timer()
     var progressCount by remember { mutableIntStateOf(0) }
@@ -115,13 +113,26 @@ fun CustomProgressBar(viewModel: WeatherViewModel) {
         initTextTimer()
     }
 
+    LaunchedEffect(key1 = true) {
+        initTimer()
+        initTextTimer()
+    }
+
     if(progressCount == 60) {
-        // Reset button
-        Column(modifier = Modifier.height(80.dp), verticalArrangement = Arrangement.Center) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(32.dp)) {
+          if(viewModel.isError) {
+              Text(text = "C'est une erreur : ${viewModel.errorMessage} \n Veuillez réesayer plus tard", fontSize = 20.sp, modifier = Modifier
+                  .padding(vertical = 16.dp)
+                  .align(Alignment.TopCenter), textAlign = TextAlign.Center) }
+          else { WeatherList(data = viewModel.data, modifier = Modifier.align(Alignment.TopCenter)) }
             Button(
                 modifier = Modifier
                     .height(60.dp)
-                    .width(240.dp),
+                    .width(240.dp)
+                    .align(Alignment.BottomCenter),
                 colors = ButtonDefaults.buttonColors(containerColor = Purple40, contentColor = Color.White),
                 onClick = {
                     reset()
@@ -130,50 +141,36 @@ fun CustomProgressBar(viewModel: WeatherViewModel) {
             }
         }
     } else {
-    Column(modifier = Modifier
-        .height(160.dp)
-        .padding(horizontal = 30.dp, vertical = 10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        // Waiting messages
-        Row(
+        Box(
             Modifier
-                .height(60.dp)
-                .padding(bottom = 8.dp), verticalAlignment = Alignment.Bottom) {
-            Text(text = text, fontSize = 16.sp, textAlign = TextAlign.Center)
-        }
-        // Progress bar
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)
-        ) {
-            // Background of the progress bar
-            Box(modifier = Modifier
                 .fillMaxSize()
-                .clip(RoundedCornerShape(36.dp))
-                .background(Color.LightGray)
-                .alpha(0.4f))
-            // Progress of the progress bar
-            Box(modifier = Modifier
-                .fillMaxWidth(size)
-                .fillMaxHeight()
-                .clip(RoundedCornerShape(36.dp))
-                .background(Purple40)
-                .animateContentSize())
-            Box(modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(horizontal = 8.dp)) {
-                Text(modifier = Modifier.padding(horizontal = 4.dp), text = "${(progress * 100).roundToInt()} %", color = if(progressCount <= 60) Purple40 else Color.White, fontWeight = FontWeight.SemiBold, fontSize = 20.sp)
-            }
+                .padding(32.dp), contentAlignment = Alignment.BottomCenter) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally){
+                Text(text = text, fontSize = 16.sp, textAlign = TextAlign.Center)
+                Spacer(modifier = Modifier.height(16.dp))
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                ) {
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(36.dp))
+                        .background(Color.LightGray))
+                    Box(modifier = Modifier
+                        .fillMaxWidth(size)
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(36.dp))
+                        .background(Purple40)
+                        .animateContentSize())
+                    Box(modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(horizontal = 8.dp)) {
+                        Text(modifier = Modifier.padding(horizontal = 4.dp), text = "${(progress * 100).roundToInt()} %", color = if(progressCount <= 60) Purple40 else Color.White, fontWeight = FontWeight.SemiBold, fontSize = 20.sp)
+                    }
+                }
         }
     }
     }
-
-    // api calls
-    LaunchedEffect(key1 = true) {
-        initTimer()
-        initTextTimer()
-    }
-
 
 
 }

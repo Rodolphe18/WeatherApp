@@ -1,20 +1,32 @@
 package com.example.weatherapp
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.weatherapp.ui.composable.CustomProgressBar
 import com.example.weatherapp.ui.composable.WeatherScreen
 import com.example.weatherapp.ui.home.WeatherViewModel
 import com.example.weatherapp.ui.theme.WeatherAppTheme
@@ -22,29 +34,43 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class WeatherActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             WeatherAppTheme {
-                val viewModel: WeatherViewModel by viewModels()
-                Box(Modifier.fillMaxSize()) {
-                    if (viewModel.timerIsFinished) {
-                        if(viewModel.data.isNotEmpty()) {
-                            WeatherScreen(data = viewModel.data, modifier = Modifier.align(Alignment.TopStart))}
-                        else if(viewModel.isError) {
-                            Box(Modifier.fillMaxWidth().height(600.dp)) {
-                                Text("C'est une erreur : ${viewModel.errorMessage}, réessayer plus tard", fontSize = 18.sp)
+                Scaffold(
+                   topBar = {
+                        CenterAlignedTopAppBar(
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            navigationIcon = {
+                                IconButton(onClick = { finish() }) {
+                                    Row(modifier = Modifier.padding(end = 5.dp), verticalAlignment =
+                                    Alignment.CenterVertically) {
+                                        Icon(
+                                            modifier = Modifier.size(30.dp),
+                                            imageVector = Icons.Filled.KeyboardArrowLeft,
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+                            },
+                            title = {
+                                Text(
+                                    modifier = Modifier.padding(horizontal = 8.dp),
+                                    textAlign = TextAlign.Center,
+                                    text = "WEATHER SCREEN",
+                                    maxLines = 1,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 20.sp,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
                             }
-                        } else {
-                            Box(Modifier.fillMaxWidth().height(600.dp)) {
-                                Text("C'est un autre problème, réessayer plus tard", fontSize = 18.sp)
-                            }
-                        }
-                        Box(Modifier.align(Alignment.BottomCenter)) { CustomProgressBar(viewModel) }
-                    }
-                    else {
-                        Box(Modifier.align(Alignment.BottomCenter)) { CustomProgressBar(viewModel) }
-                    }
+                        )
+                    }) {
+                    val viewModel: WeatherViewModel by viewModels()
+                    WeatherScreen(viewModel = viewModel)
                 }
 
             }

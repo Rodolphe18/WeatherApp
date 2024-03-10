@@ -28,7 +28,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     fun loadWeatherInfoForParis() {
         viewModelScope.launch {
-        val response = (repository.getWeatherData(CityEnum.PARIS.lat, CityEnum.PARIS.long))
+        val response = repository.getWeatherData(CityEnum.PARIS.lat, CityEnum.PARIS.long)
             when (response) {
                 is NetworkResult.Success -> _data[CityEnum.PARIS] = response.data
                 is NetworkResult.Error -> {

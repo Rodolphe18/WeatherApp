@@ -33,7 +33,7 @@ fun WeatherItem(city: CityEnum, weatherInfo: WeatherInfo) {
 }
 
 @Composable
-fun WeatherScreen(data: Map<CityEnum, WeatherInfo>, modifier : Modifier = Modifier) {
+fun WeatherList(data: Map<CityEnum, WeatherInfo>, modifier : Modifier = Modifier) {
     Spacer(modifier.height(20.dp))
     LazyColumn(modifier.height(600.dp)) {
         val items = enumValues<CityEnum>()
