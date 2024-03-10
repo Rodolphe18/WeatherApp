@@ -4,6 +4,9 @@ import com.example.weatherapp.data.api.WeatherApi
 import com.example.weatherapp.data.mapper.toWeatherInfo
 import com.example.weatherapp.data.model.WeatherInfo
 import com.example.weatherapp.util.NetworkResult
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton

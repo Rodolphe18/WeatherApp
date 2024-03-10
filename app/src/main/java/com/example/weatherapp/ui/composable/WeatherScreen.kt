@@ -37,7 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
-import com.example.weatherapp.ui.home.WeatherViewModel
+import com.example.weatherapp.ui.weather.WeatherViewModel
 import com.example.weatherapp.ui.theme.Purple40
 import java.util.Timer
 import java.util.TimerTask

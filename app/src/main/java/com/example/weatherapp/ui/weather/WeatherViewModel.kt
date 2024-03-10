@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.home
+package com.example.weatherapp.ui.weather
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.data.model.WeatherInfo
 import com.example.weatherapp.domain.WeatherRepository
+import com.example.weatherapp.util.CityEnum
 import com.example.weatherapp.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

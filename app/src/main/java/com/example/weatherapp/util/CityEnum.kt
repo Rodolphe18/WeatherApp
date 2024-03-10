@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.home
+package com.example.weatherapp.util
 
 enum class CityEnum(val cityName:String, val lat: Double, val long:Double) {
     RENNES("Rennes",48.0833, -1.68333),
