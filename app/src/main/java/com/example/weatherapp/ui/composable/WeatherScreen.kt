@@ -68,7 +68,7 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
     }
 
     when(textProgressCount) {
-        0,3,6 -> text = stringResource(R.string.message1)
+        0,3,6,9 -> text = stringResource(R.string.message1)
         1,4,7 -> text = stringResource(R.string.message2)
         2,5,8 -> text = stringResource(R.string.message3)
     }
@@ -86,7 +86,6 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
                     if (progressCount > 30) viewModel.loadWeatherInfoForBordeaux()
                     if (progressCount > 40) viewModel.loadWeatherInfoForLyon()
                     if (progressCount == 60) {
-                        viewModel.timerIsFinished = true
                         cancel()
                     }
                     progressCount++
@@ -125,6 +124,10 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
                 .padding(32.dp)) {
           if(viewModel.isError) {
               Text(text = "C'est une erreur : ${viewModel.errorMessage} \n Veuillez réesayer plus tard", fontSize = 20.sp, modifier = Modifier
+                  .padding(vertical = 16.dp)
+                  .align(Alignment.TopCenter), textAlign = TextAlign.Center) }
+          else if(viewModel.data.isEmpty()) {
+              Text(text = "C'est une erreur inconnue \n Veuillez réesayer plus tard", fontSize = 20.sp, modifier = Modifier
                   .padding(vertical = 16.dp)
                   .align(Alignment.TopCenter), textAlign = TextAlign.Center) }
           else { WeatherList(data = viewModel.data, modifier = Modifier.align(Alignment.TopCenter)) }

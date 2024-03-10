@@ -20,8 +20,6 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
         get() = _data.toMap()
     private var _data = mutableStateMapOf<CityEnum, WeatherInfo>()
 
-    var timerIsFinished by mutableStateOf(false)
-
     var isError by mutableStateOf(false)
 
     var errorMessage by mutableStateOf("")
