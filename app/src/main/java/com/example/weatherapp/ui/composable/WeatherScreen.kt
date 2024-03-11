@@ -21,11 +21,14 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,16 +50,23 @@ import kotlin.math.roundToInt
 fun WeatherScreen(viewModel: WeatherViewModel) {
 
     val timer = Timer()
+    val resetTimer = Timer()
     var progressCount by remember { mutableIntStateOf(0) }
+    var resetProgressCount by remember { mutableIntStateOf(0) }
     var progress by remember {
         mutableFloatStateOf(0f)
     }
 
     val textTimer = Timer()
+    val resetTextTimer = Timer()
     var textProgressCount by remember { mutableIntStateOf(0) }
+    var resetTextProgressCount by remember { mutableIntStateOf(0) }
     var text by remember {
         mutableStateOf("")
     }
+
+    val isFirstLoading = remember { derivedStateOf { viewModel.isFirstLoading }  }
+
 
     when(progressCount) {
         0 -> progress = 0.0f
@@ -80,41 +90,74 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
         timer.schedule(object : TimerTask() {
             override fun run() {
                 if(progressCount < 60) {
-                    if(progressCount > 0) viewModel.loadWeatherInfoForRennes()
+                    if (progressCount > 0) viewModel.loadWeatherInfoForRennes()
                     if (progressCount > 10) viewModel.loadWeatherInfoForParis()
                     if (progressCount > 20) viewModel.loadWeatherInfoForNantes()
                     if (progressCount > 30) viewModel.loadWeatherInfoForBordeaux()
                     if (progressCount > 40) viewModel.loadWeatherInfoForLyon()
-                    if (progressCount == 60) {
-                        cancel()
-                    }
+                    if (progressCount == 60) cancel()
                     progressCount++
                     Log.d("_DEBUG_PROGRESS_COUNT", progressCount.toString())
                 }
             }
         }, 1000, 1000)
-        if(progressCount == 60) timer.cancel()
+
+    }
+
+    fun resetTimer() {
+        resetTimer.schedule(object : TimerTask() {
+            override fun run() {
+                if(resetProgressCount < 60) {
+                    if (resetProgressCount > 0) viewModel.loadWeatherInfoForRennes()
+                    if (resetProgressCount > 10) viewModel.loadWeatherInfoForParis()
+                    if (resetProgressCount > 20) viewModel.loadWeatherInfoForNantes()
+                    if (resetProgressCount > 30) viewModel.loadWeatherInfoForBordeaux()
+                    if (resetProgressCount > 40) viewModel.loadWeatherInfoForLyon()
+                    if (resetProgressCount == 60) cancel()
+                    resetProgressCount++
+                    Log.d("_DEBUG_PROGRESS_COUNT", resetProgressCount.toString())
+                }
+            }
+        }, 1000, 1000)
     }
 
     fun initTextTimer() {
         textTimer.schedule(object : TimerTask() {
             override fun run() {
                 textProgressCount++
+                if(textProgressCount == 10) cancel()
             }
         }, 6000, 6000)
+    }
+
+
+    fun resetTextTimer() {
+        resetTextTimer.schedule(object : TimerTask() {
+            override fun run() {
+                resetTextProgressCount++
+                if(resetTextProgressCount == 10) cancel()
+            }
+        }, 6000, 6000)
+    }
+
+    fun load() {
+        initTimer()
+        initTextTimer()
     }
 
     fun reset() {
         progressCount = 0
         textProgressCount = 0
         progress = 0f
-        initTimer()
-        initTextTimer()
+        resetTimer()
+        resetTextTimer()
     }
 
-    LaunchedEffect(key1 = true) {
-        initTimer()
-        initTextTimer()
+    LaunchedEffect(key1 = isFirstLoading.value) {
+        if(isFirstLoading.value) {
+            load()
+        }
+        viewModel.isFirstLoading = false
     }
 
     if(progressCount == 60) {

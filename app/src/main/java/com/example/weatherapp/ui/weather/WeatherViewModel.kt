@@ -25,6 +25,8 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     var errorMessage by mutableStateOf("")
 
+    var isFirstLoading by mutableStateOf(true)
+
     fun loadWeatherInfoForParis() {
         viewModelScope.launch {
         val response = repository.getWeatherData(CityEnum.PARIS.lat, CityEnum.PARIS.long)
