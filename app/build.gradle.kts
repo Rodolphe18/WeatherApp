@@ -6,8 +6,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.protobuf)
-    id("kotlin-parcelize")
 }
 
 android {
@@ -93,8 +91,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
     implementation(libs.hilt.plugin)
-    implementation(libs.androidx.dataStore)
-    implementation(libs.protobuf.kotlin.lite)
 
     ksp(libs.hilt.compiler)
     debugImplementation(libs.androidx.compose.ui.testManifest)
