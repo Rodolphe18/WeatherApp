@@ -1,6 +1,7 @@
 package com.example.weatherapp.ui.composable
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -31,11 +32,10 @@ fun WeatherItem(city: CityEnum, weatherData: WeatherData) {
 }
 
 @Composable
-fun WeatherList(data: Map<CityEnum, WeatherData>, modifier : Modifier = Modifier) {
-    Spacer(modifier.height(20.dp))
-    LazyColumn(modifier.height(600.dp)) {
+fun WeatherList(data: Map<CityEnum, WeatherData>) {
+    Column {
         val items = enumValues<CityEnum>()
-        items(items) {city ->
+        items.forEach { city ->
             val item = data[city]
             if(item != null) {
                 WeatherItem(city = city, weatherData = item)

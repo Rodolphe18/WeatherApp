@@ -19,13 +19,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,85 +32,33 @@ import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
 import com.example.weatherapp.ui.theme.Purple40
 import com.example.weatherapp.ui.weather.WeatherViewModel
-import java.util.Timer
-import java.util.TimerTask
 import kotlin.math.roundToInt
 
 @Composable
 fun WeatherScreen(viewModel: WeatherViewModel) {
 
-    val timer = Timer()
-    val resetTimer = Timer()
-    val textTimer = Timer()
-    val resetTextTimer = Timer()
+    val progressCount = viewModel.progressCount
 
-    var progressCount by remember { mutableIntStateOf(0) }
-    var progress by remember { mutableFloatStateOf(0f) }
-    var textProgressCount by remember { mutableIntStateOf(0) }
-
-    var text by remember { mutableStateOf("") }
+    val textProgressCount = viewModel.textProgressCount
 
     when(progressCount) {
-        0 -> progress = 0.0f
-        12 -> progress = 0.2f
-        24 -> progress = 0.4f
-        36 -> progress = 0.6f
-        48 -> progress = 0.8f
-        60 -> progress = 1.0f
+        0 -> viewModel.progressBarValue = 0.0f
+        12 -> viewModel.progressBarValue = 0.2f
+        24 -> viewModel.progressBarValue = 0.4f
+        36 -> viewModel.progressBarValue = 0.6f
+        48 -> viewModel.progressBarValue = 0.8f
+        60 -> viewModel.progressBarValue = 1.0f
     }
 
     when(textProgressCount) {
-        0,3,6,9 -> text = stringResource(R.string.message1)
-        1,4,7 -> text = stringResource(R.string.message2)
-        2,5,8 -> text = stringResource(R.string.message3)
+        0,3,6,9 -> viewModel.text = stringResource(R.string.message1)
+        1,4,7 -> viewModel.text = stringResource(R.string.message2)
+        2,5,8 -> viewModel.text = stringResource(R.string.message3)
     }
 
-    val size by animateFloatAsState(targetValue = progress, tween(durationMillis = 1000, delayMillis = 200, easing = LinearOutSlowInEasing),
+    val size by animateFloatAsState(targetValue = viewModel.progressBarValue, tween(durationMillis = 1000, delayMillis = 200, easing = LinearOutSlowInEasing),
         label = "")
 
-    fun initTimer() {
-        timer.schedule(object : TimerTask() {
-            override fun run() {
-                if(progressCount < 60) {
-                    progressCount++
-                } else {
-                    cancel()
-                }
-            }
-        }, 1000, 1000)
-        textTimer.schedule(object : TimerTask() {
-            override fun run() {
-                textProgressCount++
-                if(textProgressCount == 10) cancel()
-            }
-        }, 6000, 6000)
-
-    }
-
-    fun resetTimer() {
-        viewModel.onReload()
-        progressCount = 0
-        textProgressCount = 0
-        progress = 0f
-        resetTimer.schedule(object : TimerTask() {
-            override fun run() {
-                if(progressCount < 60) {
-                    progressCount++
-                } else {
-                    cancel()
-                }
-            }
-        }, 1000, 1000)
-        resetTextTimer.schedule(object : TimerTask() {
-            override fun run() {
-                textProgressCount++
-                if(textProgressCount == 10) cancel()
-            }
-        }, 6000, 6000)
-    }
-
-
-    LaunchedEffect(Unit) { initTimer() }
 
     if(progressCount == 60) {
         Box(
@@ -131,14 +73,14 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
               Text(text = "C'est une erreur inconnue \n Veuillez réesayer plus tard", fontSize = 20.sp, modifier = Modifier
                   .padding(vertical = 16.dp)
                   .align(Alignment.TopCenter), textAlign = TextAlign.Center) }
-          else { WeatherList(data = viewModel.data, modifier = Modifier.align(Alignment.TopCenter)) }
+          else { WeatherList(data = viewModel.data) }
             Button(
                 modifier = Modifier
-                    .height(60.dp)
+                    .height(40.dp)
                     .width(240.dp)
                     .align(Alignment.BottomCenter),
                 colors = ButtonDefaults.buttonColors(containerColor = Purple40, contentColor = Color.White),
-                onClick = { resetTimer() }) {
+                onClick = { viewModel.resetTimer() }) {
                 Text(text = stringResource(R.string.retry), color = Color.White, fontSize = 18.sp)
             }
         }
@@ -146,13 +88,13 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
         Box(
             Modifier
                 .fillMaxSize()
-                .padding(32.dp), contentAlignment = Alignment.BottomCenter) {
+                .padding(28.dp), contentAlignment = Alignment.BottomCenter) {
             Column(horizontalAlignment = Alignment.CenterHorizontally){
-                Text(text = text, fontSize = 16.sp, textAlign = TextAlign.Center, color = Purple40)
+                Text(text = viewModel.text, fontSize = 16.sp, textAlign = TextAlign.Center, color = Purple40)
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp)
+                    .height(35.dp)
                 ) {
                     Box(modifier = Modifier
                         .fillMaxSize()
@@ -167,7 +109,7 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
                     Box(modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .padding(horizontal = 8.dp)) {
-                        Text(modifier = Modifier.padding(horizontal = 4.dp), text = "${(progress * 100).roundToInt()} %", color = if(progressCount <= 60) Purple40 else Color.White, fontWeight = FontWeight.SemiBold, fontSize = 20.sp)
+                        Text(modifier = Modifier.padding(horizontal = 4.dp), text = "${(viewModel.progressBarValue * 100).roundToInt()} %", color = if(progressCount <= 60) Purple40 else Color.White, fontWeight = FontWeight.SemiBold, fontSize = 20.sp)
                     }
                 }
         }

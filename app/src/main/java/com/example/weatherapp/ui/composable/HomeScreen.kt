@@ -23,7 +23,7 @@ import com.example.weatherapp.ui.theme.Purple40
 @Composable
 fun HomeScreen(onClick: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-        Text(text = stringResource(R.string.welcome_message) , modifier = Modifier.padding(8.dp), fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+        Text(text = stringResource(R.string.welcome_message), modifier = Modifier.padding(8.dp), fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
         Spacer(modifier = Modifier.height(8.dp))
         Button(
             modifier = Modifier

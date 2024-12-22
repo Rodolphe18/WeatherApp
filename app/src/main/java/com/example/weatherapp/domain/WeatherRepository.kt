@@ -4,8 +4,10 @@ import com.example.weatherapp.data.api.WeatherApi
 import com.example.weatherapp.data.mapper.toWeatherData
 import com.example.weatherapp.data.model.WeatherData
 import com.example.weatherapp.util.NetworkResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,7 +31,6 @@ class WeatherRepository @Inject constructor(private val api: WeatherApi) {
         } catch (e: Throwable) {
             emit(NetworkResult.Exception(e))
         }
-    }}
-
-
+        }.flowOn(Dispatchers.IO)
+    }
 }
