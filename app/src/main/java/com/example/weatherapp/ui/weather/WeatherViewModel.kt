@@ -29,12 +29,16 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     var isFirstLoading by mutableStateOf(true)
 
-    fun loadWeatherInfoForParis() {
+    init {
+        loadWeatherInfos()
+    }
+
+    fun loadWeatherInfos() {
         viewModelScope.launch {
-            repository.getCurrentWeatherData(CityEnum.PARIS.lat, CityEnum.PARIS.long)
-                .collect { response ->
+            for (city in enumValues<CityEnum>()) {
+                repository.getCurrentWeatherData(city.lat, city.lat).collect { response ->
                     when (response) {
-                        is NetworkResult.Success -> _data[CityEnum.PARIS] = response.data
+                        is NetworkResult.Success -> _data[city] = response.data
                         is NetworkResult.Error -> {
                             "${response.code} ${response.message}"
                             isError = true
@@ -44,74 +48,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
                         is NetworkResult.Exception -> "${response.e.message}"
                     }
                 }
-        }
-    }
-
-    fun loadWeatherInfoForNantes() {
-        viewModelScope.launch {
-            repository.getCurrentWeatherData(CityEnum.NANTES.lat, CityEnum.NANTES.long)
-                .collect { response ->
-                    when (response) {
-                        is NetworkResult.Success -> _data[CityEnum.NANTES] = response.data
-                        is NetworkResult.Error -> {
-                            "${response.code} ${response.message}"
-                            isError = true
-                            errorMessage = response.code.toString()
-                        }
-                        is NetworkResult.Exception -> "${response.e.message}"
-                    }
-                }
-        }
-    }
-
-    fun loadWeatherInfoForBordeaux() {
-        viewModelScope.launch {
-            repository.getCurrentWeatherData(CityEnum.BORDEAUX.lat, CityEnum.BORDEAUX.long)
-                    .collect { response ->
-                        when (response) {
-                            is NetworkResult.Success -> _data[CityEnum.BORDEAUX] = response.data
-                            is NetworkResult.Error -> {
-                                "${response.code} ${response.message}"
-                                isError = true
-                                errorMessage = response.code.toString()
-                            }
-                            is NetworkResult.Exception -> "${response.e.message}"
-                        }
-                    }
-        }
-    }
-
-    fun loadWeatherInfoForLyon() {
-        viewModelScope.launch {
-            repository.getCurrentWeatherData(CityEnum.LYON.lat, CityEnum.LYON.long)
-                .collect { response ->
-                    when (response) {
-                        is NetworkResult.Success -> _data[CityEnum.LYON] = response.data
-                        is NetworkResult.Error -> {
-                            "${response.code} ${response.message}"
-                            isError = true
-                            errorMessage = response.code.toString()
-                        }
-                        is NetworkResult.Exception -> "${response.e.message}"
-                    }
-                }
-        }
-    }
-
-    fun loadWeatherInfoForRennes() {
-        viewModelScope.launch {
-            repository.getCurrentWeatherData(CityEnum.RENNES.lat, CityEnum.RENNES.long)
-                .collect { response ->
-                    when (response) {
-                        is NetworkResult.Success -> _data[CityEnum.RENNES] = response.data
-                        is NetworkResult.Error -> {
-                            "${response.code} ${response.message}"
-                            isError = true
-                            errorMessage = response.code.toString()
-                        }
-                        is NetworkResult.Exception -> "${response.e.message}"
-                    }
-                }
+            }
         }
     }
 

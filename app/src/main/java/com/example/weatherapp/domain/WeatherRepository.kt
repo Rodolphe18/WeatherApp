@@ -11,28 +11,25 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WeatherRepository @Inject constructor(private val api : WeatherApi) {
+class WeatherRepository @Inject constructor(private val api: WeatherApi) {
 
 
     fun getCurrentWeatherData(lat: Double, long: Double): Flow<NetworkResult<WeatherData>> {
         return flow {
-            try {
-                val response = api.getCurrentWeatherData(lat, long)
-                val body = response.body()?.toWeatherData()
-                if (response.isSuccessful && body != null) {
-                    NetworkResult.Success(body)
-                } else {
-                    NetworkResult.Error(code = response.code(), message = response.message())
-                }
-            } catch (e: HttpException) {
-                NetworkResult.Error(code = e.code(), message = e.message())
-            } catch (e: Throwable) {
-                NetworkResult.Exception(e)
+        try {
+            val response = api.getCurrentWeatherData(lat, long)
+            val body = response.body()?.toWeatherData()
+            if (response.isSuccessful && body != null) {
+                emit(NetworkResult.Success(body))
+            } else {
+                emit(NetworkResult.Error(code = response.code(), message = response.message()))
             }
+        } catch (e: HttpException) {
+            emit(NetworkResult.Error(code = e.code(), message = e.message()))
+        } catch (e: Throwable) {
+            emit(NetworkResult.Exception(e))
         }
-    }
-
-
+    }}
 
 
 }

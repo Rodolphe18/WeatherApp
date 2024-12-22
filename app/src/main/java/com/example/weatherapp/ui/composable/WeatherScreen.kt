@@ -65,9 +65,6 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
         mutableStateOf("")
     }
 
-    val isFirstLoading = remember { derivedStateOf { viewModel.isFirstLoading }  }
-
-
     when(progressCount) {
         0 -> progress = 0.0f
         12 -> progress = 0.2f
@@ -90,14 +87,9 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
         timer.schedule(object : TimerTask() {
             override fun run() {
                 if(progressCount < 60) {
-                    if (progressCount > 0) viewModel.loadWeatherInfoForRennes()
-                    if (progressCount > 10) viewModel.loadWeatherInfoForParis()
-                    if (progressCount > 20) viewModel.loadWeatherInfoForNantes()
-                    if (progressCount > 30) viewModel.loadWeatherInfoForBordeaux()
-                    if (progressCount > 40) viewModel.loadWeatherInfoForLyon()
-                    if (progressCount == 60) cancel()
                     progressCount++
-                    Log.d("_DEBUG_PROGRESS_COUNT", progressCount.toString())
+                } else {
+                    cancel()
                 }
             }
         }, 1000, 1000)
@@ -108,14 +100,10 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
         resetTimer.schedule(object : TimerTask() {
             override fun run() {
                 if(resetProgressCount < 60) {
-                    if (resetProgressCount > 0) viewModel.loadWeatherInfoForRennes()
-                    if (resetProgressCount > 10) viewModel.loadWeatherInfoForParis()
-                    if (resetProgressCount > 20) viewModel.loadWeatherInfoForNantes()
-                    if (resetProgressCount > 30) viewModel.loadWeatherInfoForBordeaux()
-                    if (resetProgressCount > 40) viewModel.loadWeatherInfoForLyon()
-                    if (resetProgressCount == 60) cancel()
+                    viewModel.loadWeatherInfos()
                     resetProgressCount++
-                    Log.d("_DEBUG_PROGRESS_COUNT", resetProgressCount.toString())
+                } else {
+                    cancel()
                 }
             }
         }, 1000, 1000)
@@ -140,11 +128,6 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
         }, 6000, 6000)
     }
 
-    fun load() {
-        initTimer()
-        initTextTimer()
-    }
-
     fun reset() {
         progressCount = 0
         textProgressCount = 0
@@ -153,11 +136,9 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
         resetTextTimer()
     }
 
-    LaunchedEffect(key1 = isFirstLoading.value) {
-        if(isFirstLoading.value) {
-            load()
-        }
-        viewModel.isFirstLoading = false
+    LaunchedEffect(Unit) {
+        initTimer()
+        initTextTimer()
     }
 
     if(progressCount == 60) {
