@@ -1,6 +1,5 @@
 package com.example.weatherapp.ui.composable
 
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -21,14 +20,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,8 +36,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
-import com.example.weatherapp.ui.weather.WeatherViewModel
 import com.example.weatherapp.ui.theme.Purple40
+import com.example.weatherapp.ui.weather.WeatherViewModel
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.math.roundToInt
@@ -51,19 +47,14 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
 
     val timer = Timer()
     val resetTimer = Timer()
-    var progressCount by remember { mutableIntStateOf(0) }
-    var resetProgressCount by remember { mutableIntStateOf(0) }
-    var progress by remember {
-        mutableFloatStateOf(0f)
-    }
-
     val textTimer = Timer()
     val resetTextTimer = Timer()
+
+    var progressCount by remember { mutableIntStateOf(0) }
+    var progress by remember { mutableFloatStateOf(0f) }
     var textProgressCount by remember { mutableIntStateOf(0) }
-    var resetTextProgressCount by remember { mutableIntStateOf(0) }
-    var text by remember {
-        mutableStateOf("")
-    }
+
+    var text by remember { mutableStateOf("") }
 
     when(progressCount) {
         0 -> progress = 0.0f
@@ -93,24 +84,30 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
                 }
             }
         }, 1000, 1000)
+        textTimer.schedule(object : TimerTask() {
+            override fun run() {
+                textProgressCount++
+                if(textProgressCount == 10) cancel()
+            }
+        }, 6000, 6000)
 
     }
 
     fun resetTimer() {
+        viewModel.onReload()
+        progressCount = 0
+        textProgressCount = 0
+        progress = 0f
         resetTimer.schedule(object : TimerTask() {
             override fun run() {
-                if(resetProgressCount < 60) {
-                    viewModel.loadWeatherInfos()
-                    resetProgressCount++
+                if(progressCount < 60) {
+                    progressCount++
                 } else {
                     cancel()
                 }
             }
         }, 1000, 1000)
-    }
-
-    fun initTextTimer() {
-        textTimer.schedule(object : TimerTask() {
+        resetTextTimer.schedule(object : TimerTask() {
             override fun run() {
                 textProgressCount++
                 if(textProgressCount == 10) cancel()
@@ -119,27 +116,7 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
     }
 
 
-    fun resetTextTimer() {
-        resetTextTimer.schedule(object : TimerTask() {
-            override fun run() {
-                resetTextProgressCount++
-                if(resetTextProgressCount == 10) cancel()
-            }
-        }, 6000, 6000)
-    }
-
-    fun reset() {
-        progressCount = 0
-        textProgressCount = 0
-        progress = 0f
-        resetTimer()
-        resetTextTimer()
-    }
-
-    LaunchedEffect(Unit) {
-        initTimer()
-        initTextTimer()
-    }
+    LaunchedEffect(Unit) { initTimer() }
 
     if(progressCount == 60) {
         Box(
@@ -161,9 +138,7 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
                     .width(240.dp)
                     .align(Alignment.BottomCenter),
                 colors = ButtonDefaults.buttonColors(containerColor = Purple40, contentColor = Color.White),
-                onClick = {
-                    reset()
-                }) {
+                onClick = { resetTimer() }) {
                 Text(text = stringResource(R.string.retry), color = Color.White, fontSize = 18.sp)
             }
         }

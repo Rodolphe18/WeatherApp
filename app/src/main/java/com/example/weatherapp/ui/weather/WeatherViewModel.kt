@@ -25,18 +25,24 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     var isError by mutableStateOf(false)
 
-    var errorMessage by mutableStateOf("")
+    var isReloading by mutableStateOf(false)
 
-    var isFirstLoading by mutableStateOf(true)
+    var errorMessage by mutableStateOf("")
 
     init {
         loadWeatherInfos()
     }
 
-    fun loadWeatherInfos() {
+    fun onReload() {
+        isReloading = true
+        loadWeatherInfos()
+        isReloading = false
+    }
+
+    private fun loadWeatherInfos() {
         viewModelScope.launch {
             for (city in enumValues<CityEnum>()) {
-                repository.getCurrentWeatherData(city.lat, city.lat).collect { response ->
+                repository.getCurrentWeatherData(city.lat, city.long).collect { response ->
                     when (response) {
                         is NetworkResult.Success -> _data[city] = response.data
                         is NetworkResult.Error -> {
