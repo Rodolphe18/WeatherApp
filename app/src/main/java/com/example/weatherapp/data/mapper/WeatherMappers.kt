@@ -1,10 +1,9 @@
 package com.example.weatherapp.data.mapper
 
 import android.annotation.SuppressLint
+import com.example.weatherapp.data.model.HourlyForecastDataDto
+import com.example.weatherapp.data.model.WeatherCurrentDto
 import com.example.weatherapp.data.model.WeatherData
-import com.example.weatherapp.data.model.WeatherDataDto
-import com.example.weatherapp.data.model.WeatherDto
-import com.example.weatherapp.data.model.WeatherInfo
 import com.example.weatherapp.data.model.WeatherType
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -12,9 +11,9 @@ import java.time.format.DateTimeFormatter
 private data class IndexedWeatherData(val index:Int, val data:WeatherData)
 
 @SuppressLint("NewApi")
-fun WeatherDataDto.toWeatherDataMap(): Map<Int, List<WeatherData>> {
-    return time.mapIndexed { index, time ->
-        val temperature = temperature[index]
+fun HourlyForecastDataDto.toWeatherDataMap(): Map<Int, List<WeatherData>> {
+    return times.mapIndexed { index, time ->
+        val temperature = temperatures[index]
         val weatherCode = weatherCodes[index]
         IndexedWeatherData(
             index = index,
@@ -26,12 +25,8 @@ fun WeatherDataDto.toWeatherDataMap(): Map<Int, List<WeatherData>> {
 }
 
 @SuppressLint("NewApi")
-fun WeatherDto.toWeatherInfo() : WeatherInfo {
-    val weatherDataMap = weatherData.toWeatherDataMap()
+fun WeatherCurrentDto.toWeatherData() : WeatherData{
     val now = LocalDateTime.now()
-    val currentWeatherData = weatherDataMap[0]?.find {
-        val hour = if(now.minute < 30) now.hour else now.hour + 1
-        it.time.hour == hour
-    }
-    return WeatherInfo(weatherDataPerDay = weatherDataMap, currentWeatherdata = currentWeatherData)
+    return WeatherData(now, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode))
 }
+
