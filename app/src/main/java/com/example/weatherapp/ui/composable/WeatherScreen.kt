@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -57,28 +58,13 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel()) {
             showWeatherScreen = true
         }
     } else {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(32.dp)
-        ) {
-            viewModel.currentWeather?.let {
-                WeatherList(viewModel.cityName, it)
-            }
+        Column(modifier = Modifier.fillMaxSize().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(Modifier.height(16.dp))
-            ForecastList(viewModel.forecastWeather)
-            Spacer(Modifier.height(32.dp))
-            Button(
-                modifier = Modifier
-                    .height(40.dp)
-                    .width(240.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Purple40,
-                    contentColor = Color.White
-                ),
-                onClick = { viewModel.resetTimer() }) {
-                Text(text = stringResource(R.string.retry), color = Color.White, fontSize = 18.sp)
+            viewModel.currentWeather?.let { currentWeather ->
+                TodayWeatherItem(viewModel.cityName, currentWeather)
             }
+            Spacer(Modifier.height(36.dp))
+            ForecastList(viewModel.forecastWeather)
         }
     }
 }
@@ -97,15 +83,14 @@ fun ForecastList(weatherDataList: List<WeatherData>) {
 fun ForecastItem(modifier: Modifier = Modifier, weatherData: WeatherData) {
     Column(
         modifier = modifier
-            .height(150.dp)
-            .width(120.dp)
+            .width(110.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Color.Blue)
-            .padding(8.dp),
+            .padding(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "${weatherData.time.hour} h", color = Color.White)
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(8.dp))
         Text(
             text = "${weatherData.temperatureCelsius} °C",
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -113,11 +98,22 @@ fun ForecastItem(modifier: Modifier = Modifier, weatherData: WeatherData) {
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleMedium
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(8.dp))
         Image(
             painterResource(id = weatherData.weatherType.iconRes),
             contentDescription = null,
-            modifier = Modifier.size(80.dp)
+            modifier = Modifier.size(60.dp)
         )
+    }
+}
+
+@Composable
+fun TodayWeatherItem(city: String, weatherData: WeatherData) {
+    weatherData.let { data ->
+        Row(modifier = Modifier.height(100.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(text = city, modifier = Modifier.padding(horizontal = 32.dp), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+            Text(text = "${data.temperatureCelsius} °C", modifier = Modifier.padding(horizontal = 16.dp), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+            Image(painterResource(id = data.weatherType.iconRes), contentDescription = null, modifier = Modifier.size(80.dp).padding(start = 32.dp))
+        }
     }
 }

@@ -16,6 +16,7 @@ import com.example.weatherapp.util.CityEnum
 import com.example.weatherapp.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import java.util.Timer
 import java.util.TimerTask
 import javax.inject.Inject
@@ -68,8 +69,10 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
         viewModelScope.launch {
                 repository.getForecastWeatherData(lat, lng).collect { response ->
                     when (response) {
-                        is NetworkResult.Success ->
-                            _forecastWeather.addAll(response.data[0].orEmpty())
+                        is NetworkResult.Success -> {
+                            val todayData = response.data[0]?.filter { it.time.hour >= LocalDateTime.now().hour }
+                            val tomorrowData = response.data[1]
+                            _forecastWeather.addAll(todayData.orEmpty() + tomorrowData.orEmpty()) }
                         is NetworkResult.Error -> {
                             "${response.code} ${response.message}"
                             isError = true
