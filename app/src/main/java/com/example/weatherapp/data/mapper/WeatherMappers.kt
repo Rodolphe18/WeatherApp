@@ -21,7 +21,7 @@ fun HourlyForecastDataDto.toWeatherDataMap(): Map<Int, List<WeatherData>> {
                 temperatureCelsius = temperature,
                 weatherType = WeatherType.fromApi(weatherCode)))
 
-    }.groupBy { it.index / 24 }.mapValues { it.value.map { it.data } }
+    }.groupBy { indexedWeatherData -> indexedWeatherData.index / 24 }.mapValues { it.value.map { it.data } }
 }
 
 @SuppressLint("NewApi")

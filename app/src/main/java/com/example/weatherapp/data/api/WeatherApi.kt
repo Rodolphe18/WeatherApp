@@ -22,4 +22,6 @@ interface WeatherApi {
         @Query("current") hourly:List<String> = listOf("temperature_2m","weathercode")
     ): Response<WeatherCurrentDto>
 
+
+
 }

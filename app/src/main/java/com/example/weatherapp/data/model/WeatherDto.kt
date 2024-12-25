@@ -9,7 +9,7 @@ data class WeatherForecastDto(@SerializedName("hourly") val weatherForecastData:
 data class WeatherCurrentDto(@SerializedName("current") val weatherCurrentData: WeatherCurrentDataDto)
 
 data class HourlyForecastDataDto(
-    val times: List<String>,
+    @SerializedName("time") val times: List<String>,
     @SerializedName("temperature_2m") val temperatures: List<Double>,
     @SerializedName("weathercode") val weatherCodes: List<Int>
 )

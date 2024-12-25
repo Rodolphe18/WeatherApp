@@ -1,14 +1,10 @@
 package com.example.weatherapp.ui.composable
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,13 +14,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.weatherapp.data.model.WeatherData
-import com.example.weatherapp.util.CityEnum
 
 @Composable
-fun WeatherItem(city: CityEnum, weatherData: WeatherData) {
+fun WeatherItem(city: String, weatherData: WeatherData) {
     weatherData.let { data ->
         Row(modifier = Modifier.height(100.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(text = city.cityName, modifier = Modifier.padding(horizontal = 32.dp), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+            Text(text = city, modifier = Modifier.padding(horizontal = 32.dp), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
             Text(text = "${data.temperatureCelsius} °C", modifier = Modifier.padding(horizontal = 16.dp), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
             Image(painterResource(id = data.weatherType.iconRes), contentDescription = null, modifier = Modifier.size(80.dp).padding(start = 32.dp))
         }
@@ -32,17 +27,10 @@ fun WeatherItem(city: CityEnum, weatherData: WeatherData) {
 }
 
 @Composable
-fun WeatherList(data: Map<CityEnum, WeatherData>) {
-    Column {
-        val items = enumValues<CityEnum>()
-        items.forEach { city ->
-            val item = data[city]
-            if(item != null) {
-                WeatherItem(city = city, weatherData = item)
+fun WeatherList(city:String, data: WeatherData) {
+                WeatherItem(city = city, weatherData = data)
             }
-        }
-    }
-}
+
 
 
 
