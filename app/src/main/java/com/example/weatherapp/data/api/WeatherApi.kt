@@ -1,5 +1,6 @@
 package com.example.weatherapp.data.api
 
+import com.example.weatherapp.data.model.DailyWeatherDto
 import com.example.weatherapp.data.model.WeatherCurrentDto
 import com.example.weatherapp.data.model.WeatherForecastDto
 import retrofit2.Response
@@ -10,18 +11,29 @@ interface WeatherApi {
 
     @GET("forecast")
     suspend fun getForecastWeatherData(
-        @Query("latitude") lat:Double,
-        @Query("longitude") long:Double,
-        @Query("hourly") hourly:List<String> = listOf("temperature_2m","weathercode")
+        @Query("latitude") lat: Double,
+        @Query("longitude") long: Double,
+        @Query("hourly") hourly: List<String> = listOf("temperature_2m", "weathercode")
     ): Response<WeatherForecastDto>
 
     @GET("forecast")
     suspend fun getCurrentWeatherData(
-        @Query("latitude") lat:Double,
-        @Query("longitude") long:Double,
-        @Query("current") hourly:List<String> = listOf("temperature_2m","weathercode")
+        @Query("latitude") lat: Double,
+        @Query("longitude") long: Double,
+        @Query("current") hourly: List<String> = listOf("temperature_2m", "weathercode")
     ): Response<WeatherCurrentDto>
 
+
+    @GET("forecast")
+    suspend fun getDailyWeather(
+        @Query("latitude") lat: Double,
+        @Query("longitude") long: Double,
+        @Query("daily") daily: List<String> = listOf(
+            "weather_code",
+            "temperature_2m_max",
+            "temperature_2m_min"
+        )
+    ): Response<DailyWeatherDto>
 
 
 }

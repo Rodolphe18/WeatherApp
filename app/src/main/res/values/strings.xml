@@ -5,4 +5,5 @@
     <string name="message3">Plus que quelques secondes avant d’avoir le résultat…</string>
     <string name="welcome_message">Welcome to Weather App ! \n Click on the button below</string>
     <string name="retry">Réessayer</string>
+    <string name="card_meta_data_text">%1$s / %2$s</string>
 </resources>

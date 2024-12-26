@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.weather
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -10,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.data.model.AutoCompleteResultItem
+import com.example.weatherapp.data.model.DailyWeatherData
 import com.example.weatherapp.data.model.WeatherData
 import com.example.weatherapp.domain.WeatherRepository
 import com.example.weatherapp.util.CityEnum
@@ -37,6 +39,11 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
         get() = _forecastWeather.toList()
     private val _forecastWeather = mutableStateListOf<WeatherData>()
 
+    val dailyWeather: List<DailyWeatherData>
+        get() = _dailyWeather.toList()
+    private val _dailyWeather = mutableStateListOf<DailyWeatherData>()
+
+
     var isError by mutableStateOf(false)
 
     var errorMessage by mutableStateOf("")
@@ -51,6 +58,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
                     when (response) {
                         is NetworkResult.Success -> {
                             _cityName = cityName
+                            _currentWeather = null
                             _currentWeather = response.data
                         }
                         is NetworkResult.Error -> {
@@ -72,6 +80,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
                         is NetworkResult.Success -> {
                             val todayData = response.data[0]?.filter { it.time.hour >= LocalDateTime.now().hour }
                             val tomorrowData = response.data[1]
+                            _forecastWeather.clear()
                             _forecastWeather.addAll(todayData.orEmpty() + tomorrowData.orEmpty()) }
                         is NetworkResult.Error -> {
                             "${response.code} ${response.message}"
@@ -83,6 +92,26 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
                     }
                 }
             }
+    }
+
+    fun loadDailyWeather(lat:Double, lng:Double) {
+        viewModelScope.launch {
+            repository.getDailyWeatherData(lat, lng).collect { response ->
+                when (response) {
+                    is NetworkResult.Success -> {
+                        _dailyWeather.clear()
+                        _dailyWeather.addAll(response.data)
+                    }
+                    is NetworkResult.Error -> {
+                        "${response.code} ${response.message}"
+                        isError = true
+                        errorMessage = response.code.toString()
+                    }
+
+                    is NetworkResult.Exception -> "${response.e.message}"
+                }
+            }
+        }
     }
 
 

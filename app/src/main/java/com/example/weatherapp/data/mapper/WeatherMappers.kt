@@ -1,6 +1,8 @@
 package com.example.weatherapp.data.mapper
 
 import android.annotation.SuppressLint
+import com.example.weatherapp.data.model.DailyCurrentDataDto
+import com.example.weatherapp.data.model.DailyWeatherData
 import com.example.weatherapp.data.model.HourlyForecastDataDto
 import com.example.weatherapp.data.model.WeatherCurrentDto
 import com.example.weatherapp.data.model.WeatherData
@@ -9,6 +11,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 private data class IndexedWeatherData(val index:Int, val data:WeatherData)
+
 
 @SuppressLint("NewApi")
 fun HourlyForecastDataDto.toWeatherDataMap(): Map<Int, List<WeatherData>> {
@@ -29,4 +32,18 @@ fun WeatherCurrentDto.toWeatherData() : WeatherData{
     val now = LocalDateTime.now()
     return WeatherData(now, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode))
 }
+
+fun DailyCurrentDataDto.toCurrentDailyDataMap(): List<DailyWeatherData> {
+    return times.mapIndexed { index, time ->
+        val temperatureMax = temperaturesMax[index]
+        val temperatureMin = temperaturesMin[index]
+        val weatherCode = weatherCode[index]
+       DailyWeatherData(
+           time = time,
+           temperatureMax = temperatureMax,
+           temperatureMin = temperatureMin,
+           weatherType = WeatherType.fromApi(weatherCode))
+    }
+}
+
 
