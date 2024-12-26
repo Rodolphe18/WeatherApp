@@ -14,12 +14,14 @@ data class DailyWeatherDto(@SerializedName("daily") val weatherDailyDto: DailyCu
 data class HourlyForecastDataDto(
     @SerializedName("time") val times: List<String>,
     @SerializedName("temperature_2m") val temperatures: List<Double>,
+    @SerializedName("wind_speed_10m") val windSpeeds:List<Double>,
     @SerializedName("weathercode") val weatherCodes: List<Int>
 )
 
 data class WeatherCurrentDataDto(
     @SerializedName("temperature_2m") val temperature: Double,
-    @SerializedName("weathercode") val weatherCode: Int
+    @SerializedName("weathercode") val weatherCode: Int,
+    @SerializedName("wind_speed_10m") val windSpeed:Double
 )
 
 @Serializable
@@ -34,6 +36,7 @@ data class WeatherData(
     val time: LocalDateTime,
     val temperatureCelsius: Double,
     val weatherType: WeatherType,
+    val windSpeed:Double
 )
 
 data class DailyWeatherData(

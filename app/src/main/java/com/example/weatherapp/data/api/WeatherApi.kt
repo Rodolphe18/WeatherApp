@@ -13,14 +13,14 @@ interface WeatherApi {
     suspend fun getForecastWeatherData(
         @Query("latitude") lat: Double,
         @Query("longitude") long: Double,
-        @Query("hourly") hourly: List<String> = listOf("temperature_2m", "weathercode")
+        @Query("hourly") hourly: List<String> = listOf("temperature_2m", "weathercode", "wind_speed_10m")
     ): Response<WeatherForecastDto>
 
     @GET("forecast")
     suspend fun getCurrentWeatherData(
         @Query("latitude") lat: Double,
         @Query("longitude") long: Double,
-        @Query("current") hourly: List<String> = listOf("temperature_2m", "weathercode")
+        @Query("current") hourly: List<String> = listOf("temperature_2m", "weathercode","is_day","wind_speed_10m")
     ): Response<WeatherCurrentDto>
 
 

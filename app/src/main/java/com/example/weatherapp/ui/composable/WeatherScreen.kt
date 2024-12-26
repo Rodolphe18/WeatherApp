@@ -132,6 +132,13 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, weatherData: WeatherData) 
                 contentDescription = null,
                 modifier = Modifier.size(45.dp)
             )
+            Text(
+                text = "${weatherData.windSpeed} ",
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium
+            )
         }
     }
 
@@ -163,12 +170,28 @@ fun TodayWeatherItem(city: String, weatherData: WeatherData) {
                 fontSize = 40.sp,
                 color = Color.White
             )
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = data.weatherType.weatherDesc,
+                modifier = Modifier.padding(horizontal = 16.dp),
+                fontWeight = FontWeight.Bold,
+                fontSize = 40.sp,
+                color = Color.White
+            )
+            Spacer(Modifier.height(8.dp))
             Image(
                 painterResource(id = data.weatherType.iconRes),
                 contentDescription = null,
-                modifier = Modifier.size(160.dp)
+                modifier = Modifier.size(120.dp)
             )
+            Text(
+                text = data.windSpeed.toString(),
+                modifier = Modifier.padding(horizontal = 16.dp),
+                fontWeight = FontWeight.Bold,
+                fontSize = 40.sp,
+                color = Color.White
+            )
+            Spacer(Modifier.height(8.dp))
         }
     }
 }

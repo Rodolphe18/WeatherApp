@@ -18,19 +18,20 @@ fun HourlyForecastDataDto.toWeatherDataMap(): Map<Int, List<WeatherData>> {
     return times.mapIndexed { index, time ->
         val temperature = temperatures[index]
         val weatherCode = weatherCodes[index]
+        val windSpeed = windSpeeds[index]
         IndexedWeatherData(
             index = index,
             data = WeatherData(time = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME),
                 temperatureCelsius = temperature,
-                weatherType = WeatherType.fromApi(weatherCode)))
-
+                weatherType = WeatherType.fromApi(weatherCode),
+                windSpeed = windSpeed))
     }.groupBy { indexedWeatherData -> indexedWeatherData.index / 24 }.mapValues { it.value.map { it.data } }
 }
 
 @SuppressLint("NewApi")
 fun WeatherCurrentDto.toWeatherData() : WeatherData{
     val now = LocalDateTime.now()
-    return WeatherData(now, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode))
+    return WeatherData(now, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode), weatherCurrentData.windSpeed)
 }
 
 fun DailyCurrentDataDto.toCurrentDailyDataMap(): List<DailyWeatherData> {
