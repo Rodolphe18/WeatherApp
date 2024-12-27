@@ -20,7 +20,7 @@ interface WeatherApi {
     suspend fun getCurrentWeatherData(
         @Query("latitude") lat: Double,
         @Query("longitude") long: Double,
-        @Query("current") hourly: List<String> = listOf("temperature_2m", "weathercode","is_day","wind_speed_10m")
+        @Query("current") current: List<String> = listOf("temperature_2m", "weathercode","wind_speed_10m", "wind_direction_10m", "is_day")
     ): Response<WeatherCurrentDto>
 
 
@@ -28,10 +28,13 @@ interface WeatherApi {
     suspend fun getDailyWeather(
         @Query("latitude") lat: Double,
         @Query("longitude") long: Double,
+        @Query("timezone") timeZone:String = "Europe/Paris",
         @Query("daily") daily: List<String> = listOf(
-            "weather_code",
+            "weathercode",
             "temperature_2m_max",
-            "temperature_2m_min"
+            "temperature_2m_min",
+            "wind_direction_10m_dominant",
+            "sunrise","sunset"
         )
     ): Response<DailyWeatherDto>
 

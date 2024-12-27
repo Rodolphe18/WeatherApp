@@ -3,8 +3,9 @@ package com.example.weatherapp.ui.composable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,9 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,10 +39,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.R
 import com.example.weatherapp.data.model.DailyWeatherData
 import com.example.weatherapp.data.model.WeatherData
-import com.example.weatherapp.ui.theme.Purple40
 import com.example.weatherapp.ui.weather.WeatherViewModel
 import com.example.weatherapp.util.DateTimeFormatter
-import java.time.OffsetDateTime
 
 
 @Composable
@@ -69,15 +68,18 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = 32.dp,horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(vertical = 16.dp)
         ) {
-            Spacer(Modifier.height(16.dp))
             viewModel.currentWeather?.let { currentWeather ->
-                TodayWeatherItem(viewModel.cityName, currentWeather)
+                TodayWeatherItem(
+                    modifier = Modifier.padding(16.dp),
+                    viewModel.cityName,
+                    currentWeather,
+                    viewModel.dailyWeather[0]
+                )
             }
-            Spacer(Modifier.height(50.dp))
             ForecastHourlyList(viewModel.forecastWeather)
-            Spacer(Modifier.height(16.dp))
             ForecastDailyList(viewModel.dailyWeather)
         }
     }
@@ -86,9 +88,17 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel()) {
 
 @Composable
 fun ForecastHourlyList(weatherDataList: List<WeatherData>) {
-    Text(text = "Dans les prochaines heures", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-    Spacer(Modifier.height(8.dp))
-    LazyRow(state = rememberLazyListState(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    Text(
+        modifier = Modifier.padding(16.dp),
+        text = "Dans les prochaines heures",
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold
+    )
+    LazyRow(
+        state = rememberLazyListState(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(16.dp)
+    ) {
         items(weatherDataList) { weatherData ->
             ForecastHourlyItem(weatherData = weatherData)
         }
@@ -97,9 +107,17 @@ fun ForecastHourlyList(weatherDataList: List<WeatherData>) {
 
 @Composable
 fun ForecastDailyList(weatherDataList: List<DailyWeatherData>) {
-    Text(text = "Prévisions sur 5 jours", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-    Spacer(Modifier.height(8.dp))
-    LazyRow(state = rememberLazyListState(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    Text(
+        modifier = Modifier.padding(16.dp),
+        text = "Prévisions sur 5 jours",
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold
+    )
+    LazyRow(
+        state = rememberLazyListState(),
+        contentPadding = PaddingValues(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         items(weatherDataList) { weatherData ->
             ForecastDailyItem(weatherData = weatherData)
         }
@@ -109,19 +127,23 @@ fun ForecastDailyList(weatherDataList: List<DailyWeatherData>) {
 @Composable
 fun ForecastHourlyItem(modifier: Modifier = Modifier, weatherData: WeatherData) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "${weatherData.time.hour} h", fontWeight = FontWeight.ExtraBold, fontSize = 18.sp, color = Color.Gray)
+        Text(
+            text = "${weatherData.time.hour} h",
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 18.sp,
+            color = Color.Gray
+        )
         Spacer(Modifier.height(4.dp))
         Column(
             modifier = modifier
-                .width(120.dp)
+                .width(125.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(Color.Blue.copy(0.3f))
-                .padding(8.dp),
+                .background(Color.Blue.copy(0.3f)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "${weatherData.temperatureCelsius} °C",
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = 8.dp),
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium
@@ -133,8 +155,8 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, weatherData: WeatherData) 
                 modifier = Modifier.size(45.dp)
             )
             Text(
-                text = "${weatherData.windSpeed} ",
-                modifier = Modifier.padding(horizontal = 16.dp),
+                text = "${weatherData.windSpeed} km/h",
+                modifier = Modifier.padding(horizontal = 8.dp),
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium
@@ -145,53 +167,75 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, weatherData: WeatherData) 
 }
 
 @Composable
-fun TodayWeatherItem(city: String, weatherData: WeatherData) {
+fun TodayWeatherItem(modifier: Modifier = Modifier, city: String, weatherData: WeatherData, dailyWeatherData: DailyWeatherData) {
     weatherData.let { data ->
-        Column(
-            modifier = Modifier
+        Box(
+            modifier = modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
                 .background(Color.Blue.copy(0.35f))
                 .padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = city,
-                modifier = Modifier.padding(horizontal = 32.dp),
-                fontWeight = FontWeight.Bold,
-                fontSize = 36.sp,
-                color = Color.White
-            )
-            Spacer(Modifier.height(16.dp))
-            Text(
-                text = "${data.temperatureCelsius} °C",
-                modifier = Modifier.padding(horizontal = 16.dp),
-                fontWeight = FontWeight.Bold,
-                fontSize = 40.sp,
-                color = Color.White
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = data.weatherType.weatherDesc,
-                modifier = Modifier.padding(horizontal = 16.dp),
-                fontWeight = FontWeight.Bold,
-                fontSize = 40.sp,
-                color = Color.White
-            )
-            Spacer(Modifier.height(8.dp))
-            Image(
-                painterResource(id = data.weatherType.iconRes),
-                contentDescription = null,
-                modifier = Modifier.size(120.dp)
-            )
-            Text(
-                text = data.windSpeed.toString(),
-                modifier = Modifier.padding(horizontal = 16.dp),
-                fontWeight = FontWeight.Bold,
-                fontSize = 40.sp,
-                color = Color.White
-            )
-            Spacer(Modifier.height(8.dp))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = city,
+                    modifier = Modifier.padding(horizontal = 32.dp),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 36.sp,
+                    color = Color.White
+                )
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    text = "${data.temperatureCelsius} °C",
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    color = Color.White
+                )
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    text = data.weatherType.weatherDesc,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    color = Color.White
+                )
+                Image(
+                    painterResource(id = data.weatherType.iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(100.dp)
+                )
+                Spacer(Modifier.height(16.dp))
+            }
+            Column(modifier = Modifier.align(Alignment.BottomStart)) {
+                Text(
+                    text = "${data.windSpeed} km/h",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White
+                )
+                Text(
+                    text = DateTimeFormatter.getFormattedTime(dailyWeatherData.sunrise),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White
+                )
+            }
+            Column(modifier = Modifier.align(Alignment.BottomEnd)) {
+                Text(
+                    text = data.windDirection.windDirection(),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White
+                )
+                Text(
+                    text = DateTimeFormatter.getFormattedTime(dailyWeatherData.sunset),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White
+                )
+            }
         }
     }
 }
@@ -219,5 +263,22 @@ fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherDa
             color = Color.White,
             style = MaterialTheme.typography.titleMedium
         )
+        Text(text = weatherData.windDirection.windDirection(), color = Color.White)
+        Text(text = DateTimeFormatter.getFormattedTime(weatherData.sunset), color = Color.White)
+    }
+}
+
+fun Int.windDirection(): String {
+    return when (this) {
+        in 0..22 -> "N"
+        in 338..360 -> "N"
+        in 23..67 -> "NE"
+        in 68..112 -> "E"
+        in 113..157 -> "SE"
+        in 158..202 -> "S"
+        in 203..247 -> "SO"
+        in 248..292 -> "E"
+        in 293..337 -> "N0"
+        else -> ""
     }
 }

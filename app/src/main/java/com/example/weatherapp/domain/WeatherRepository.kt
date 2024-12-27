@@ -36,6 +36,7 @@ class WeatherRepository @Inject constructor(
         return flow {
             try {
                 val response = api.getCurrentWeatherData(lat, long)
+                Log.d("debug_", response.body().toString())
                 val body = response.body()?.toWeatherData()
                 if (response.isSuccessful && body != null) {
                     emit(NetworkResult.Success(body))

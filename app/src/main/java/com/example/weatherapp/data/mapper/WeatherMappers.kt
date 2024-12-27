@@ -31,7 +31,7 @@ fun HourlyForecastDataDto.toWeatherDataMap(): Map<Int, List<WeatherData>> {
 @SuppressLint("NewApi")
 fun WeatherCurrentDto.toWeatherData() : WeatherData{
     val now = LocalDateTime.now()
-    return WeatherData(now, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode), weatherCurrentData.windSpeed)
+    return WeatherData(now, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode), weatherCurrentData.windSpeed, weatherCurrentData.windDirection, weatherCurrentData.isDay == 1)
 }
 
 fun DailyCurrentDataDto.toCurrentDailyDataMap(): List<DailyWeatherData> {
@@ -39,11 +39,18 @@ fun DailyCurrentDataDto.toCurrentDailyDataMap(): List<DailyWeatherData> {
         val temperatureMax = temperaturesMax[index]
         val temperatureMin = temperaturesMin[index]
         val weatherCode = weatherCode[index]
+        val windDirection = windDirections[index]
+        val sunset = sunsets[index]
+        val sunrise = sunrises[index]
        DailyWeatherData(
            time = time,
            temperatureMax = temperatureMax,
            temperatureMin = temperatureMin,
-           weatherType = WeatherType.fromApi(weatherCode))
+           weatherType = WeatherType.fromApi(weatherCode),
+           windDirection = windDirection,
+           sunset = sunset,
+           sunrise = sunrise
+           )
     }
 }
 
