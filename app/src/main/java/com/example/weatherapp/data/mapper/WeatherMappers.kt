@@ -1,27 +1,28 @@
 package com.example.weatherapp.data.mapper
 
 import android.annotation.SuppressLint
+import com.example.weatherapp.data.model.CurrentWeatherData
 import com.example.weatherapp.data.model.DailyCurrentDataDto
 import com.example.weatherapp.data.model.DailyWeatherData
 import com.example.weatherapp.data.model.HourlyForecastDataDto
+import com.example.weatherapp.data.model.HourlyWeatherData
 import com.example.weatherapp.data.model.WeatherCurrentDto
-import com.example.weatherapp.data.model.WeatherData
-import com.example.weatherapp.data.model.WeatherType
+import com.example.weatherapp.util.WeatherType
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-private data class IndexedWeatherData(val index:Int, val data:WeatherData)
+private data class IndexedWeatherData(val index:Int, val data:HourlyWeatherData)
 
 
 @SuppressLint("NewApi")
-fun HourlyForecastDataDto.toWeatherDataMap(): Map<Int, List<WeatherData>> {
+fun HourlyForecastDataDto.toWeatherDataMap(): Map<Int, List<HourlyWeatherData>> {
     return times.mapIndexed { index, time ->
         val temperature = temperatures[index]
         val weatherCode = weatherCodes[index]
         val windSpeed = windSpeeds[index]
         IndexedWeatherData(
             index = index,
-            data = WeatherData(time = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME),
+            data = HourlyWeatherData(time = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME),
                 temperatureCelsius = temperature,
                 weatherType = WeatherType.fromApi(weatherCode),
                 windSpeed = windSpeed))
@@ -29,9 +30,9 @@ fun HourlyForecastDataDto.toWeatherDataMap(): Map<Int, List<WeatherData>> {
 }
 
 @SuppressLint("NewApi")
-fun WeatherCurrentDto.toWeatherData() : WeatherData{
+fun WeatherCurrentDto.toWeatherData() : CurrentWeatherData {
     val now = LocalDateTime.now()
-    return WeatherData(now, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode), weatherCurrentData.windSpeed, weatherCurrentData.windDirection, weatherCurrentData.isDay == 1)
+    return CurrentWeatherData(now, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode), weatherCurrentData.windSpeed, weatherCurrentData.windDirection, weatherCurrentData.isDay == 1, weatherCurrentData.apparentTemperature, weatherCurrentData.precipitation)
 }
 
 fun DailyCurrentDataDto.toCurrentDailyDataMap(): List<DailyWeatherData> {

@@ -18,7 +18,7 @@ object DateTimeFormatter {
         val time = LocalDateTime.parse(value)
         val minute = if(time.minute < 10) "0${time.minute}" else time.minute
         val hour = time.hour
-        val formattedDate = "$hour:$minute"
+        val formattedDate = "${hour}h$minute"
         return formattedDate
     }
 

@@ -1,6 +1,7 @@
 package com.example.weatherapp.data.model
 
 
+import com.example.weatherapp.util.WeatherType
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
@@ -9,7 +10,7 @@ data class WeatherForecastDto(@SerializedName("hourly") val weatherForecastData:
 
 data class WeatherCurrentDto(@SerializedName("current") val weatherCurrentData: WeatherCurrentDataDto)
 
-data class DailyWeatherDto(@SerializedName("daily") val weatherDailyDto: DailyCurrentDataDto)
+data class WeatherDailyDto(@SerializedName("daily") val weatherDailyDto: DailyCurrentDataDto)
 
 data class HourlyForecastDataDto(
     @SerializedName("time") val times: List<String>,
@@ -24,6 +25,8 @@ data class WeatherCurrentDataDto(
     @SerializedName("wind_speed_10m") val windSpeed: Double,
     @SerializedName("wind_direction_10m ") val windDirection: Int,
     @SerializedName("is_day") val isDay:Int,
+    @SerializedName("apparent_temperature") val apparentTemperature:Double,
+    @SerializedName("precipitation") val precipitation:Double
 )
 
 @Serializable
@@ -37,13 +40,22 @@ data class DailyCurrentDataDto(
     @SerializedName("wind_direction_10m_dominant") val windDirections: List<Int>
 )
 
-data class WeatherData(
+data class CurrentWeatherData(
     val time: LocalDateTime,
     val temperatureCelsius: Double,
     val weatherType: WeatherType,
     val windSpeed:Double,
-    val windDirection:Int = 180,
-    val isDay:Boolean = true
+    val windDirection:Int,
+    val isDay:Boolean,
+    val apparentTemperature:Double,
+    val precipitation:Double
+)
+
+data class HourlyWeatherData(
+    val time: LocalDateTime,
+    val temperatureCelsius: Double,
+    val weatherType: WeatherType,
+    val windSpeed:Double
 )
 
 data class DailyWeatherData(

@@ -7,8 +7,9 @@ import com.example.weatherapp.data.mapper.toCurrentDailyDataMap
 import com.example.weatherapp.data.mapper.toWeatherData
 import com.example.weatherapp.data.mapper.toWeatherDataMap
 import com.example.weatherapp.data.model.AutoCompleteResultItem
+import com.example.weatherapp.data.model.CurrentWeatherData
 import com.example.weatherapp.data.model.DailyWeatherData
-import com.example.weatherapp.data.model.WeatherData
+import com.example.weatherapp.data.model.HourlyWeatherData
 import com.example.weatherapp.util.NetworkResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -20,9 +21,7 @@ import javax.inject.Singleton
 
 @Singleton
 class WeatherRepository @Inject constructor(
-    private val api: WeatherApi,
-    private val autoCompleteApi: AutoCompleteApi
-) {
+    private val api: WeatherApi, private val autoCompleteApi: AutoCompleteApi) {
 
 
     fun getAutoCompleteResult(query:String): Flow<List<AutoCompleteResultItem>?> {
@@ -32,11 +31,10 @@ class WeatherRepository @Inject constructor(
     }
 
 
-    fun getCurrentWeatherData(lat: Double, long: Double): Flow<NetworkResult<WeatherData>> {
+    fun getCurrentWeatherData(lat: Double, long: Double): Flow<NetworkResult<CurrentWeatherData>> {
         return flow {
             try {
                 val response = api.getCurrentWeatherData(lat, long)
-                Log.d("debug_", response.body().toString())
                 val body = response.body()?.toWeatherData()
                 if (response.isSuccessful && body != null) {
                     emit(NetworkResult.Success(body))
@@ -54,7 +52,7 @@ class WeatherRepository @Inject constructor(
     fun getForecastWeatherData(
         lat: Double,
         long: Double
-    ): Flow<NetworkResult<Map<Int, List<WeatherData>>>> {
+    ): Flow<NetworkResult<Map<Int, List<HourlyWeatherData>>>> {
         return flow {
             try {
                 val response = api.getForecastWeatherData(lat, long)

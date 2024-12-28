@@ -1,43 +1,37 @@
 package com.example.weatherapp.ui.weather
 
-import android.util.Log
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.data.model.AutoCompleteResultItem
+import com.example.weatherapp.data.model.CurrentWeatherData
 import com.example.weatherapp.data.model.DailyWeatherData
-import com.example.weatherapp.data.model.WeatherData
+import com.example.weatherapp.data.model.HourlyWeatherData
 import com.example.weatherapp.domain.WeatherRepository
-import com.example.weatherapp.util.CityEnum
 import com.example.weatherapp.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
-import java.util.Timer
-import java.util.TimerTask
 import javax.inject.Inject
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(private val repository: WeatherRepository) :
     ViewModel() {
 
-    val currentWeather: WeatherData?
+    val currentWeather: CurrentWeatherData?
         get() = _currentWeather
-    private var _currentWeather by mutableStateOf<WeatherData?>(null)
+    private var _currentWeather by mutableStateOf<CurrentWeatherData?>(null)
 
     val cityName: String
         get() = _cityName
     private var _cityName by mutableStateOf("")
 
-    val forecastWeather: List<WeatherData>
+    val forecastWeather: List<HourlyWeatherData>
         get() = _forecastWeather.toList()
-    private val _forecastWeather = mutableStateListOf<WeatherData>()
+    private val _forecastWeather = mutableStateListOf<HourlyWeatherData>()
 
     val dailyWeather: List<DailyWeatherData>
         get() = _dailyWeather.toList()
@@ -114,6 +108,9 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
         }
     }
 
+    fun updateUserCities(autoCompleteCity: AutoCompleteCity) {
+
+    }
 
     fun getAutoCompleteSearch(query: String) {
         viewModelScope.launch {
@@ -127,3 +124,5 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     }
 
 }
+
+data class AutoCompleteCity(val name:String, val lat:Double, val long:Double)
