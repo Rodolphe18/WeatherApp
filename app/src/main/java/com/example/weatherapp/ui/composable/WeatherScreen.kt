@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.composable
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -50,17 +51,20 @@ import kotlin.math.roundToInt
 @Composable
 fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel()) {
     var showWeatherScreen by remember { mutableStateOf(false) }
-    val userPref by viewModel.userPreferencesCities.collectAsStateWithLifecycle()
+    val userPref by viewModel.userPreferences.collectAsStateWithLifecycle()
+    val cities = userPref.userSavedCities
     val userPrefEmpty = userPref.userSavedCities.isEmpty()
     val autoCompletionResult = viewModel.autoCompletionResult
     if (!userPrefEmpty) {
+        Log.d("debug_shared_pref", cities.toString())
         userPref.userSavedCities.forEach { city ->
             viewModel.loadCurrentWeather(city.latitude, city.longitude, city.name)
             viewModel.loadForecastWeather(city.latitude, city.longitude)
             viewModel.loadDailyWeather(city.latitude, city.longitude)
             showWeatherScreen = true
         }
-    } else if(!showWeatherScreen) {
+    } else if (!showWeatherScreen) {
+        Log.d("debug_shared_pref1", cities.toString())
         SearchAutoComplete(cities = autoCompletionResult) { city ->
             viewModel.loadCurrentWeather(
                 city.lat?.toDouble() ?: 0.00,
@@ -79,6 +83,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel()) {
             showWeatherScreen = true
         }
     } else {
+        Log.d("debug_shared_pref2", cities.toString())
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -88,7 +93,6 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel()) {
             viewModel.currentWeather?.let { currentWeather ->
                 TodayWeatherFirstItem(
                     modifier = Modifier.padding(16.dp),
-                    viewModel.cityName,
                     currentWeather
                 )
             }
@@ -189,7 +193,6 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
 @Composable
 fun TodayWeatherFirstItem(
     modifier: Modifier = Modifier,
-    city: String,
     currentWeatherData: CurrentWeatherData
 ) {
     currentWeatherData.let { data ->
@@ -203,18 +206,10 @@ fun TodayWeatherFirstItem(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = city,
-                    modifier = Modifier.padding(horizontal = 32.dp),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 36.sp,
-                    color = Color.White
-                )
-                Spacer(Modifier.height(6.dp))
-                Text(
                     text = "${data.temperatureCelsius} °C",
                     modifier = Modifier.padding(horizontal = 16.dp),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp,
+                    fontSize = 40.sp,
                     color = Color.White
                 )
                 Spacer(Modifier.height(6.dp))
@@ -241,30 +236,43 @@ fun TodayWeatherSecondItem(
     currentWeatherData: CurrentWeatherData,
     dailyWeatherData: DailyWeatherData
 ) {
-
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color.Blue.copy(0.35f))
-            .padding(12.dp)
-    ) {
-        Column(Modifier.weight(1f)) {
-            TodayItemMetaData("Ressenti", "${currentWeatherData.apparentTemperature}°C")
-            TodayItemMetaData("Vitesse du vent", "${currentWeatherData.windSpeed} km/h")
-            TodayItemMetaData(
-                "Lever du soleil",
-                DateTimeFormatter.getFormattedTime(dailyWeatherData.sunrise)
-            )
-        }
-        Column(Modifier.weight(1f)) {
-            TodayItemMetaData("Direction du vent", currentWeatherData.windDirection.windDirection())
-            TodayItemMetaData("Précipitation", "${currentWeatherData.precipitation.roundToInt()}%")
-            TodayItemMetaData(
-                "Coucher du soleil",
-                DateTimeFormatter.getFormattedTime(dailyWeatherData.sunset)
-            )
+    Column {
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            text = "Données météorologiques",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.ExtraBold
+        )
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.Blue.copy(0.35f))
+                .padding(12.dp)
+        ) {
+            Column(Modifier.weight(1f)) {
+                TodayItemMetaData("Ressenti", "${currentWeatherData.apparentTemperature}°C")
+                TodayItemMetaData("Vitesse du vent", "${currentWeatherData.windSpeed} km/h")
+                TodayItemMetaData(
+                    "Lever du soleil",
+                    DateTimeFormatter.getFormattedTime(dailyWeatherData.sunrise)
+                )
+            }
+            Column(Modifier.weight(1f)) {
+                TodayItemMetaData(
+                    "Direction du vent",
+                    currentWeatherData.windDirection.windDirection()
+                )
+                TodayItemMetaData(
+                    "Précipitation",
+                    "${currentWeatherData.precipitation.roundToInt()}%"
+                )
+                TodayItemMetaData(
+                    "Coucher du soleil",
+                    DateTimeFormatter.getFormattedTime(dailyWeatherData.sunset)
+                )
+            }
         }
     }
 }

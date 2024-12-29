@@ -13,10 +13,9 @@ class PreferencesDataSource @Inject constructor(
 ) {
     val userData = userPreferences.data
         .map { userPrefs ->
-            Log.d("debug_userPref", userPrefs.citiesMap.values.toString())
             UserData(userSavedCities = userPrefs.citiesMap.entries.map { (key, value) ->
                 SavedCity(key, value.name, value.latitude, value.longitude)
-            }.toSet())
+            })
         }
 
 

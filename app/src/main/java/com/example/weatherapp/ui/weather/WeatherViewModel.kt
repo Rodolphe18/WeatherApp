@@ -26,13 +26,13 @@ import javax.inject.Inject
 class WeatherViewModel @Inject constructor(private val repository: WeatherRepository, val userDataRepository: UserDataRepository) :
     ViewModel() {
 
-    val currentWeather: CurrentWeatherData?
-        get() = _currentWeather
-    private var _currentWeather by mutableStateOf<CurrentWeatherData?>(null)
-
     val cityName: String
         get() = _cityName
     private var _cityName by mutableStateOf("")
+
+    val currentWeather: CurrentWeatherData?
+        get() = _currentWeather
+    private var _currentWeather by mutableStateOf<CurrentWeatherData?>(null)
 
     val forecastWeather: List<HourlyWeatherData>
         get() = _forecastWeather.toList()
@@ -42,14 +42,15 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
         get() = _dailyWeather.toList()
     private val _dailyWeather = mutableStateListOf<DailyWeatherData>()
 
-
     var isError by mutableStateOf(false)
 
     var errorMessage by mutableStateOf("")
 
     val autoCompletionResult = mutableStateListOf<AutoCompleteResultItem>()
 
-    val userPreferencesCities = userDataRepository.userData.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), UserData(emptySet()))
+    val userPreferences = userDataRepository.userData.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), UserData(
+        emptyList()
+    ))
 
     fun loadCurrentWeather(lat:Double =0.00, lng:Double = 0.00, cityName:String="") {
         viewModelScope.launch {
