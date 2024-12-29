@@ -38,14 +38,15 @@ fun CitiesPager(viewmodel: PagerViewmodel = hiltViewModel()) {
     val userPref by viewmodel.userPreferences.collectAsStateWithLifecycle()
     val cities = userPref.userSavedCities
     val userPrefEmpty = userPref.userSavedCities.isEmpty()
-    Log.d("debug_b", nbOfPages.toString())
-    Log.d("debug_c", cities.toString())
-    Log.d("debug_e", viewmodel.currentPage.toString())
+
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { newPage ->
-            viewmodel.loadNextCityCurrentWeather(newPage)
-            viewmodel.loadNextCityDailyWeather(newPage)
-            viewmodel.loadNextCityForecastWeather(newPage)
+            Log.d("debug_b", nbOfPages.toString())
+            Log.d("debug_c", cities.toString())
+            Log.d("debug_e", viewmodel.currentPage.toString())
+            viewmodel.loadCityCurrentWeather(newPage)
+            viewmodel.loadCityDailyWeather(newPage)
+            viewmodel.loadCityForecastWeather(newPage)
             viewmodel.currentPage = newPage
         }
     }
