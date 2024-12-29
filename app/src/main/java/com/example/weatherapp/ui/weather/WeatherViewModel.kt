@@ -6,6 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weatherapp.data.datastore.SavedCity
+import com.example.weatherapp.data.datastore.UserData
+import com.example.weatherapp.data.datastore.UserDataRepository
 import com.example.weatherapp.data.model.AutoCompleteResultItem
 import com.example.weatherapp.data.model.CurrentWeatherData
 import com.example.weatherapp.data.model.DailyWeatherData
@@ -13,12 +16,14 @@ import com.example.weatherapp.data.model.HourlyWeatherData
 import com.example.weatherapp.domain.WeatherRepository
 import com.example.weatherapp.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class WeatherViewModel @Inject constructor(private val repository: WeatherRepository) :
+class WeatherViewModel @Inject constructor(private val repository: WeatherRepository, val userDataRepository: UserDataRepository) :
     ViewModel() {
 
     val currentWeather: CurrentWeatherData?
@@ -44,7 +49,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     val autoCompletionResult = mutableStateListOf<AutoCompleteResultItem>()
 
-
+    val userPreferencesCities = userDataRepository.userData.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), UserData(emptySet()))
 
     fun loadCurrentWeather(lat:Double =0.00, lng:Double = 0.00, cityName:String="") {
         viewModelScope.launch {
@@ -108,9 +113,6 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
         }
     }
 
-    fun updateUserCities(autoCompleteCity: AutoCompleteCity) {
-
-    }
 
     fun getAutoCompleteSearch(query: String) {
         viewModelScope.launch {
@@ -120,9 +122,21 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
                 }
             }
         }
+    }
 
+
+    fun addCityToUserFavoriteCities(remoteCity: AutoCompleteResultItem) {
+       viewModelScope.launch {
+           userDataRepository.addUserCity(
+               SavedCity(
+                   remoteCity.place_id?.toLong() ?: 0,
+                   remoteCity.display_place.orEmpty(),
+                   remoteCity.lat?.toDouble() ?: 0.00,
+                   remoteCity.lon?.toDouble() ?: 0.00
+               )
+           )
+       }
     }
 
 }
 
-data class AutoCompleteCity(val name:String, val lat:Double, val long:Double)

@@ -93,7 +93,13 @@ dependencies {
     implementation(libs.hilt.core)
     implementation(libs.kotlinx.coroutines.core)
 
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.core)
+    implementation(libs.kotlinx.coroutines.core)
+
     implementation(libs.hilt.plugin)
+    implementation(libs.androidx.dataStore)
+    implementation(libs.protobuf.kotlin.lite)
 
     ksp(libs.hilt.compiler)
     debugImplementation(libs.androidx.compose.ui.testManifest)
@@ -102,9 +108,6 @@ dependencies {
 
     implementation(libs.gson)
     implementation(libs.converter.gson)
-
-    implementation(libs.androidx.dataStore)
-    implementation(libs.protobuf.kotlin.lite)
 
 }
 
@@ -125,6 +128,7 @@ protobuf {
         }
     }
 }
+
 
 androidComponents {
     onVariants(selector().all()) { variant ->

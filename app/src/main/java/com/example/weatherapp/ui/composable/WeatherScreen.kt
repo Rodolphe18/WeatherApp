@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.weatherapp.R
 import com.example.weatherapp.data.model.CurrentWeatherData
 import com.example.weatherapp.data.model.DailyWeatherData
@@ -49,8 +50,17 @@ import kotlin.math.roundToInt
 @Composable
 fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel()) {
     var showWeatherScreen by remember { mutableStateOf(false) }
+    val userPref by viewModel.userPreferencesCities.collectAsStateWithLifecycle()
+    val userPrefEmpty = userPref.userSavedCities.isEmpty()
     val autoCompletionResult = viewModel.autoCompletionResult
-    if (!showWeatherScreen) {
+    if (!userPrefEmpty) {
+        userPref.userSavedCities.forEach { city ->
+            viewModel.loadCurrentWeather(city.latitude, city.longitude, city.name)
+            viewModel.loadForecastWeather(city.latitude, city.longitude)
+            viewModel.loadDailyWeather(city.latitude, city.longitude)
+            showWeatherScreen = true
+        }
+    } else if(!showWeatherScreen) {
         SearchAutoComplete(cities = autoCompletionResult) { city ->
             viewModel.loadCurrentWeather(
                 city.lat?.toDouble() ?: 0.00,
@@ -65,7 +75,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel()) {
                 city.lat?.toDouble() ?: 0.00,
                 city.lon?.toDouble() ?: 0.00
             )
-
+            viewModel.addCityToUserFavoriteCities(city)
             showWeatherScreen = true
         }
     } else {
