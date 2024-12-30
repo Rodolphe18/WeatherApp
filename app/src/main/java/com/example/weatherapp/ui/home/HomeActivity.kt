@@ -4,15 +4,23 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.example.weatherapp.ui.composable.CitiesPager
-import com.example.weatherapp.ui.composable.PagerViewmodel
-import com.example.weatherapp.ui.composable.WeatherScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.weatherapp.navigation.WeatherNavHost
+import com.example.weatherapp.ui.pager_screen.PagerRoute
+import com.example.weatherapp.ui.search_city.SearchCityNavigationRoute
 import com.example.weatherapp.ui.theme.WeatherAppTheme
-import com.example.weatherapp.ui.weather.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,12 +29,18 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WeatherAppTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                Row(
+                    Modifier
+                        .fillMaxSize()
+                        .windowInsetsPadding(
+                            WindowInsets.safeDrawing.only(
+                                WindowInsetsSides.Horizontal
+                            )
+                        )
                 ) {
-                    val viewModel: PagerViewmodel by viewModels()
-                   CitiesPager(viewModel)
+                    val viewModel by viewModels<HomeViewModel>()
+                    val cities by viewModel.userPreferencesCities.collectAsStateWithLifecycle()
+                    WeatherNavHost(startDestination = if(cities.isNotEmpty()) PagerRoute(0) else SearchCityNavigationRoute)
                 }
             }
         }

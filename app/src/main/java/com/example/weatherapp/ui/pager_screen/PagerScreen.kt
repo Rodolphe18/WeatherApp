@@ -1,40 +1,36 @@
-package com.example.weatherapp.ui.composable
+package com.example.weatherapp.ui.pager_screen
 
 import WeatherTopAppBar
 import android.util.Log
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.weatherapp.ui.composable.ForecastDailyList
+import com.example.weatherapp.ui.composable.ForecastHourlyList
+import com.example.weatherapp.ui.composable.TodayWeatherFirstItem
+import com.example.weatherapp.ui.composable.TodayWeatherSecondItem
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CitiesPager(viewmodel: PagerViewmodel = hiltViewModel()) {
+fun CitiesPager(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick:() -> Unit) {
     val nbOfPages by viewmodel.userPreferencesCitiesCount.collectAsStateWithLifecycle()
-    val pagerState = rememberPagerState(initialPage = 0, pageCount = { nbOfPages })
+    val pagerState = rememberPagerState(initialPage = viewmodel.currentIndex, pageCount = { nbOfPages })
     val userPref by viewmodel.userPreferences.collectAsStateWithLifecycle()
     val cities = userPref.userSavedCities
     val userPrefEmpty = userPref.userSavedCities.isEmpty()
@@ -51,7 +47,8 @@ fun CitiesPager(viewmodel: PagerViewmodel = hiltViewModel()) {
         }
     }
     if(!userPrefEmpty) {
-    Scaffold(topBar = {  WeatherTopAppBar(cities[viewmodel.currentPage].name, Icons.Filled.MoreVert)}) { padding ->
+    Scaffold(
+        topBar = { WeatherTopAppBar(text = cities[viewmodel.currentPage].name, actionIcon = Icons.Filled.MoreVert, onNavigationClick = onNavigationClick)}) { padding ->
         HorizontalPager(
             state = pagerState,
             beyondViewportPageCount = 1,
@@ -90,7 +87,6 @@ fun CitiesPager(viewmodel: PagerViewmodel = hiltViewModel()) {
                         ForecastDailyList(it)
                     }
                 }
-
             }
         }
     }
