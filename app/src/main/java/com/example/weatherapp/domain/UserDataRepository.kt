@@ -1,5 +1,7 @@
-package com.example.weatherapp.data.datastore
+package com.example.weatherapp.domain
 
+import com.example.weatherapp.data.datastore.SavedCity
+import com.example.weatherapp.data.datastore.UserData
 import kotlinx.coroutines.flow.Flow
 
 interface UserDataRepository {
