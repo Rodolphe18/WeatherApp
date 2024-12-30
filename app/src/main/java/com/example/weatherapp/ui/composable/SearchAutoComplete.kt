@@ -33,6 +33,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,13 +43,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.data.model.AutoCompleteResultItem
-import com.example.weatherapp.ui.weather.WeatherViewModel
+import com.example.weatherapp.ui.search_city.SearchCityViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchAutoComplete(
-    viewModel: WeatherViewModel = hiltViewModel(),
+    viewModel: SearchCityViewModel = hiltViewModel(),
     cities: List<AutoCompleteResultItem>,
     onSelect: (AutoCompleteResultItem) -> Unit
 ) {
@@ -67,11 +69,12 @@ fun SearchAutoComplete(
     val interactionSource = remember {
         MutableInteractionSource()
     }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     // Query Field
     Column(
         modifier = Modifier
-            .padding(30.dp)
             .fillMaxWidth()
             .clickable(
                 interactionSource = interactionSource,
@@ -100,7 +103,7 @@ fun SearchAutoComplete(
                     viewModel.getAutoCompleteSearch(query)
                     expanded = true
                 },
-                placeholder = { Text("Enter city name") },
+                placeholder = { Text("Entrer le nom d'une ville") },
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
@@ -115,17 +118,7 @@ fun SearchAutoComplete(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
                 ),
-                singleLine = true,
-                trailingIcon = {
-                    IconButton(onClick = { expanded = !expanded }) {
-                        Icon(
-                            modifier = Modifier.size(24.dp),
-                            imageVector = Icons.Rounded.KeyboardArrowDown,
-                            contentDescription = "arrow",
-                            tint = Color.Black
-                        )
-                    }
-                }
+                singleLine = true
             )
         }
 
@@ -149,7 +142,16 @@ fun SearchAutoComplete(
                                 }
                                 .distinct()
                         ) { city ->
-                            ItemsCategory(city = city, onSelect = onSelect)
+                            ItemsCategory(
+                                city = city,
+                                onSelect = {
+                                    onSelect(city)
+                                   expanded = !expanded
+                                    query = ""
+                                    keyboardController?.hide()
+                                    focusManager.clearFocus()
+                                }
+                            )
                         }
                     }
                 }
