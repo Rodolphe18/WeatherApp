@@ -75,6 +75,8 @@ fun SearchCityScreen(
     val scope = rememberCoroutineScope()
     LaunchedEffect(inSelectionMode) {
         if(inSelectionMode) { state.bottomSheetState.expand() } }
+    LaunchedEffect(!inSelectionMode) {
+        if(!inSelectionMode) { state.bottomSheetState.hide() } }
     BottomSheetScaffold(sheetDragHandle = {}, scaffoldState = state, sheetPeekHeight = 0.dp,sheetShape = RectangleShape, sheetContent = {
         Column(modifier = Modifier.fillMaxWidth().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
         Icon(Icons.Outlined.Delete, null, Modifier.size(35.dp).clickable {
