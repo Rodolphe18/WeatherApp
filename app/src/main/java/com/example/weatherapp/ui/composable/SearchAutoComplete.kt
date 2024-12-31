@@ -91,7 +91,7 @@ fun SearchAutoComplete(
                     .height(heightTextFields)
                     .border(
                         width = 1.8.dp,
-                        color = Color.Black,
+                        color = Color.LightGray,
                         shape = RoundedCornerShape(15.dp)
                     )
                     .onGloballyPositioned { coordinates ->
@@ -103,15 +103,15 @@ fun SearchAutoComplete(
                     viewModel.getAutoCompleteSearch(query)
                     expanded = true
                 },
-                placeholder = { Text("Entrer le nom d'une ville") },
+                placeholder = { Text(text = "Entrer le nom d'une ville", color = Color.LightGray) },
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = Color.Black
+                    cursorColor = Color.LightGray
                 ),
                 textStyle = TextStyle(
-                    color = Color.Black,
+                    color = Color.LightGray,
                     fontSize = 16.sp
                 ),
                 keyboardOptions = KeyboardOptions(

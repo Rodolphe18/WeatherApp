@@ -11,9 +11,11 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.ui.theme.LocalBackgroundColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,18 +24,18 @@ fun WeatherTopAppBar(
     actionIcon: ImageVector,
     actionIconContentDescription: String? = null,
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = LocalBackgroundColor.current.backgroundColor),
     onActionClick: () -> Unit = {},
     onNavigationClick:() -> Unit = {}
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(text = text, fontSize = 26.sp, fontWeight = FontWeight.ExtraBold) },
+        title = { Text(text = text, fontSize = 26.sp, fontWeight = FontWeight.ExtraBold, color = Color.LightGray) },
         actions = {
             IconButton(onClick = onActionClick) {
                 Icon(
                     imageVector = actionIcon,
                     contentDescription = actionIconContentDescription,
-                    tint = MaterialTheme.colorScheme.onSurface
+                    tint = Color.LightGray
                 )
             }
         },
@@ -42,7 +44,7 @@ fun WeatherTopAppBar(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface,
+                    tint = Color.LightGray
                 )
             }
         },

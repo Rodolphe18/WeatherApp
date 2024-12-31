@@ -2,6 +2,7 @@ package com.example.weatherapp.ui.pager_screen
 
 import WeatherTopAppBar
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,6 +25,7 @@ import com.example.weatherapp.ui.composable.ForecastDailyList
 import com.example.weatherapp.ui.composable.ForecastHourlyList
 import com.example.weatherapp.ui.composable.TodayWeatherFirstItem
 import com.example.weatherapp.ui.composable.TodayWeatherSecondItem
+import com.example.weatherapp.ui.theme.LocalBackgroundColor
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,15 +58,12 @@ fun CitiesPager(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick:(
         ) { index ->
             Log.d("debug_cities_ui", cities.toString())
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(vertical = 8.dp),
+                modifier = Modifier.fillMaxSize().background(LocalBackgroundColor.current.backgroundColor),
                 contentPadding = padding,
                 state = rememberLazyListState()
             ) {
                 item { viewmodel.pageCurrentCityWeather[index]?.let { currentWeather ->
-                    TodayWeatherFirstItem(
-                        modifier = Modifier.padding(16.dp),
+                    TodayWeatherFirstItem(currentWeatherData =
                         currentWeather
                     )
                 } }
@@ -75,7 +74,6 @@ fun CitiesPager(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick:(
                     viewmodel.pageCurrentCityWeather[index]?.let { currentWeather ->
                         viewmodel.pageDailyCityWeather[index]?.let { dailyWeather ->
                         TodayWeatherSecondItem(
-                            modifier = Modifier.padding(16.dp),
                             currentWeatherData = currentWeather,
                             dailyWeatherData = dailyWeather[0]
                         )
