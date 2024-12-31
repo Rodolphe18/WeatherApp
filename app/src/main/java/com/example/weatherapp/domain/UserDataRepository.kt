@@ -12,4 +12,6 @@ interface UserDataRepository {
 
     suspend fun deleteUserCity(savedCity: SavedCity)
 
+    suspend fun deleteUserCities(savedCities:List<SavedCity>)
+
 }

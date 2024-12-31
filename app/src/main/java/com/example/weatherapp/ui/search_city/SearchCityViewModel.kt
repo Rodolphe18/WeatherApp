@@ -44,6 +44,8 @@ class SearchCityViewModel @Inject constructor(
     private val _savedCities = mutableStateListOf<SavedCity>()
     val savedCities: List<SavedCity> = _savedCities
 
+    var selectedCities = mutableStateListOf<SavedCity>()
+
     init {
         loadCityCurrentWeather()
     }
@@ -110,12 +112,22 @@ class SearchCityViewModel @Inject constructor(
         }
     }
 
-    fun deleteCityFromUserFavoriteCities(savedCity: SavedCity) {
+    fun deleteCitiesFromUserCities() {
         viewModelScope.launch {
             _savedCities.clear()
-            userDataRepository.deleteUserCity(savedCity)
+            userDataRepository.deleteUserCities(selectedCities)
+            selectedCities.clear()
         }
     }
+
+    fun addCity(savedCity: SavedCity) {
+        selectedCities.add(savedCity)
+    }
+
+    fun removeCity(savedCity: SavedCity) {
+        selectedCities.remove(savedCity)
+    }
+
 
 
 }

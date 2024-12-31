@@ -23,7 +23,10 @@ class PreferencesDataSource @Inject constructor(
         userPreferences.updateData { userPrefs ->
             Log.d("debug_userPref1", userPrefs.citiesMap.values.toString())
             userPrefs.copy {
-                this.cities.put(savedCity.placeId, AutoCompleteCity.newBuilder().setName(savedCity.name).setLatitude(savedCity.latitude).setLongitude(savedCity.longitude).build())
+                this.cities.put(savedCity.placeId,
+                    AutoCompleteCity.newBuilder().setName(savedCity.name)
+                        .setLatitude(savedCity.latitude).setLongitude(savedCity.longitude).build()
+                )
             }
         }
     }
@@ -32,6 +35,16 @@ class PreferencesDataSource @Inject constructor(
         userPreferences.updateData { userPrefs ->
             userPrefs.copy {
                 this.cities.remove(savedCity.placeId)
+            }
+        }
+    }
+
+    suspend fun removeCities(savedCities: List<SavedCity>) {
+        userPreferences.updateData { userPrefs ->
+            userPrefs.copy {
+                savedCities.forEach { savedCity ->
+                    this.cities.remove(savedCity.placeId)
+                }
             }
         }
     }

@@ -21,4 +21,8 @@ class DefaultUserDataRepository @Inject constructor(private val preferencesDataS
         preferencesDataSource.removeCity(savedCity)
     }
 
+    override suspend fun deleteUserCities(savedCities: List<SavedCity>) {
+        preferencesDataSource.removeCities(savedCities)
+    }
+
 }
