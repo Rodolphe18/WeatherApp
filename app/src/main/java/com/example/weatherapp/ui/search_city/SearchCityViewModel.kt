@@ -46,6 +46,8 @@ class SearchCityViewModel @Inject constructor(
 
     var selectedCities = mutableStateListOf<SavedCity>()
 
+    var reload = mutableStateOf(false)
+
     init {
         loadCityCurrentWeather()
     }
@@ -117,6 +119,7 @@ class SearchCityViewModel @Inject constructor(
             _savedCities.clear()
             userDataRepository.deleteUserCities(selectedCities)
             selectedCities.clear()
+            reload.value = true
         }
     }
 

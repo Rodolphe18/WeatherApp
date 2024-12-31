@@ -23,15 +23,23 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,6 +55,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.data.datastore.SavedCity
 import com.example.weatherapp.ui.composable.SearchAutoComplete
 import com.example.weatherapp.ui.theme.LocalBackgroundColor
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,33 +66,47 @@ fun SearchCityScreen(
     navigateToPagerScreen: (Int) -> Unit
 ) {
     val autoCompletionResult = viewModel.autoCompletionResult
-    Column(modifier = modifier.padding(16.dp)) {
-        Text(
-            modifier = Modifier.padding(vertical = 16.dp),
-            text = "Gérer les villes",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
-        SearchAutoComplete(cities = autoCompletionResult) { city ->
-            viewModel.addCityToUserFavoriteCities(city)
-        }
-        Spacer(Modifier.height(16.dp))
-        if (viewModel.savedCities.isNotEmpty()) {
-            UserCitiesList(
-                viewModel = viewModel,
-                savedCities = viewModel.savedCities,
-                onItemSelected = { index -> navigateToPagerScreen(index) })
-          }
-   }
-    if(viewModel.selectedCities.isNotEmpty()) {
-        ModalBottomSheet(modifier = Modifier.height(120.dp), onDismissRequest = {}, shape = RectangleShape, dragHandle = {}) {
-            Column(modifier = Modifier.fillMaxSize().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                Icon(Icons.Outlined.Delete, null, Modifier.size(35.dp).clickable { viewModel.deleteCitiesFromUserCities() })
-                Text(text = "Supprimer")
+    val inSelectionMode by remember { derivedStateOf { viewModel.selectedCities.isNotEmpty() } }
+    val bottomSheetState = rememberStandardBottomSheetState(
+        initialValue = SheetValue.Hidden,
+        skipHiddenState = false
+    )
+    val state = rememberBottomSheetScaffoldState(bottomSheetState = bottomSheetState)
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(inSelectionMode) {
+        if(inSelectionMode) { state.bottomSheetState.expand() } }
+    BottomSheetScaffold(sheetDragHandle = {}, scaffoldState = state, sheetPeekHeight = 0.dp,sheetShape = RectangleShape, sheetContent = {
+        Column(modifier = Modifier.fillMaxWidth().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Icon(Icons.Outlined.Delete, null, Modifier.size(35.dp).clickable {
+            scope.launch {
+                viewModel.deleteCitiesFromUserCities()
+                state.bottomSheetState.hide()
+            }
+       })
+        Text(text = "Supprimer")
+    } }) {
+        Column(modifier = modifier.padding(16.dp)) {
+            Text(
+                modifier = Modifier.padding(vertical = 16.dp),
+                text = "Gérer les villes",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            SearchAutoComplete(cities = autoCompletionResult) { city ->
+                viewModel.addCityToUserFavoriteCities(city)
+            }
+            Spacer(Modifier.height(16.dp))
+            if (viewModel.savedCities.isNotEmpty()) {
+                UserCitiesList(
+                    viewModel = viewModel,
+                    savedCities = viewModel.savedCities,
+                    inSelectionMode = inSelectionMode,
+                    onItemSelected = { index -> navigateToPagerScreen(index) })
             }
         }
     }
+
 }
 
 
@@ -93,17 +116,16 @@ fun UserCitiesList(
     viewModel: SearchCityViewModel,
     savedCities: List<SavedCity>,
     onItemSelected: (Int) -> Unit,
+    inSelectionMode:Boolean
 ) {
-
-    val inSelectionMode by remember { derivedStateOf { viewModel.selectedCities.isNotEmpty() } }
     LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         itemsIndexed(items = savedCities) { index, savedCity ->
             val selected by remember { derivedStateOf { savedCity in viewModel.selectedCities } }
             UserCityItem(selected = selected, inSelectionMode = inSelectionMode, savedCity = savedCity,
-                modifier = if(inSelectionMode) Modifier.clickable { if(selected) viewModel.removeCity(savedCity) else viewModel.addCity(savedCity)}  else Modifier.combinedClickable(
+                modifier = if(inSelectionMode) { Modifier.clickable { if(selected) viewModel.removeCity(savedCity) else viewModel.addCity(savedCity)} } else {Modifier.combinedClickable(
                 onLongClick = { viewModel.addCity(savedCity) },
                 onClick = { onItemSelected(index) }
-            ))
+            ) } )
         }
     }
 }
