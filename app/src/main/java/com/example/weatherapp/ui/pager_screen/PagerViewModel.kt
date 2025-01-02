@@ -28,7 +28,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PagerViewmodel @Inject constructor(
-    private val weatherRepository: WeatherRepository, userDataRepository: UserDataRepository, savedStateHandle: SavedStateHandle
+    private val weatherRepository: WeatherRepository,
+    userDataRepository: UserDataRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     var isLoading by mutableStateOf(false)
@@ -41,12 +43,16 @@ class PagerViewmodel @Inject constructor(
 
     var currentPage by mutableIntStateOf(currentIndex)
 
-    val userPreferences = userDataRepository.userData.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), UserData(
-        emptyList()
-    ))
+    val userPreferences = userDataRepository.userData.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), UserData(
+            emptyList()
+        )
+    )
 
-    val pageCount = userDataRepository.userData.map { it.userSavedCities.size -1 }.stateIn(viewModelScope,
-        SharingStarted.WhileSubscribed(5000), 0)
+    val pageCount = userDataRepository.userData.map { it.userSavedCities.size }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000), 0
+    )
 
 
     private val _pageCurrentCityWeather = mutableStateMapOf<Int, CurrentWeatherData>()
@@ -59,40 +65,48 @@ class PagerViewmodel @Inject constructor(
     private val _pageDailyCityWeather = mutableStateMapOf<Int, List<DailyWeatherData>>()
     val pageDailyCityWeather: SnapshotStateMap<Int, List<DailyWeatherData>> = _pageDailyCityWeather
 
-    init {
-        loadCityCurrentWeather(currentPage)
-        loadCityForecastWeather(currentPage)
-        loadCityDailyWeather(currentPage)
-    }
+//    init {
+//        loadCityCurrentWeather(currentPage)
+//        loadCityForecastWeather(currentPage)
+//        loadCityDailyWeather(currentPage)
+//    }
 
-    fun loadCityCurrentWeather(index:Int = 0) {
+    fun loadCityCurrentWeather(index: Int = 0) {
         viewModelScope.launch {
             userPreferences.collectLatest { cities ->
-                if (index < cities.userSavedCities.count() - 1) {
-                cities.userSavedCities[index].let {  savedCity ->
-                    weatherRepository.getCurrentWeatherData(savedCity.latitude, savedCity.longitude)
-                        .collect { response ->
-                            when (response) {
-                                is NetworkResult.Success -> {
-                                    _pageCurrentCityWeather[index] = response.data
-                                }
+                if (cities.userSavedCities.isNotEmpty()) {
+                    if (index > 0) {
+                        cities.userSavedCities[index - 1].let { savedCity ->
+                            weatherRepository.getCurrentWeatherData(
+                                savedCity.latitude,
+                                savedCity.longitude
+                            )
+                                .collect { response ->
+                                    when (response) {
+                                        is NetworkResult.Success -> {
+                                            _pageCurrentCityWeather[index - 1] = response.data
+                                        }
 
-                                is NetworkResult.Error -> {
-                                    "${response.code} ${response.message}"
-                                    isError = true
-                                    errorMessage = response.code.toString()
-                                }
+                                        is NetworkResult.Error -> {
+                                            "${response.code} ${response.message}"
+                                            isError = true
+                                            errorMessage = response.code.toString()
+                                        }
 
-                                is NetworkResult.Exception -> "${response.e.message}"
-                            }
+                                        is NetworkResult.Exception -> "${response.e.message}"
+                                    }
+                                }
                         }
-                }
-                    cities.userSavedCities[index+1].let {  savedCity ->
-                        weatherRepository.getCurrentWeatherData(savedCity.latitude, savedCity.longitude)
+                    }
+                    cities.userSavedCities[index].let { savedCity ->
+                        weatherRepository.getCurrentWeatherData(
+                            savedCity.latitude,
+                            savedCity.longitude
+                        )
                             .collect { response ->
                                 when (response) {
                                     is NetworkResult.Success -> {
-                                        _pageCurrentCityWeather[index+1] = response.data
+                                        _pageCurrentCityWeather[index] = response.data
                                     }
 
                                     is NetworkResult.Error -> {
@@ -105,41 +119,66 @@ class PagerViewmodel @Inject constructor(
                                 }
                             }
                     }
+                    if (index < cities.userSavedCities.size - 1) {
+                        cities.userSavedCities[index + 1].let { savedCity ->
+                            weatherRepository.getCurrentWeatherData(
+                                savedCity.latitude,
+                                savedCity.longitude
+                            )
+                                .collect { response ->
+                                    when (response) {
+                                        is NetworkResult.Success -> {
+                                            _pageCurrentCityWeather[index + 1] = response.data
+                                        }
+
+                                        is NetworkResult.Error -> {
+                                            "${response.code} ${response.message}"
+                                            isError = true
+                                            errorMessage = response.code.toString()
+                                        }
+
+                                        is NetworkResult.Exception -> "${response.e.message}"
+                                    }
+                                }
+                        }
+                    }
+                }
             }
-        }
         }
     }
 
 
-    fun loadCityForecastWeather(index:Int) {
+    fun loadCityForecastWeather(index: Int) {
         viewModelScope.launch {
             userPreferences.collectLatest { cities ->
-                if (index < cities.userSavedCities.count() -1) {
-                cities.userSavedCities[index].let { savedCity ->
-                    weatherRepository.getForecastWeatherData(
-                        savedCity.latitude,
-                        savedCity.longitude
-                    ).collect { response ->
-                        when (response) {
-                            is NetworkResult.Success -> {
-                                val todayData =
-                                    response.data[0]?.filter { it.time.hour >= LocalDateTime.now().hour }
-                                val tomorrowData = response.data[1]
-                                _pageHourlyCityWeather[index] =
-                                    (todayData.orEmpty() + tomorrowData.orEmpty())
-                            }
+                if (cities.userSavedCities.isNotEmpty()) {
+                    if (index > 0) {
+                        cities.userSavedCities[index - 1].let { savedCity ->
+                            weatherRepository.getForecastWeatherData(
+                                savedCity.latitude,
+                                savedCity.longitude
+                            ).collect { response ->
+                                when (response) {
+                                    is NetworkResult.Success -> {
+                                        val todayData =
+                                            response.data[0]?.filter { it.time.hour >= LocalDateTime.now().hour }
+                                        val tomorrowData = response.data[1]
+                                        _pageHourlyCityWeather[index - 1] =
+                                            (todayData.orEmpty() + tomorrowData.orEmpty())
+                                    }
 
-                            is NetworkResult.Error -> {
-                                "${response.code} ${response.message}"
-                                isError = true
-                                errorMessage = response.code.toString()
-                            }
+                                    is NetworkResult.Error -> {
+                                        "${response.code} ${response.message}"
+                                        isError = true
+                                        errorMessage = response.code.toString()
+                                    }
 
-                            is NetworkResult.Exception -> "${response.e.message}"
+                                    is NetworkResult.Exception -> "${response.e.message}"
+                                }
+                            }
                         }
                     }
-                }
-                    cities.userSavedCities[index+1].let { savedCity ->
+                    cities.userSavedCities[index].let { savedCity ->
                         weatherRepository.getForecastWeatherData(
                             savedCity.latitude,
                             savedCity.longitude
@@ -149,7 +188,7 @@ class PagerViewmodel @Inject constructor(
                                     val todayData =
                                         response.data[0]?.filter { it.time.hour >= LocalDateTime.now().hour }
                                     val tomorrowData = response.data[1]
-                                    _pageHourlyCityWeather[index+1] =
+                                    _pageHourlyCityWeather[index] =
                                         (todayData.orEmpty() + tomorrowData.orEmpty())
                                 }
 
@@ -163,15 +202,64 @@ class PagerViewmodel @Inject constructor(
                             }
                         }
                     }
+                    if (index < cities.userSavedCities.size - 1) {
+                        cities.userSavedCities[index + 1].let { savedCity ->
+                            weatherRepository.getForecastWeatherData(
+                                savedCity.latitude,
+                                savedCity.longitude
+                            ).collect { response ->
+                                when (response) {
+                                    is NetworkResult.Success -> {
+                                        val todayData =
+                                            response.data[0]?.filter { it.time.hour >= LocalDateTime.now().hour }
+                                        val tomorrowData = response.data[1]
+                                        _pageHourlyCityWeather[index + 1] =
+                                            (todayData.orEmpty() + tomorrowData.orEmpty())
+                                    }
+
+                                    is NetworkResult.Error -> {
+                                        "${response.code} ${response.message}"
+                                        isError = true
+                                        errorMessage = response.code.toString()
+                                    }
+
+                                    is NetworkResult.Exception -> "${response.e.message}"
+                                }
+                            }
+                        }
+                    }
+                }
             }
-        }}
+        }
     }
 
 
-    fun loadCityDailyWeather(index:Int) {
+    fun loadCityDailyWeather(index: Int) {
         viewModelScope.launch {
             userPreferences.collectLatest { cities ->
-                if (index < cities.userSavedCities.count() - 1) {
+                if (cities.userSavedCities.isNotEmpty()) {
+                    if(index > 0) {
+                    cities.userSavedCities[index-1].let { savedCity ->
+                        weatherRepository.getDailyWeatherData(
+                            savedCity.latitude,
+                            savedCity.longitude
+                        )
+                            .collect { response ->
+                                when (response) {
+                                    is NetworkResult.Success -> {
+                                        _pageDailyCityWeather[index-1] = response.data
+                                    }
+
+                                    is NetworkResult.Error -> {
+                                        "${response.code} ${response.message}"
+                                        isError = true
+                                        errorMessage = response.code.toString()
+                                    }
+
+                                    is NetworkResult.Exception -> "${response.e.message}"
+                                }
+                            }
+                    }}
                     cities.userSavedCities[index].let { savedCity ->
                         weatherRepository.getDailyWeatherData(
                             savedCity.latitude,
@@ -193,26 +281,28 @@ class PagerViewmodel @Inject constructor(
                                 }
                             }
                     }
-                    cities.userSavedCities[index+1].let { savedCity ->
-                        weatherRepository.getDailyWeatherData(
-                            savedCity.latitude,
-                            savedCity.longitude
-                        )
-                            .collect { response ->
-                                when (response) {
-                                    is NetworkResult.Success -> {
-                                        _pageDailyCityWeather[index+1] = response.data
-                                    }
+                    if (index < cities.userSavedCities.size - 1) {
+                        cities.userSavedCities[index + 1].let { savedCity ->
+                            weatherRepository.getDailyWeatherData(
+                                savedCity.latitude,
+                                savedCity.longitude
+                            )
+                                .collect { response ->
+                                    when (response) {
+                                        is NetworkResult.Success -> {
+                                            _pageDailyCityWeather[index + 1] = response.data
+                                        }
 
-                                    is NetworkResult.Error -> {
-                                        "${response.code} ${response.message}"
-                                        isError = true
-                                        errorMessage = response.code.toString()
-                                    }
+                                        is NetworkResult.Error -> {
+                                            "${response.code} ${response.message}"
+                                            isError = true
+                                            errorMessage = response.code.toString()
+                                        }
 
-                                    is NetworkResult.Exception -> "${response.e.message}"
+                                        is NetworkResult.Exception -> "${response.e.message}"
+                                    }
                                 }
-                            }
+                        }
                     }
                 }
             }
