@@ -39,8 +39,7 @@ fun ForecastDailyList(weatherDataList: List<DailyWeatherData>) {
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         text = "Prévisions sur 5 jours",
         fontSize = 24.sp,
-        fontWeight = FontWeight.ExtraBold,
-        color = Color.LightGray
+        fontWeight = FontWeight.ExtraBold
     )
     LazyRow(
         state = rememberLazyListState(),
@@ -57,7 +56,7 @@ fun ForecastDailyList(weatherDataList: List<DailyWeatherData>) {
 fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherData) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = DateTimeFormatter.getFormattedDate(weatherData.time),fontWeight = FontWeight.ExtraBold,
-            fontSize = 18.sp,color = Color.LightGray)
+            fontSize = 18.sp)
         Spacer(Modifier.height(8.dp))
         Column(
             modifier = modifier
@@ -77,8 +76,7 @@ fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherDa
                     "${weatherData.temperatureMin}°"
                 ),
                 fontWeight = FontWeight.Medium,
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.LightGray
+                style = MaterialTheme.typography.titleMedium
             )
             Image(
                 painterResource(id = weatherData.weatherType.iconRes),

@@ -34,8 +34,7 @@ fun TodayWeatherSecondItem(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             text = "Données météorologiques",
             fontSize = 24.sp,
-            fontWeight = FontWeight.ExtraBold,
-            color = Color.LightGray
+            fontWeight = FontWeight.ExtraBold
         )
         Row(
             modifier = modifier
@@ -74,19 +73,17 @@ fun TodayWeatherSecondItem(
 
 
 @Composable
-fun TodayItemMetaData(title: String, data: String, color: Color = Color.LightGray) {
+fun TodayItemMetaData(title: String, data: String) {
     Column {
         Text(
             text = title,
             fontWeight = FontWeight.Medium,
-            fontSize = 14.sp,
-            color = color
+            fontSize = 14.sp
         )
         Text(
             text = data,
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
-            color = color
         )
         Spacer(Modifier.height(8.dp))
     }

@@ -41,7 +41,6 @@ fun TodayWeatherFirstItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     fontWeight = FontWeight.Bold,
                     fontSize = 40.sp,
-                    color = Color.LightGray
                 )
                 Spacer(Modifier.height(6.dp))
                 Text(
@@ -49,7 +48,6 @@ fun TodayWeatherFirstItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     fontWeight = FontWeight.Bold,
                     fontSize = 30.sp,
-                    color = Color.LightGray
                 )
                 Image(
                     painterResource(id = data.weatherType.iconRes),

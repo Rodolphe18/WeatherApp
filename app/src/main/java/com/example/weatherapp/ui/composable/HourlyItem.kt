@@ -35,8 +35,7 @@ fun ForecastHourlyList(weatherDataList: List<HourlyWeatherData>) {
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
         text = "Dans les prochaines heures",
         fontSize = 24.sp,
-        fontWeight = FontWeight.ExtraBold,
-        color = Color.LightGray
+        fontWeight = FontWeight.ExtraBold
     )
     LazyRow(
         state = rememberLazyListState(),
@@ -55,8 +54,7 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
         Text(
             text = "${hourlyWeatherData.time.hour} h",
             fontWeight = FontWeight.ExtraBold,
-            fontSize = 18.sp,
-            color = Color.LightGray
+            fontSize = 18.sp
         )
         Spacer(Modifier.height(4.dp))
         Column(
@@ -74,7 +72,6 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
                 modifier = Modifier.padding(horizontal = 8.dp),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.LightGray
             )
             Image(
                 painterResource(id = hourlyWeatherData.weatherType.iconRes),
@@ -86,7 +83,6 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
                 modifier = Modifier.padding(horizontal = 8.dp),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.LightGray
             )
         }
     }

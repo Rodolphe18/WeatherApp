@@ -91,11 +91,12 @@ fun AppTheme(
 ) {
     val colorScheme = if (darkTheme) darkScheme else lightScheme
     val backgroundColor = BackgroundColor(colorScheme.onPrimary.copy(0.6f))
+    val appBarColor = AppBarColor(colorScheme.onPrimary)
     val defaultGradientColors = GradientColors(
         top = colorScheme.primary,
         bottom = colorScheme.tertiaryContainer,
     )
-    CompositionLocalProvider(LocalGradientColors provides defaultGradientColors, LocalBackgroundColor provides backgroundColor) {
+    CompositionLocalProvider(LocalAppBarColor provides appBarColor,LocalGradientColors provides defaultGradientColors, LocalBackgroundColor provides backgroundColor) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = AppTypography,
