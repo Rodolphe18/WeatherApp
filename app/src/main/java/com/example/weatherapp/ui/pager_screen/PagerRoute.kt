@@ -17,6 +17,6 @@ fun NavController.navigateToPager(index: Int, navOptions: NavOptionsBuilder.() -
 
 fun NavGraphBuilder.pagerScreen(onNavigationClick:() -> Unit) {
     composable<PagerRoute> {
-        CitiesPager(onNavigationClick = onNavigationClick)
+        PagerScreen(onNavigationClick = onNavigationClick)
     }
 }

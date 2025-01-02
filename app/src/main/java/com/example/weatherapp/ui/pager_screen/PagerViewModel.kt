@@ -45,7 +45,7 @@ class PagerViewmodel @Inject constructor(
         emptyList()
     ))
 
-    val userPreferencesCitiesCount = userDataRepository.userData.map { it.userSavedCities.count() }.stateIn(viewModelScope,
+    val pageCount = userDataRepository.userData.map { it.userSavedCities.size -1 }.stateIn(viewModelScope,
         SharingStarted.WhileSubscribed(5000), 0)
 
 
@@ -59,6 +59,11 @@ class PagerViewmodel @Inject constructor(
     private val _pageDailyCityWeather = mutableStateMapOf<Int, List<DailyWeatherData>>()
     val pageDailyCityWeather: SnapshotStateMap<Int, List<DailyWeatherData>> = _pageDailyCityWeather
 
+    init {
+        loadCityCurrentWeather(currentPage)
+        loadCityForecastWeather(currentPage)
+        loadCityDailyWeather(currentPage)
+    }
 
     fun loadCityCurrentWeather(index:Int = 0) {
         viewModelScope.launch {
@@ -217,5 +222,7 @@ class PagerViewmodel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         _pageCurrentCityWeather.clear()
+        _pageHourlyCityWeather.clear()
+        _pageDailyCityWeather.clear()
     }
 }
