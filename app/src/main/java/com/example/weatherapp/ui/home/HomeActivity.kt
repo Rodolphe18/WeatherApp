@@ -25,10 +25,9 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val viewModel by viewModels<HomeViewModel>()
         var keep = true
-        val delay:Long = 2000
         val handler = Handler(Looper.getMainLooper())
         val runner = Runnable { keep = false }
-        handler.postDelayed(runner, delay)
+        handler.postDelayed(runner, 2000)
         installSplashScreen().setKeepOnScreenCondition { keep }
         setContent {
             AppTheme {

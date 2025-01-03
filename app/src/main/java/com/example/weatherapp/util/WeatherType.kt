@@ -1,6 +1,7 @@
 package com.example.weatherapp.util
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.isSystemInDarkTheme
 import com.example.weatherapp.R
 
 sealed class WeatherType(
@@ -8,11 +9,11 @@ sealed class WeatherType(
     @DrawableRes val iconRes: Int
 ) {
     data object ClearSky : WeatherType(
-        weatherDesc = "Ensoleillé",
+        weatherDesc = "Dégagé",
         iconRes = R.drawable.ic_sunny
     )
     data object MainlyClear : WeatherType(
-        weatherDesc = "Dégagé",
+        weatherDesc = "Légers nuages",
         iconRes = R.drawable.ic_cloudy
     )
     data object PartlyCloudy : WeatherType(
