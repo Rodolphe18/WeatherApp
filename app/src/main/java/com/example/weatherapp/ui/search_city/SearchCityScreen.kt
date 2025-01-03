@@ -93,7 +93,6 @@ fun SearchCityScreen(
                 text = "Gérer les villes",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
             )
             SearchAutoComplete(cities = autoCompletionResult) { city ->
                 viewModel.addCityToUserFavoriteCities(city)
@@ -158,14 +157,12 @@ fun UserCityItem(
         Text(
             modifier = Modifier.weight(1f),
             text = savedCity.name,
-            color = Color.White,
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp
         )
         Text(
             modifier = Modifier.weight(0.2f),
             text = "${savedCity.temperature}°",
-            color = Color.White,
             fontWeight = FontWeight.SemiBold
         )
         if (inSelectionMode) {

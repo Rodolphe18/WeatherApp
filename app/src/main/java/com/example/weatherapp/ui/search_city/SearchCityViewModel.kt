@@ -66,7 +66,7 @@ class SearchCityViewModel @Inject constructor(
         viewModelScope.launch {
             userPreferences
                 .collectLatest { cities ->
-                if (cities.userSavedCities.isNotEmpty()) {
+                if (cities.userSavedCities?.isNotEmpty() == true) {
                     cities.userSavedCities.forEachIndexed { index, savedCity ->
                         weatherRepository.getCurrentWeatherData(
                             savedCity.latitude,

@@ -42,7 +42,7 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
             viewmodel.loadCityForecastWeather(newPage)
         }
     }
-    if (userCities.isNotEmpty()) {
+    if (userCities?.isNotEmpty() == true) {
         Scaffold(
             topBar = {
                 WeatherTopAppBar(

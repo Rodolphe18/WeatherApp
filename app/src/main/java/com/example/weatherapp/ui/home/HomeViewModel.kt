@@ -12,6 +12,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(userDataRepository: UserDataRepository) : ViewModel() {
 
-    val userPreferencesCities = userDataRepository.userData.map { it.userSavedCities }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val userPreferencesCities = userDataRepository.userData.map { it.userSavedCities }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
 }

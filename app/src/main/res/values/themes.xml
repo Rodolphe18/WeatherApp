@@ -2,4 +2,11 @@
 <resources>
 
     <style name="Theme.WeatherApp" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.WeatherApp.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FF03DAC5</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_icon</item>
+        <item name="windowSplashScreenIconBackgroundColor">#FFFFFF</item>
+        <item name="postSplashScreenTheme">@style/Theme.WeatherApp</item>
+    </style>
 </resources>

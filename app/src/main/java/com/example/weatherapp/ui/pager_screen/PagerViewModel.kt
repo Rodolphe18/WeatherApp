@@ -49,7 +49,7 @@ class PagerViewmodel @Inject constructor(
         )
     )
 
-    val pageCount = userDataRepository.userData.map { it.userSavedCities.size }.stateIn(
+    val pageCount = userDataRepository.userData.map { it.userSavedCities?.size ?: 0 }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000), 0
     )
@@ -74,7 +74,7 @@ class PagerViewmodel @Inject constructor(
     fun loadCityCurrentWeather(index: Int = 0) {
         viewModelScope.launch {
             userPreferences.collectLatest { cities ->
-                if (cities.userSavedCities.isNotEmpty()) {
+                if (cities.userSavedCities?.isNotEmpty() == true) {
                     if (index > 0) {
                         cities.userSavedCities[index - 1].let { savedCity ->
                             weatherRepository.getCurrentWeatherData(
@@ -151,7 +151,7 @@ class PagerViewmodel @Inject constructor(
     fun loadCityForecastWeather(index: Int) {
         viewModelScope.launch {
             userPreferences.collectLatest { cities ->
-                if (cities.userSavedCities.isNotEmpty()) {
+                if (cities.userSavedCities?.isNotEmpty() == true) {
                     if (index > 0) {
                         cities.userSavedCities[index - 1].let { savedCity ->
                             weatherRepository.getForecastWeatherData(
@@ -237,7 +237,7 @@ class PagerViewmodel @Inject constructor(
     fun loadCityDailyWeather(index: Int) {
         viewModelScope.launch {
             userPreferences.collectLatest { cities ->
-                if (cities.userSavedCities.isNotEmpty()) {
+                if (cities.userSavedCities?.isNotEmpty() == true) {
                     if(index > 0) {
                     cities.userSavedCities[index-1].let { savedCity ->
                         weatherRepository.getDailyWeatherData(

@@ -10,6 +10,7 @@ import com.example.weatherapp.ui.pager_screen.pagerScreen
 import com.example.weatherapp.ui.search_city.navigateToSearchCityScreen
 import com.example.weatherapp.ui.search_city.searchCityRoute
 
+
 @Composable
 fun WeatherNavHost(
     navController: NavHostController = rememberNavController(),
