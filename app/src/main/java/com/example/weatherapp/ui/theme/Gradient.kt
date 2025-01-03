@@ -10,7 +10,4 @@ data class GradientColors(
     val bottom: Color = Color.Transparent
 )
 
-/**
- * A composition local for [GradientColors].
- */
 val LocalGradientColors = staticCompositionLocalOf { GradientColors() }

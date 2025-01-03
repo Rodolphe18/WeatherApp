@@ -8,14 +8,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.data.datastore.SavedCity
 import com.example.weatherapp.data.datastore.UserData
-import com.example.weatherapp.domain.UserDataRepository
 import com.example.weatherapp.data.model.AutoCompleteResultItem
+import com.example.weatherapp.domain.UserDataRepository
 import com.example.weatherapp.domain.WeatherRepository
 import com.example.weatherapp.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,7 +23,7 @@ import javax.inject.Inject
 class SearchCityViewModel @Inject constructor(
     private val weatherRepository: WeatherRepository,
     private val repository: WeatherRepository,
-    val userDataRepository: UserDataRepository
+    private val userDataRepository: UserDataRepository
 ) :
     ViewModel() {
 

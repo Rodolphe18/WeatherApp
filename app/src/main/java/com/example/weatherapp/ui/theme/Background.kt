@@ -9,7 +9,4 @@ data class BackgroundColor(
     val backgroundColor: Color = Color.Unspecified,
 )
 
-/**
- * A composition local for [ItemColor].
- */
 val LocalBackgroundColor = staticCompositionLocalOf { BackgroundColor() }

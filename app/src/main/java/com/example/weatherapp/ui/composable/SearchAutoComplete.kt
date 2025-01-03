@@ -111,7 +111,7 @@ fun SearchAutoComplete(
                     containerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = LocalBackgroundColor.current.backgroundColor
+                    cursorColor = Color.Gray
                 ),
                 textStyle = TextStyle(
                     fontSize = 16.sp

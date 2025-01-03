@@ -9,7 +9,4 @@ data class AppBarColor(
     val appBarColor: Color = Color.Unspecified,
 )
 
-/**
- * A composition local for [ItemColor].
- */
 val LocalAppBarColor = staticCompositionLocalOf { AppBarColor() }
