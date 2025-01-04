@@ -3,9 +3,9 @@ package com.example.weatherapp.domain
 import android.util.Log
 import com.example.weatherapp.data.api.AutoCompleteApi
 import com.example.weatherapp.data.api.WeatherApi
-import com.example.weatherapp.data.mapper.toCurrentDailyDataMap
-import com.example.weatherapp.data.mapper.toWeatherData
-import com.example.weatherapp.data.mapper.toWeatherDataMap
+import com.example.weatherapp.data.mapper.toCurrentWeatherData
+import com.example.weatherapp.data.mapper.toDailyWeatherData
+import com.example.weatherapp.data.mapper.toHourlyWeatherData
 import com.example.weatherapp.data.model.AutoCompleteResultItem
 import com.example.weatherapp.data.model.CurrentWeatherData
 import com.example.weatherapp.data.model.DailyWeatherData
@@ -35,7 +35,7 @@ class WeatherRepository @Inject constructor(
         return flow {
             try {
                 val response = api.getCurrentWeatherData(lat, long)
-                val body = response.body()?.toWeatherData()
+                val body = response.body()?.toCurrentWeatherData()
                 if (response.isSuccessful && body != null) {
                     emit(NetworkResult.Success(body))
                 } else {
@@ -55,8 +55,9 @@ class WeatherRepository @Inject constructor(
     ): Flow<NetworkResult<Map<Int, List<HourlyWeatherData>>>> {
         return flow {
             try {
-                val response = api.getForecastWeatherData(lat, long)
-                val body = response.body()?.weatherForecastData?.toWeatherDataMap()
+                val response = api.getHourlyWeatherData(lat, long)
+                val body = response.body()?.toHourlyWeatherData()
+                Log.d("debug_hourly_time", body?.values.toString())
                 if (response.isSuccessful && body != null) {
                     emit(NetworkResult.Success(body))
                 } else {
@@ -78,7 +79,7 @@ class WeatherRepository @Inject constructor(
         return flow {
             try {
                 val response = api.getDailyWeather(lat, long)
-               val body = response.body()?.weatherDailyDto?.toCurrentDailyDataMap()
+               val body = response.body()?.toDailyWeatherData()
                 if (response.isSuccessful && body != null) {
                     emit(NetworkResult.Success(body))
                 } else {

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -60,12 +61,12 @@ fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherDa
         Spacer(Modifier.height(8.dp))
         Column(
             modifier = modifier
-                .width(110.dp)
+                .aspectRatio(3/4f)
                 .clip(RoundedCornerShape(8.dp))
                 .background(brush = Brush.linearGradient(listOf(
                     LocalBackgroundColor.current.backgroundColor.copy(0.6f),
                     LocalBackgroundColor.current.backgroundColor.copy(0.4f))))
-                .padding(4.dp),
+                .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(

@@ -16,6 +16,7 @@ import com.example.weatherapp.data.model.CurrentWeatherData
 import com.example.weatherapp.data.model.DailyWeatherData
 import com.example.weatherapp.data.model.HourlyWeatherData
 import com.example.weatherapp.domain.WeatherRepository
+import com.example.weatherapp.util.DateTimeFormatter
 import com.example.weatherapp.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -161,7 +162,7 @@ class PagerViewmodel @Inject constructor(
                                 when (response) {
                                     is NetworkResult.Success -> {
                                         val todayData =
-                                            response.data[0]?.filter { it.time.hour >= LocalDateTime.now().hour }
+                                            response.data[0]?.filter { LocalDateTime.parse(it.time).hour >= LocalDateTime.now().hour }
                                         val tomorrowData = response.data[1]
                                         _pageHourlyCityWeather[index - 1] =
                                             (todayData.orEmpty() + tomorrowData.orEmpty())
@@ -185,8 +186,8 @@ class PagerViewmodel @Inject constructor(
                         ).collect { response ->
                             when (response) {
                                 is NetworkResult.Success -> {
-                                    val todayData =
-                                        response.data[0]?.filter { it.time.hour >= LocalDateTime.now().hour }
+                                   val todayData =
+                                        response.data[0]?.filter { LocalDateTime.parse(it.time).hour >= LocalDateTime.now().hour }
                                     val tomorrowData = response.data[1]
                                     _pageHourlyCityWeather[index] =
                                         (todayData.orEmpty() + tomorrowData.orEmpty())
@@ -211,7 +212,7 @@ class PagerViewmodel @Inject constructor(
                                 when (response) {
                                     is NetworkResult.Success -> {
                                         val todayData =
-                                            response.data[0]?.filter { it.time.hour >= LocalDateTime.now().hour }
+                                            response.data[0]?.filter { LocalDateTime.parse(it.time).hour >= LocalDateTime.now().hour }
                                         val tomorrowData = response.data[1]
                                         _pageHourlyCityWeather[index + 1] =
                                             (todayData.orEmpty() + tomorrowData.orEmpty())

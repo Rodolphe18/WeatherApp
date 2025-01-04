@@ -10,13 +10,14 @@ import retrofit2.http.Query
 interface WeatherApi {
 
     @GET("forecast")
-    suspend fun getForecastWeatherData(
+    suspend fun getHourlyWeatherData(
         @Query("latitude") lat: Double,
         @Query("longitude") long: Double,
+        @Query("timezone") timeZone: String = "auto",
         @Query("hourly") hourly: List<String> = listOf(
             "temperature_2m",
             "weathercode",
-            "wind_speed_10m"
+            "wind_speed_10m",
         )
     ): Response<WeatherForecastDto>
 
@@ -24,6 +25,7 @@ interface WeatherApi {
     suspend fun getCurrentWeatherData(
         @Query("latitude") lat: Double,
         @Query("longitude") long: Double,
+        @Query("timezone") timeZone: String = "auto",
         @Query("current") current: List<String> = listOf(
             "temperature_2m",
             "weathercode",
@@ -39,7 +41,7 @@ interface WeatherApi {
     suspend fun getDailyWeather(
         @Query("latitude") lat: Double,
         @Query("longitude") long: Double,
-        @Query("timezone") timeZone: String = "Europe/Paris",
+        @Query("timezone") timeZone: String = "auto",
         @Query("daily") daily: List<String> = listOf(
             "weathercode",
             "temperature_2m_max",

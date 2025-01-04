@@ -7,22 +7,28 @@ import com.example.weatherapp.data.model.DailyWeatherData
 import com.example.weatherapp.data.model.HourlyForecastDataDto
 import com.example.weatherapp.data.model.HourlyWeatherData
 import com.example.weatherapp.data.model.WeatherCurrentDto
+import com.example.weatherapp.data.model.WeatherDailyDto
+import com.example.weatherapp.data.model.WeatherForecastDto
 import com.example.weatherapp.util.WeatherType
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 private data class IndexedWeatherData(val index:Int, val data:HourlyWeatherData)
 
 
 @SuppressLint("NewApi")
-fun HourlyForecastDataDto.toWeatherDataMap(): Map<Int, List<HourlyWeatherData>> {
-    return times.mapIndexed { index, time ->
-        val temperature = temperatures[index]
-        val weatherCode = weatherCodes[index]
-        val windSpeed = windSpeeds[index]
+fun WeatherForecastDto.toHourlyWeatherData(): Map<Int, List<HourlyWeatherData>> {
+    return weatherForecastData.times.mapIndexed { index, time ->
+        val temperature = weatherForecastData.temperatures[index]
+        val weatherCode = weatherForecastData.weatherCodes[index]
+        val windSpeed = weatherForecastData.windSpeeds[index]
         IndexedWeatherData(
             index = index,
-            data = HourlyWeatherData(time = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME),
+            data = HourlyWeatherData(time = time,
+                offSetSeconds = offSetSeconds,
                 temperatureCelsius = temperature,
                 weatherType = WeatherType.fromApi(weatherCode),
                 windSpeed = windSpeed))
@@ -30,21 +36,22 @@ fun HourlyForecastDataDto.toWeatherDataMap(): Map<Int, List<HourlyWeatherData>> 
 }
 
 @SuppressLint("NewApi")
-fun WeatherCurrentDto.toWeatherData() : CurrentWeatherData {
-    val now = LocalDateTime.now()
-    return CurrentWeatherData(now, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode), weatherCurrentData.windSpeed, weatherCurrentData.windDirection, weatherCurrentData.isDay == 1, weatherCurrentData.apparentTemperature, weatherCurrentData.precipitation)
+fun WeatherCurrentDto.toCurrentWeatherData() : CurrentWeatherData {
+    val now = ZonedDateTime.now()
+    return CurrentWeatherData(now, offSetSeconds, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode), weatherCurrentData.windSpeed, weatherCurrentData.windDirection, weatherCurrentData.isDay == 1, weatherCurrentData.apparentTemperature, weatherCurrentData.precipitation)
 }
 
-fun DailyCurrentDataDto.toCurrentDailyDataMap(): List<DailyWeatherData> {
-    return times.mapIndexed { index, time ->
-        val temperatureMax = temperaturesMax[index]
-        val temperatureMin = temperaturesMin[index]
-        val weatherCode = weatherCode[index]
-        val windDirection = windDirections[index]
-        val sunset = sunsets[index]
-        val sunrise = sunrises[index]
+fun WeatherDailyDto.toDailyWeatherData(): List<DailyWeatherData> {
+    return weatherDailyDto.times.mapIndexed { index, time ->
+        val temperatureMax = weatherDailyDto.temperaturesMax[index]
+        val temperatureMin = weatherDailyDto.temperaturesMin[index]
+        val weatherCode = weatherDailyDto.weatherCode[index]
+        val windDirection = weatherDailyDto.windDirections[index]
+        val sunset = weatherDailyDto.sunsets[index]
+        val sunrise = weatherDailyDto.sunrises[index]
        DailyWeatherData(
            time = time,
+           offSetSeconds = offSetSeconds,
            temperatureMax = temperatureMax,
            temperatureMin = temperatureMin,
            weatherType = WeatherType.fromApi(weatherCode),

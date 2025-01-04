@@ -5,12 +5,14 @@ import com.example.weatherapp.util.WeatherType
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZonedDateTime
 
-data class WeatherForecastDto(@SerializedName("hourly") val weatherForecastData: HourlyForecastDataDto)
+data class WeatherForecastDto(@SerializedName("utc_offset_seconds") val offSetSeconds: Int,@SerializedName("hourly") val weatherForecastData: HourlyForecastDataDto)
 
-data class WeatherCurrentDto(@SerializedName("current") val weatherCurrentData: WeatherCurrentDataDto)
+data class WeatherCurrentDto(@SerializedName("utc_offset_seconds") val offSetSeconds: Int, @SerializedName("current") val weatherCurrentData: WeatherCurrentDataDto)
 
-data class WeatherDailyDto(@SerializedName("daily") val weatherDailyDto: DailyCurrentDataDto)
+data class WeatherDailyDto(@SerializedName("utc_offset_seconds") val offSetSeconds: Int, @SerializedName("daily") val weatherDailyDto: DailyCurrentDataDto)
 
 data class HourlyForecastDataDto(
     @SerializedName("time") val times: List<String>,
@@ -34,6 +36,7 @@ data class DailyCurrentDataDto(
     @SerializedName("temperature_2m_max") val temperaturesMax: List<Double> = emptyList(),
     @SerializedName("temperature_2m_min") val temperaturesMin: List<Double> = emptyList(),
     @SerializedName("time") val times: List<String> = emptyList(),
+    @SerializedName("utc_offset_seconds") val offSetSeconds: Int,
     @SerializedName("weathercode") val weatherCode: List<Int> = emptyList(),
     @SerializedName("sunset") val sunsets:List<String> = emptyList(),
     @SerializedName("sunrise") val sunrises:List<String> = emptyList(),
@@ -41,7 +44,8 @@ data class DailyCurrentDataDto(
 )
 
 data class CurrentWeatherData(
-    val time: LocalDateTime,
+    val time: ZonedDateTime,
+    val offSetSeconds: Int,
     val temperatureCelsius: Double,
     val weatherType: WeatherType,
     val windSpeed:Double,
@@ -52,7 +56,8 @@ data class CurrentWeatherData(
 )
 
 data class HourlyWeatherData(
-    val time: LocalDateTime,
+    val time: String,
+    val offSetSeconds: Int,
     val temperatureCelsius: Double,
     val weatherType: WeatherType,
     val windSpeed:Double
@@ -60,6 +65,7 @@ data class HourlyWeatherData(
 
 data class DailyWeatherData(
     val time: String,
+    val offSetSeconds: Int,
     val temperatureMax: Double,
     val temperatureMin: Double,
     val weatherType: WeatherType,

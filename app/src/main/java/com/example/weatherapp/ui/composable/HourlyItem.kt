@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.composable
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.data.model.HourlyWeatherData
 import com.example.weatherapp.ui.theme.LocalBackgroundColor
+import com.example.weatherapp.util.DateTimeFormatter
+import kotlinx.datetime.LocalDateTime
+import kotlin.math.abs
 
 @Composable
 fun ForecastHourlyList(weatherDataList: List<HourlyWeatherData>) {
@@ -51,8 +55,12 @@ fun ForecastHourlyList(weatherDataList: List<HourlyWeatherData>) {
 @Composable
 fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyWeatherData) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        val offSetInHour = hourlyWeatherData.offSetSeconds / 3600
+        val time = LocalDateTime.parse(hourlyWeatherData.time).hour
+       val tryd = if(time < abs(offSetInHour)) time+offSetInHour+24 else time+offSetInHour
+        val format = "$tryd h"
         Text(
-            text = "${hourlyWeatherData.time.hour} h",
+            text = DateTimeFormatter.getFormattedTimeForHourly(hourlyWeatherData.time, hourlyWeatherData.offSetSeconds),
             fontWeight = FontWeight.ExtraBold,
             fontSize = 18.sp
         )
