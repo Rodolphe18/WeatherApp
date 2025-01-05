@@ -21,7 +21,7 @@ object DateTimeFormatter {
         return formattedDate
     }
 
-    fun getFormattedTimeForDaily(value: String):String {
+    fun getFormattedTimeForSunsetAndSunrise(value: String):String {
         val time = LocalDateTime.parse(value)
         val minute = if(time.minute < 10) "0${time.minute}" else time.minute
         val hour = time.hour

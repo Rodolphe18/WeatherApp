@@ -49,7 +49,7 @@ fun TodayWeatherSecondItem(
                 TodayItemMetaData("Vitesse du vent", "${currentWeatherData.windSpeed} km/h")
                 TodayItemMetaData(
                     "Lever du soleil",
-                    DateTimeFormatter.getFormattedTimeForDaily(dailyWeatherData.sunrise)
+                    DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunrise)
                 )
             }
             Column(Modifier.weight(1f)) {
@@ -63,7 +63,7 @@ fun TodayWeatherSecondItem(
                 )
                 TodayItemMetaData(
                     "Coucher du soleil",
-                    DateTimeFormatter.getFormattedTimeForDaily(dailyWeatherData.sunset)
+                    DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunset)
                 )
             }
         }
