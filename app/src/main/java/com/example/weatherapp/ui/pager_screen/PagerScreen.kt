@@ -3,7 +3,9 @@ package com.example.weatherapp.ui.pager_screen
 import WeatherTopAppBar
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -17,10 +19,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.weatherapp.ui.composable.ForecastDailyList
 import com.example.weatherapp.ui.composable.ForecastHourlyList
+import com.example.weatherapp.ui.composable.LoadingScreen
 import com.example.weatherapp.ui.composable.TodayWeatherFirstItem
 import com.example.weatherapp.ui.composable.TodayWeatherSecondItem
 import com.example.weatherapp.ui.theme.LocalBackgroundColor
@@ -32,7 +36,8 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
     val userPref by viewmodel.userPreferences.collectAsStateWithLifecycle()
     val pageCount by viewmodel.pageCount.collectAsStateWithLifecycle()
     val userCities = userPref.userSavedCities
-    val pagerState = rememberPagerState(initialPage = viewmodel.currentIndex, pageCount = { pageCount })
+    val pagerState =
+        rememberPagerState(initialPage = viewmodel.currentIndex, pageCount = { pageCount })
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { newPage ->
@@ -56,43 +61,46 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
                 beyondViewportPageCount = 1,
                 modifier = Modifier.fillMaxSize()
             ) { index ->
-                Log.d(
-                    "debug_cities_ui",
-                    viewmodel.pageCurrentCityWeather[viewmodel.currentPage].toString()
-                )
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(LocalBackgroundColor.current.backgroundColor),
-                    contentPadding = padding,
-                    state = rememberLazyListState()
-                ) {
-                    item {
-                        viewmodel.pageCurrentCityWeather[index]?.let { currentWeather ->
-                            TodayWeatherFirstItem(
-                                currentWeatherData =
-                                currentWeather
-                            )
-                        }
-                    }
-                    item {
-                        viewmodel.pageHourlyCityWeather[index]?.let {
-                            ForecastHourlyList(it)
-                        }
-                    }
-                    item {
-                        viewmodel.pageCurrentCityWeather[index]?.let { currentWeather ->
-                            viewmodel.pageDailyCityWeather[index]?.let { dailyWeather ->
-                                TodayWeatherSecondItem(
-                                    currentWeatherData = currentWeather,
-                                    dailyWeatherData = dailyWeather[0]
+                if (viewmodel.isLoading) {
+                    LoadingScreen()
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(LocalBackgroundColor.current.backgroundColor),
+                        contentPadding = padding,
+                        state = rememberLazyListState()
+                    ) {
+                        item {
+                            viewmodel.pageCurrentCityWeather[index]?.let { currentWeather ->
+                                TodayWeatherFirstItem(
+                                    currentWeatherData =
+                                    currentWeather
                                 )
                             }
                         }
-                    }
-                    item {
-                        viewmodel.pageDailyCityWeather[index]?.let {
-                            ForecastDailyList(it)
+                        item {
+                            viewmodel.pageHourlyCityWeather[index]?.let {
+                                ForecastHourlyList(it)
+                            }
+                        }
+                        item {
+                            viewmodel.pageCurrentCityWeather[index]?.let { currentWeather ->
+                                viewmodel.pageDailyCityWeather[index]?.let { dailyWeather ->
+                                    TodayWeatherSecondItem(
+                                        currentWeatherData = currentWeather,
+                                        dailyWeatherData = dailyWeather[0]
+                                    )
+                                }
+                            }
+                        }
+                        item {
+                            viewmodel.pageDailyCityWeather[index]?.let {
+                                ForecastDailyList(it)
+                            }
+                        }
+                        item {
+                            Spacer(Modifier.height(6.dp))
                         }
                     }
                 }

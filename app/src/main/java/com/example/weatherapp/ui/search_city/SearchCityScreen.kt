@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.data.datastore.SavedCity
+import com.example.weatherapp.ui.composable.LoadingScreen
 import com.example.weatherapp.ui.composable.SearchAutoComplete
 import com.example.weatherapp.ui.theme.LocalBackgroundColor
 import kotlinx.coroutines.launch
@@ -77,23 +78,26 @@ fun SearchCityScreen(
        })
         Text(text = "Supprimer")
     } }) {
-        Column(modifier = modifier.padding(16.dp)) {
-            Text(
-                modifier = Modifier.padding(vertical = 16.dp),
-                text = "Gérer les villes",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-            )
-            SearchAutoComplete(cities = autoCompletionResult) { city ->
-                viewModel.addCityToUserFavoriteCities(city)
-            }
-            Spacer(Modifier.height(16.dp))
-            if (viewModel.savedCities.isNotEmpty()) {
-                UserCitiesList(
-                    viewModel = viewModel,
-                    savedCities = viewModel.savedCities,
-                    inSelectionMode = inSelectionMode,
-                    onItemSelected = { index -> navigateToPagerScreen(index) })
+        if (viewModel.isLoading) { LoadingScreen()
+        } else {
+            Column(modifier = modifier.padding(16.dp)) {
+                Text(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    text = "Gérer les villes",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                SearchAutoComplete(cities = autoCompletionResult) { city ->
+                    viewModel.addCityToUserFavoriteCities(city)
+                }
+                Spacer(Modifier.height(16.dp))
+                if (viewModel.savedCities.isNotEmpty()) {
+                    UserCitiesList(
+                        viewModel = viewModel,
+                        savedCities = viewModel.savedCities,
+                        inSelectionMode = inSelectionMode,
+                        onItemSelected = { index -> navigateToPagerScreen(index) })
+                }
             }
         }
     }
@@ -113,8 +117,8 @@ fun UserCitiesList(
         itemsIndexed(items = savedCities) { index, savedCity ->
             val selected by remember { derivedStateOf { savedCity in viewModel.selectedCities } }
             UserCityItem(selected = selected, inSelectionMode = inSelectionMode, savedCity = savedCity,
-                modifier = if(inSelectionMode) { Modifier.clickable { if(selected) viewModel.removeCity(savedCity) else viewModel.addCity(savedCity)} } else {Modifier.combinedClickable(
-                onLongClick = { viewModel.addCity(savedCity) },
+                modifier = if(inSelectionMode) { Modifier.clickable { if(selected) viewModel.selectCityToRemove(savedCity) else viewModel.unSelectCityToRemove(savedCity)} } else {Modifier.combinedClickable(
+                onLongClick = { viewModel.unSelectCityToRemove(savedCity) },
                 onClick = { onItemSelected(index) }
             ) } )
         }

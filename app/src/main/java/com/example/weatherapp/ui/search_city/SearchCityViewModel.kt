@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.data.datastore.SavedCity
 import com.example.weatherapp.data.datastore.UserData
 import com.example.weatherapp.data.model.AutoCompleteResult
-import com.example.weatherapp.data.model.AutoCompleteResultItem
 import com.example.weatherapp.domain.UserDataRepository
 import com.example.weatherapp.domain.WeatherRepository
 import com.example.weatherapp.util.NetworkResult
@@ -25,9 +24,10 @@ class SearchCityViewModel @Inject constructor(
     private val weatherRepository: WeatherRepository,
     private val repository: WeatherRepository,
     private val userDataRepository: UserDataRepository
-) :
-    ViewModel() {
+) : ViewModel() {
 
+
+    var isLoading by mutableStateOf(true)
 
     var isError by mutableStateOf(false)
 
@@ -108,11 +108,13 @@ class SearchCityViewModel @Inject constructor(
                 }
             }
         }
+        isLoading = false
     }
 
 
     fun addCityToUserFavoriteCities(remoteCity: AutoCompleteResult) {
         viewModelScope.launch {
+            isLoading = true
             _savedCities.clear()
             if (remoteCity.latitude != null && remoteCity.longitude != null) {
                 userDataRepository.addUserCity(
@@ -124,23 +126,26 @@ class SearchCityViewModel @Inject constructor(
                     )
                 )
             }
+            isLoading = false
         }
     }
 
     fun deleteCitiesFromUserCities() {
         viewModelScope.launch {
+            isLoading = true
             _savedCities.clear()
             userDataRepository.deleteUserCities(selectedCities)
             selectedCities.clear()
             reload.value = true
+            isLoading = false
         }
     }
 
-    fun addCity(savedCity: SavedCity) {
+    fun unSelectCityToRemove(savedCity: SavedCity) {
         selectedCities.add(savedCity)
     }
 
-    fun removeCity(savedCity: SavedCity) {
+    fun selectCityToRemove(savedCity: SavedCity) {
         selectedCities.remove(savedCity)
     }
 

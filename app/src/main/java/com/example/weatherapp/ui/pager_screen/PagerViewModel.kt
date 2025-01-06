@@ -33,7 +33,7 @@ class PagerViewmodel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    var isLoading by mutableStateOf(false)
+    var isLoading by mutableStateOf(true)
 
     var isError by mutableStateOf(false)
 
@@ -65,11 +65,6 @@ class PagerViewmodel @Inject constructor(
     private val _pageDailyCityWeather = mutableStateMapOf<Int, List<DailyWeatherData>>()
     val pageDailyCityWeather: SnapshotStateMap<Int, List<DailyWeatherData>> = _pageDailyCityWeather
 
-//    init {
-//        loadCityCurrentWeather(currentPage)
-//        loadCityForecastWeather(currentPage)
-//        loadCityDailyWeather(currentPage)
-//    }
 
     fun loadCityCurrentWeather(index: Int = 0) {
         viewModelScope.launch {
@@ -145,12 +140,13 @@ class PagerViewmodel @Inject constructor(
                 }
             }
         }
+        isLoading = false
     }
 
 
     fun loadCityForecastWeather(index: Int) {
         viewModelScope.launch {
-            userPreferences.collectLatest { cities ->
+            userPreferences.collect { cities ->
                 if (cities.userSavedCities?.isNotEmpty() == true) {
                     if (index > 0) {
                         cities.userSavedCities[index - 1].let { savedCity ->
@@ -231,6 +227,7 @@ class PagerViewmodel @Inject constructor(
                 }
             }
         }
+        isLoading = false
     }
 
 
@@ -307,6 +304,7 @@ class PagerViewmodel @Inject constructor(
                 }
             }
         }
+        isLoading = false
     }
 
     override fun onCleared() {
