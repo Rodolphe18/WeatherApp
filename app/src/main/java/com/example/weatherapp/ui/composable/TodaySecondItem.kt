@@ -13,9 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.R
 import com.example.weatherapp.domain.model.CurrentWeatherData
 import com.example.weatherapp.domain.model.DailyWeatherData
 import com.example.weatherapp.ui.theme.LocalBackgroundColor
@@ -32,37 +34,42 @@ fun TodayWeatherSecondItem(
     Column {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            text = "Données météorologiques",
+            text = stringResource(R.string.today_detail_weather_title),
             fontSize = 24.sp,
             fontWeight = FontWeight.ExtraBold
         )
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .background(brush = Brush.linearGradient(listOf(
-                    LocalBackgroundColor.current.backgroundColor.copy(0.6f),
-                    LocalBackgroundColor.current.backgroundColor.copy(0.4f))))
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(
+                            LocalBackgroundColor.current.backgroundColor.copy(0.6f),
+                            LocalBackgroundColor.current.backgroundColor.copy(0.4f)
+                        )
+                    )
+                )
                 .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
             Column(Modifier.weight(1f)) {
-                TodayItemMetaData("Ressenti", "${currentWeatherData.apparentTemperature}°C")
-                TodayItemMetaData("Vitesse du vent", "${currentWeatherData.windSpeed} km/h")
+                TodayItemMetaData(stringResource(R.string.apparent_temperature), "${currentWeatherData.apparentTemperature}°C")
+                TodayItemMetaData(stringResource(R.string.wind_speed), "${currentWeatherData.windSpeed} km/h")
                 TodayItemMetaData(
-                    "Lever du soleil",
+                    stringResource(R.string.sunrise),
                     DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunrise)
                 )
             }
             Column(Modifier.weight(1f)) {
                 TodayItemMetaData(
-                    "Direction du vent",
+                    stringResource(R.string.wind_direction),
                     currentWeatherData.windDirection.windDirection()
                 )
                 TodayItemMetaData(
-                    "Précipitation",
+                    stringResource(R.string.precipitation),
                     "${currentWeatherData.precipitation.roundToInt()}%"
                 )
                 TodayItemMetaData(
-                    "Coucher du soleil",
+                    stringResource(R.string.sunset),
                     DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunset)
                 )
             }

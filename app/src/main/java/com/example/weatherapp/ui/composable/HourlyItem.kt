@@ -23,9 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.R
 import com.example.weatherapp.domain.model.HourlyWeatherData
 import com.example.weatherapp.ui.theme.LocalBackgroundColor
 import com.example.weatherapp.util.DateTimeFormatter
@@ -36,7 +38,7 @@ import kotlin.math.abs
 fun ForecastHourlyList(weatherDataList: List<HourlyWeatherData>) {
     Text(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
-        text = "Dans les prochaines heures",
+        text = stringResource(R.string.forecast_hourly_title),
         fontSize = 24.sp,
         fontWeight = FontWeight.ExtraBold
     )
@@ -54,10 +56,6 @@ fun ForecastHourlyList(weatherDataList: List<HourlyWeatherData>) {
 @Composable
 fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyWeatherData) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        val offSetInHour = hourlyWeatherData.offSetSeconds / 3600
-        val time = LocalDateTime.parse(hourlyWeatherData.time).hour
-       val tryd = if(time < abs(offSetInHour)) time+offSetInHour+24 else time+offSetInHour
-        val format = "$tryd h"
         Text(
             text = DateTimeFormatter.getFormattedTimeForHourly(hourlyWeatherData.time, hourlyWeatherData.offSetSeconds),
             fontWeight = FontWeight.ExtraBold,
@@ -68,9 +66,14 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
             modifier = modifier
                 .width(120.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(brush = Brush.linearGradient(listOf(
-                    LocalBackgroundColor.current.backgroundColor.copy(0.6f),
-                    LocalBackgroundColor.current.backgroundColor.copy(0.4f))))
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(
+                            LocalBackgroundColor.current.backgroundColor.copy(0.6f),
+                            LocalBackgroundColor.current.backgroundColor.copy(0.4f)
+                        )
+                    )
+                )
                 .padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

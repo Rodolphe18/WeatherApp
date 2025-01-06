@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -22,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,7 +35,7 @@ import com.example.weatherapp.util.DateTimeFormatter
 fun ForecastDailyList(weatherDataList: List<DailyWeatherData>) {
     Text(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-        text = "Prévisions sur 5 jours",
+        text = stringResource(R.string.forecast_daily_title),
         fontSize = 24.sp,
         fontWeight = FontWeight.ExtraBold
     )
@@ -60,11 +58,16 @@ fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherDa
         Spacer(Modifier.height(8.dp))
         Column(
             modifier = modifier
-                .aspectRatio(3/4f)
+                .aspectRatio(3 / 4f)
                 .clip(RoundedCornerShape(8.dp))
-                .background(brush = Brush.linearGradient(listOf(
-                    LocalBackgroundColor.current.backgroundColor.copy(0.6f),
-                    LocalBackgroundColor.current.backgroundColor.copy(0.4f))))
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(
+                            LocalBackgroundColor.current.backgroundColor.copy(0.6f),
+                            LocalBackgroundColor.current.backgroundColor.copy(0.4f)
+                        )
+                    )
+                )
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

@@ -6,4 +6,14 @@
     <string name="welcome_message">Welcome to Weather App ! \n Click on the button below</string>
     <string name="retry">Réessayer</string>
     <string name="card_meta_data_text">%1$s / %2$s</string>
+    <string name="forecast_daily_title">Prévisions sur 5 jours</string>
+    <string name="forecast_hourly_title">Dans les prochaines heures</string>
+    <string name="place_holder_hint">Entrer le nom d\'une ville</string>
+    <string name="today_detail_weather_title">Données météorologiques</string>
+    <string name="apparent_temperature">Ressenti</string>
+    <string name="wind_speed">Vitesse du vent</string>
+    <string name="sunrise">Lever du soleil</string>
+    <string name="wind_direction">Direction du vent</string>
+    <string name="precipitation">Précipitation</string>
+    <string name="sunset">Coucher du soleil</string>
 </resources>
