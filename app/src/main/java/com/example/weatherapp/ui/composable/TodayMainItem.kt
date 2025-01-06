@@ -34,12 +34,6 @@ fun TodayWeatherFirstItem(
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "${data.temperatureCelsius} °C",
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 40.sp,
-                )
                 Spacer(Modifier.height(6.dp))
                 Text(
                     text = data.weatherType.weatherDesc,
@@ -51,6 +45,12 @@ fun TodayWeatherFirstItem(
                     painterResource(id = data.weatherType.iconRes),
                     contentDescription = null,
                     modifier = Modifier.size(100.dp)
+                )
+                Text(
+                    text = "${data.temperatureCelsius} °C",
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 32.sp,
                 )
             }
         }
