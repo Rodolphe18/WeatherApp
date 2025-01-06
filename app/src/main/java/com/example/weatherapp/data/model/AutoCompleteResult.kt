@@ -29,3 +29,9 @@ data class Address(
     val postcode: String? = "",
     val state: String?= ""
 )
+
+fun AutoCompleteResultItem.asExternalModel():AutoCompleteResult {
+   return AutoCompleteResult(place_id.orEmpty(), lat?.toDouble(), lon?.toDouble(), display_place.orEmpty(), display_name.orEmpty())
+}
+
+data class AutoCompleteResult(val placeId:String, val latitude:Double?, val longitude:Double?, val shortName:String, val longName:String)

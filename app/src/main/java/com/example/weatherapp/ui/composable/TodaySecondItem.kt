@@ -16,8 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.weatherapp.data.model.CurrentWeatherData
-import com.example.weatherapp.data.model.DailyWeatherData
+import com.example.weatherapp.domain.model.CurrentWeatherData
+import com.example.weatherapp.domain.model.DailyWeatherData
 import com.example.weatherapp.ui.theme.LocalBackgroundColor
 import com.example.weatherapp.util.DateTimeFormatter
 import kotlin.math.roundToInt

@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.weatherapp.data.model.AutoCompleteResult
 import com.example.weatherapp.data.model.AutoCompleteResultItem
 import com.example.weatherapp.ui.search_city.SearchCityViewModel
 import com.example.weatherapp.ui.theme.LocalAppBarColor
@@ -54,8 +55,8 @@ import com.example.weatherapp.ui.theme.LocalBackgroundColor
 @Composable
 fun SearchAutoComplete(
     viewModel: SearchCityViewModel = hiltViewModel(),
-    cities: List<AutoCompleteResultItem>,
-    onSelect: (AutoCompleteResultItem) -> Unit
+    cities: List<AutoCompleteResult>,
+    onSelect: (AutoCompleteResult) -> Unit
 ) {
 
     var query by remember {
@@ -137,9 +138,8 @@ fun SearchAutoComplete(
                         items(
                             cities
                                 .filter {
-                                    it.display_place?.lowercase().orEmpty()
-                                        .contains(query.lowercase()) || it.display_place?.lowercase()
-                                        .orEmpty()
+                                    it.shortName.lowercase()
+                                        .contains(query.lowercase()) || it.shortName.lowercase()
                                         .contains("others")
                                 }
                                 .distinct()
@@ -165,8 +165,8 @@ fun SearchAutoComplete(
 
 @Composable
 fun ItemsCategory(
-    city: AutoCompleteResultItem,
-    onSelect: (AutoCompleteResultItem) -> Unit
+    city: AutoCompleteResult,
+    onSelect: (AutoCompleteResult) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -174,7 +174,7 @@ fun ItemsCategory(
             .clickable { onSelect(city) }
             .padding(8.dp)
     ) {
-        Text(text = city.display_name.orEmpty(), fontSize = 16.sp)
+        Text(text = city.longName, fontSize = 16.sp)
     }
 
 }

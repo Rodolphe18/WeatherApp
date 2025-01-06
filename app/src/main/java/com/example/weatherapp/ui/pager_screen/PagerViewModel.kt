@@ -12,11 +12,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.weatherapp.data.datastore.UserData
 import com.example.weatherapp.domain.UserDataRepository
-import com.example.weatherapp.data.model.CurrentWeatherData
-import com.example.weatherapp.data.model.DailyWeatherData
-import com.example.weatherapp.data.model.HourlyWeatherData
+import com.example.weatherapp.domain.model.CurrentWeatherData
+import com.example.weatherapp.domain.model.DailyWeatherData
+import com.example.weatherapp.domain.model.HourlyWeatherData
 import com.example.weatherapp.domain.WeatherRepository
-import com.example.weatherapp.util.DateTimeFormatter
 import com.example.weatherapp.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted

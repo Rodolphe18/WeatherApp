@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.data.datastore.SavedCity
 import com.example.weatherapp.data.datastore.UserData
+import com.example.weatherapp.data.model.AutoCompleteResult
 import com.example.weatherapp.data.model.AutoCompleteResultItem
 import com.example.weatherapp.domain.UserDataRepository
 import com.example.weatherapp.domain.WeatherRepository
@@ -32,7 +33,8 @@ class SearchCityViewModel @Inject constructor(
 
     var errorMessage by mutableStateOf("")
 
-    val autoCompletionResult = mutableStateListOf<AutoCompleteResultItem>()
+    private val _autoCompletionResult = mutableStateListOf<AutoCompleteResult>()
+    val autoCompletionResult = _autoCompletionResult
 
     private val userPreferences = userDataRepository.userData.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), UserData(
@@ -53,9 +55,19 @@ class SearchCityViewModel @Inject constructor(
 
     fun getAutoCompleteSearch(query: String) {
         viewModelScope.launch {
-            repository.getAutoCompleteResult(query).collect { citiesResult ->
-                citiesResult?.let { cities ->
-                    autoCompletionResult.addAll(cities)
+            repository.getAutoCompleteResult(query).collect { response ->
+                when (response) {
+                    is NetworkResult.Success -> {
+                        response.data.let { cities ->
+                            autoCompletionResult.addAll(cities)
+                        }
+                    }
+                    is NetworkResult.Error -> {
+                        "${response.code} ${response.message}"
+                        isError = true
+                        errorMessage = response.code.toString()
+                    }
+                    is NetworkResult.Exception -> "${response.e.message}"
                 }
             }
         }
@@ -99,17 +111,19 @@ class SearchCityViewModel @Inject constructor(
     }
 
 
-    fun addCityToUserFavoriteCities(remoteCity: AutoCompleteResultItem) {
+    fun addCityToUserFavoriteCities(remoteCity: AutoCompleteResult) {
         viewModelScope.launch {
             _savedCities.clear()
-            userDataRepository.addUserCity(
-                SavedCity(
-                    remoteCity.place_id?.toLong() ?: 0,
-                    remoteCity.display_place.orEmpty(),
-                    remoteCity.lat?.toDouble() ?: 0.00,
-                    remoteCity.lon?.toDouble() ?: 0.00,
+            if (remoteCity.latitude != null && remoteCity.longitude != null) {
+                userDataRepository.addUserCity(
+                    SavedCity(
+                        remoteCity.placeId.toLong(),
+                        remoteCity.shortName,
+                        remoteCity.latitude,
+                        remoteCity.longitude,
+                    )
                 )
-            )
+            }
         }
     }
 
