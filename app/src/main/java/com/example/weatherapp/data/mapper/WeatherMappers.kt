@@ -1,26 +1,20 @@
 package com.example.weatherapp.data.mapper
 
 import android.annotation.SuppressLint
-import com.example.weatherapp.data.model.CurrentWeatherData
-import com.example.weatherapp.data.model.DailyCurrentDataDto
-import com.example.weatherapp.data.model.DailyWeatherData
-import com.example.weatherapp.data.model.HourlyForecastDataDto
-import com.example.weatherapp.data.model.HourlyWeatherData
 import com.example.weatherapp.data.model.WeatherCurrentDto
 import com.example.weatherapp.data.model.WeatherDailyDto
 import com.example.weatherapp.data.model.WeatherForecastDto
+import com.example.weatherapp.domain.model.CurrentWeatherData
+import com.example.weatherapp.domain.model.DailyWeatherData
+import com.example.weatherapp.domain.model.HourlyWeatherData
 import com.example.weatherapp.util.WeatherType
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
-import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 
-private data class IndexedWeatherData(val index:Int, val data:HourlyWeatherData)
+private data class IndexedWeatherData(val index:Int, val data: HourlyWeatherData)
 
 
 @SuppressLint("NewApi")
-fun WeatherForecastDto.toHourlyWeatherData(): Map<Int, List<HourlyWeatherData>> {
+fun WeatherForecastDto.asExternalHourlyWeather(): Map<Int, List<HourlyWeatherData>> {
     return weatherForecastData.times.mapIndexed { index, time ->
         val temperature = weatherForecastData.temperatures[index]
         val weatherCode = weatherForecastData.weatherCodes[index]
@@ -36,12 +30,12 @@ fun WeatherForecastDto.toHourlyWeatherData(): Map<Int, List<HourlyWeatherData>> 
 }
 
 @SuppressLint("NewApi")
-fun WeatherCurrentDto.toCurrentWeatherData() : CurrentWeatherData {
+fun WeatherCurrentDto.asExternalCurrentWeather() : CurrentWeatherData {
     val now = ZonedDateTime.now()
     return CurrentWeatherData(now, offSetSeconds, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode), weatherCurrentData.windSpeed, weatherCurrentData.windDirection, weatherCurrentData.isDay == 1, weatherCurrentData.apparentTemperature, weatherCurrentData.precipitation)
 }
 
-fun WeatherDailyDto.toDailyWeatherData(): List<DailyWeatherData> {
+fun WeatherDailyDto.asExternalDailyWeather(): List<DailyWeatherData> {
     return weatherDailyDto.times.mapIndexed { index, time ->
         val temperatureMax = weatherDailyDto.temperaturesMax[index]
         val temperatureMin = weatherDailyDto.temperaturesMin[index]

@@ -3,13 +3,13 @@ package com.example.weatherapp.domain
 import android.util.Log
 import com.example.weatherapp.data.api.AutoCompleteApi
 import com.example.weatherapp.data.api.WeatherApi
-import com.example.weatherapp.data.mapper.toCurrentWeatherData
-import com.example.weatherapp.data.mapper.toDailyWeatherData
-import com.example.weatherapp.data.mapper.toHourlyWeatherData
+import com.example.weatherapp.data.mapper.asExternalCurrentWeather
+import com.example.weatherapp.data.mapper.asExternalDailyWeather
+import com.example.weatherapp.data.mapper.asExternalHourlyWeather
 import com.example.weatherapp.data.model.AutoCompleteResultItem
-import com.example.weatherapp.data.model.CurrentWeatherData
-import com.example.weatherapp.data.model.DailyWeatherData
-import com.example.weatherapp.data.model.HourlyWeatherData
+import com.example.weatherapp.domain.model.CurrentWeatherData
+import com.example.weatherapp.domain.model.DailyWeatherData
+import com.example.weatherapp.domain.model.HourlyWeatherData
 import com.example.weatherapp.util.NetworkResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -35,7 +35,7 @@ class WeatherRepository @Inject constructor(
         return flow {
             try {
                 val response = api.getCurrentWeatherData(lat, long)
-                val body = response.body()?.toCurrentWeatherData()
+                val body = response.body()?.asExternalCurrentWeather()
                 if (response.isSuccessful && body != null) {
                     emit(NetworkResult.Success(body))
                 } else {
@@ -56,7 +56,7 @@ class WeatherRepository @Inject constructor(
         return flow {
             try {
                 val response = api.getHourlyWeatherData(lat, long)
-                val body = response.body()?.toHourlyWeatherData()
+                val body = response.body()?.asExternalHourlyWeather()
                 Log.d("debug_hourly_time", body?.values.toString())
                 if (response.isSuccessful && body != null) {
                     emit(NetworkResult.Success(body))
@@ -79,7 +79,7 @@ class WeatherRepository @Inject constructor(
         return flow {
             try {
                 val response = api.getDailyWeather(lat, long)
-               val body = response.body()?.toDailyWeatherData()
+               val body = response.body()?.asExternalDailyWeather()
                 if (response.isSuccessful && body != null) {
                     emit(NetworkResult.Success(body))
                 } else {

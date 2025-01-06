@@ -1,12 +1,8 @@
 package com.example.weatherapp.data.model
 
 
-import com.example.weatherapp.util.WeatherType
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
-import java.time.ZonedDateTime
 
 data class WeatherForecastDto(@SerializedName("utc_offset_seconds") val offSetSeconds: Int,@SerializedName("hourly") val weatherForecastData: HourlyForecastDataDto)
 
@@ -43,33 +39,3 @@ data class DailyCurrentDataDto(
     @SerializedName("wind_direction_10m_dominant") val windDirections: List<Int>
 )
 
-data class CurrentWeatherData(
-    val time: ZonedDateTime,
-    val offSetSeconds: Int,
-    val temperatureCelsius: Double,
-    val weatherType: WeatherType,
-    val windSpeed:Double,
-    val windDirection:Int,
-    val isDay:Boolean,
-    val apparentTemperature:Double,
-    val precipitation:Double
-)
-
-data class HourlyWeatherData(
-    val time: String,
-    val offSetSeconds: Int,
-    val temperatureCelsius: Double,
-    val weatherType: WeatherType,
-    val windSpeed:Double
-)
-
-data class DailyWeatherData(
-    val time: String,
-    val offSetSeconds: Int,
-    val temperatureMax: Double,
-    val temperatureMin: Double,
-    val weatherType: WeatherType,
-    val windDirection:Int,
-    val sunset:String = "",
-    val sunrise:String = ""
-)
