@@ -57,7 +57,7 @@ fun SearchCityScreen(
     navigateToPagerScreen: (Int) -> Unit
 ) {
     val autoCompletionResult = viewModel.autoCompletionResult
-    val inSelectionMode by remember { derivedStateOf { viewModel.selectedCities.isNotEmpty() } }
+    val inSelectionMode by remember { derivedStateOf { viewModel.selectedCitiesToRemove.isNotEmpty() } }
     val bottomSheetState = rememberStandardBottomSheetState(
         initialValue = SheetValue.Hidden,
         skipHiddenState = false
@@ -115,7 +115,7 @@ fun UserCitiesList(
 ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         itemsIndexed(items = savedCities) { index, savedCity ->
-            val selected by remember { derivedStateOf { savedCity in viewModel.selectedCities } }
+            val selected by remember { derivedStateOf { savedCity in viewModel.selectedCitiesToRemove } }
             UserCityItem(selected = selected, inSelectionMode = inSelectionMode, savedCity = savedCity,
                 modifier = if(inSelectionMode) { Modifier.clickable { if(selected) viewModel.selectCityToRemove(savedCity) else viewModel.unSelectCityToRemove(savedCity)} } else {Modifier.combinedClickable(
                 onLongClick = { viewModel.unSelectCityToRemove(savedCity) },

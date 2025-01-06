@@ -45,9 +45,8 @@ class SearchCityViewModel @Inject constructor(
     private val _savedCities = mutableStateListOf<SavedCity>()
     val savedCities: List<SavedCity> = _savedCities
 
-    var selectedCities = mutableStateListOf<SavedCity>()
-
-    var reload = mutableStateOf(false)
+    var selectedCitiesToRemove = mutableStateListOf<SavedCity>()
+        private set
 
     init {
         loadCityCurrentWeather()
@@ -134,19 +133,18 @@ class SearchCityViewModel @Inject constructor(
         viewModelScope.launch {
             isLoading = true
             _savedCities.clear()
-            userDataRepository.deleteUserCities(selectedCities)
-            selectedCities.clear()
-            reload.value = true
+            userDataRepository.deleteUserCities(selectedCitiesToRemove)
+            selectedCitiesToRemove.clear()
             isLoading = false
         }
     }
 
     fun unSelectCityToRemove(savedCity: SavedCity) {
-        selectedCities.add(savedCity)
+        selectedCitiesToRemove.add(savedCity)
     }
 
     fun selectCityToRemove(savedCity: SavedCity) {
-        selectedCities.remove(savedCity)
+        selectedCitiesToRemove.remove(savedCity)
     }
 
 
