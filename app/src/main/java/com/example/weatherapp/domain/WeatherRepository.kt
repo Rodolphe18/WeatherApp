@@ -14,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,7 +28,7 @@ class WeatherRepository @Inject constructor(
                 val response = autoCompleteApi.getAutoCompleteResult(query)
                 val body = response.body()?.map { it.asExternalModel() }?.distinct()
                 emit(body)
-            } catch (e: HttpException) {
+            } catch (e: Exception) {
                 emit(null) }
         }.flowOn(Dispatchers.IO)
     }
@@ -40,7 +39,7 @@ class WeatherRepository @Inject constructor(
             try {
                 val body = api.getCurrentWeatherData(lat, long).body()?.asExternalCurrentWeather()
                 emit(body)
-            } catch (e: HttpException) {
+            } catch (e: Exception) {
                 emit(null)
             }
         }.flowOn(Dispatchers.IO)
@@ -55,7 +54,7 @@ class WeatherRepository @Inject constructor(
                 val response = api.getHourlyWeatherData(lat, long)
                 val body = response.body()?.asExternalHourlyWeather()
                 emit(body)
-            } catch (e: HttpException) {
+            } catch (e: Exception) {
                 emit(null)}
         }.flowOn(Dispatchers.IO)
     }
@@ -70,7 +69,7 @@ class WeatherRepository @Inject constructor(
                 val response = api.getDailyWeather(lat, long)
                val body = response.body()?.asExternalDailyWeather()
                 emit(body)
-            } catch (e: HttpException) {
+            } catch (e: Exception) {
                 emit(null)
         }}.flowOn(Dispatchers.IO)
     }

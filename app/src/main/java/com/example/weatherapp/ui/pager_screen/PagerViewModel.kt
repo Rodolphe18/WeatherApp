@@ -12,11 +12,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.weatherapp.data.datastore.UserData
 import com.example.weatherapp.domain.UserDataRepository
+import com.example.weatherapp.domain.WeatherRepository
 import com.example.weatherapp.domain.model.CurrentWeatherData
 import com.example.weatherapp.domain.model.DailyWeatherData
 import com.example.weatherapp.domain.model.HourlyWeatherData
-import com.example.weatherapp.domain.WeatherRepository
-import com.example.weatherapp.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
@@ -37,8 +36,6 @@ class PagerViewmodel @Inject constructor(
 
     var isError by mutableStateOf(false)
 
-    var errorMessage by mutableStateOf("")
-
     val currentIndex = savedStateHandle.toRoute<PagerRoute>().index
 
     var currentPage by mutableIntStateOf(currentIndex)
@@ -54,7 +51,6 @@ class PagerViewmodel @Inject constructor(
         SharingStarted.WhileSubscribed(5000), 0
     )
 
-
     private val _pageCurrentCityWeather = mutableStateMapOf<Int, CurrentWeatherData>()
     val pageCurrentCityWeather: SnapshotStateMap<Int, CurrentWeatherData> = _pageCurrentCityWeather
 
@@ -64,6 +60,13 @@ class PagerViewmodel @Inject constructor(
 
     private val _pageDailyCityWeather = mutableStateMapOf<Int, List<DailyWeatherData>>()
     val pageDailyCityWeather: SnapshotStateMap<Int, List<DailyWeatherData>> = _pageDailyCityWeather
+
+    fun reload() {
+        isError = false
+        loadCityCurrentWeather(currentPage)
+        loadCityHourlyWeather(currentPage)
+        loadCityDailyWeather(currentPage)
+    }
 
 
     fun loadCityCurrentWeather(index: Int = 0) {
@@ -77,9 +80,10 @@ class PagerViewmodel @Inject constructor(
                                 savedCity.longitude
                             )
                                 .collect { currentWeatherData ->
-                                    currentWeatherData?.let {
-                                        _pageCurrentCityWeather[index - 1] = it
-
+                                    if (currentWeatherData != null) {
+                                        _pageCurrentCityWeather[index - 1] = currentWeatherData
+                                    } else {
+                                        isError = true
                                     }
                                 }
                         }
@@ -90,11 +94,13 @@ class PagerViewmodel @Inject constructor(
                             savedCity.longitude
                         )
                             .collect { currentWeatherData ->
-                                currentWeatherData?.let {
-                                    _pageCurrentCityWeather[index] = it
-
+                                if (currentWeatherData != null) {
+                                    _pageCurrentCityWeather[index] = currentWeatherData
+                                } else {
+                                    isError = true
                                 }
                             }
+
                     }
                     if (index < cities.userSavedCities.size - 1) {
                         cities.userSavedCities[index + 1].let { savedCity ->
@@ -103,10 +109,12 @@ class PagerViewmodel @Inject constructor(
                                 savedCity.longitude
                             )
                                 .collect { currentWeatherData ->
-                                    currentWeatherData?.let {
-                                        _pageCurrentCityWeather[index + 1] = it
-
+                                    if (currentWeatherData != null) {
+                                        _pageCurrentCityWeather[index + 1] = currentWeatherData
+                                    } else {
+                                        isError = true
                                     }
+
                                 }
                         }
                     }
@@ -117,7 +125,7 @@ class PagerViewmodel @Inject constructor(
     }
 
 
-    fun loadCityForecastWeather(index: Int) {
+    fun loadCityHourlyWeather(index: Int) {
         viewModelScope.launch {
             userPreferences.collect { cities ->
                 if (cities.userSavedCities?.isNotEmpty() == true) {
@@ -127,11 +135,14 @@ class PagerViewmodel @Inject constructor(
                                 savedCity.latitude,
                                 savedCity.longitude
                             ).collect { hourlyWeatherData ->
-                                val todayData = hourlyWeatherData?.get(0)
+                                val today = hourlyWeatherData?.get(0)
                                     ?.filter { LocalDateTime.parse(it.time).hour >= LocalDateTime.now().hour }
-                                val tomorrowData = hourlyWeatherData?.get(1)
-                                    _pageHourlyCityWeather[index - 1] =
-                                        (todayData.orEmpty() + tomorrowData.orEmpty())
+                                val tomorrow = hourlyWeatherData?.get(1)
+                                if (today != null && tomorrow != null) {
+                                    _pageHourlyCityWeather[index - 1] = today + tomorrow
+                                } else {
+                                    isError = true
+                                }
                             }
                         }
                     }
@@ -140,12 +151,15 @@ class PagerViewmodel @Inject constructor(
                             savedCity.latitude,
                             savedCity.longitude
                         ).collect { hourlyWeatherData ->
-                            val todayData =
+                            val today =
                                 hourlyWeatherData?.get(0)
                                     ?.filter { LocalDateTime.parse(it.time).hour >= LocalDateTime.now().hour }
-                            val tomorrowData = hourlyWeatherData?.get(1)
-                            _pageHourlyCityWeather[index] =
-                                (todayData.orEmpty() + tomorrowData.orEmpty())
+                            val tomorrow = hourlyWeatherData?.get(1)
+                            if (today != null && tomorrow != null) {
+                                _pageHourlyCityWeather[index] = today + tomorrow
+                            } else {
+                                isError = true
+                            }
                         }
                     }
                     if (index < cities.userSavedCities.size - 1) {
@@ -154,74 +168,83 @@ class PagerViewmodel @Inject constructor(
                                 savedCity.latitude,
                                 savedCity.longitude
                             ).collect { hourlyWeatherData ->
-                                val todayData =
+                                val today =
                                     hourlyWeatherData?.get(0)
                                         ?.filter { LocalDateTime.parse(it.time).hour >= LocalDateTime.now().hour }
-                                val tomorrowData = hourlyWeatherData?.get(1)
-                                _pageHourlyCityWeather[index + 1] =
-                                    (todayData.orEmpty() + tomorrowData.orEmpty())
-                            }
+                                val tomorrow = hourlyWeatherData?.get(1)
+                                if (today != null && tomorrow != null) {
+                                    _pageHourlyCityWeather[index + 1] = today + tomorrow
+                                } else {
+                                    isError = true
+                                }
 
+                            }
                         }
+
                     }
                 }
-                isLoading = false
-            }
         }
     }
+    isLoading = false
+}
 
-
-    fun loadCityDailyWeather(index: Int) {
-        viewModelScope.launch {
-            userPreferences.collectLatest { cities ->
-                if (cities.userSavedCities?.isNotEmpty() == true) {
-                    if (index > 0) {
-                        cities.userSavedCities[index - 1].let { savedCity ->
-                            weatherRepository.getDailyWeatherData(
-                                savedCity.latitude,
-                                savedCity.longitude
-                            )
-                                .collect { dailyWeatherData ->
-                                    dailyWeatherData?.let {
-                                        _pageDailyCityWeather[index - 1] = it
-                                    }
-                                }
-                        }
-                    }
-                    cities.userSavedCities[index].let { savedCity ->
+fun loadCityDailyWeather(index: Int) {
+    viewModelScope.launch {
+        userPreferences.collectLatest { cities ->
+            if (cities.userSavedCities?.isNotEmpty() == true) {
+                if (index > 0) {
+                    cities.userSavedCities[index - 1].let { savedCity ->
                         weatherRepository.getDailyWeatherData(
                             savedCity.latitude,
                             savedCity.longitude
                         )
                             .collect { dailyWeatherData ->
-                                dailyWeatherData?.let {
-                                    _pageDailyCityWeather[index] = it
+                               if(dailyWeatherData != null) {
+                                    _pageDailyCityWeather[index - 1] = dailyWeatherData
+                                } else {
+                                    isError=true
                                 }
                             }
                     }
-                    if (index < cities.userSavedCities.size - 1) {
-                        cities.userSavedCities[index + 1].let { savedCity ->
-                            weatherRepository.getDailyWeatherData(
-                                savedCity.latitude,
-                                savedCity.longitude
-                            )
-                                .collect { dailyWeatherData ->
-                                    dailyWeatherData?.let {
-                                        _pageDailyCityWeather[index + 1] = it
-                                    }
-                                }
+                }
+                cities.userSavedCities[index].let { savedCity ->
+                    weatherRepository.getDailyWeatherData(
+                        savedCity.latitude,
+                        savedCity.longitude
+                    )
+                        .collect { dailyWeatherData ->
+                            if(dailyWeatherData != null) {
+                                _pageDailyCityWeather[index] = dailyWeatherData
+                            } else {
+                                isError=true
+                            }
                         }
+                }
+                if (index < cities.userSavedCities.size - 1) {
+                    cities.userSavedCities[index + 1].let { savedCity ->
+                        weatherRepository.getDailyWeatherData(
+                            savedCity.latitude,
+                            savedCity.longitude
+                        )
+                            .collect { dailyWeatherData ->
+                                if(dailyWeatherData != null) {
+                                    _pageDailyCityWeather[index + 1] = dailyWeatherData
+                                } else {
+                                    isError=true
+                                }
+                            }
                     }
                 }
             }
-            isLoading = false
         }
+        isLoading = false
     }
+}
 
-    override fun onCleared() {
-        super.onCleared()
-        _pageCurrentCityWeather.clear()
-        _pageHourlyCityWeather.clear()
-        _pageDailyCityWeather.clear()
-    }
+override fun onCleared() {
+    super.onCleared()
+    _pageCurrentCityWeather.clear()
+    _pageHourlyCityWeather.clear()
+    _pageDailyCityWeather.clear()
+}
 }

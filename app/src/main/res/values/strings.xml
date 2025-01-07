@@ -45,4 +45,7 @@
     <string name="heavy_hail_thunderstorm">Orageux avec éclairs</string>
     <string name="delete_cities">Supprimer</string>
     <string name="manage_cities">Gérer les villes</string>
+    <string name="error_title">Une erreur est survenue lors du chargement</string>
+    <string name="error_subtitle">Veuillez réssayer en cliquant sur le lien ci-dessous.</string>
+    <string name="error_button_text">Réessayer</string>
 </resources>

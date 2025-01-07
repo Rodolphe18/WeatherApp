@@ -1,7 +1,6 @@
 package com.example.weatherapp.ui.pager_screen
 
 import WeatherTopAppBar
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.weatherapp.ui.composable.ErrorScreen
 import com.example.weatherapp.ui.composable.ForecastDailyList
 import com.example.weatherapp.ui.composable.ForecastHourlyList
 import com.example.weatherapp.ui.composable.LoadingScreen
@@ -44,7 +44,7 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
             viewmodel.currentPage = newPage
             viewmodel.loadCityCurrentWeather(newPage)
             viewmodel.loadCityDailyWeather(newPage)
-            viewmodel.loadCityForecastWeather(newPage)
+            viewmodel.loadCityHourlyWeather(newPage)
         }
     }
     if (userCities?.isNotEmpty() == true) {
@@ -63,6 +63,8 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
             ) { index ->
                 if (viewmodel.isLoading) {
                     LoadingScreen()
+                } else if(viewmodel.isError) {
+                    ErrorScreen { viewmodel.reload() }
                 } else {
                     LazyColumn(
                         modifier = Modifier
