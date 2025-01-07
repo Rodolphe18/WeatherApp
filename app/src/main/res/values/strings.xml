@@ -43,4 +43,6 @@
     <string name="moderate_thunderstorm">Orageux</string>
     <string name="slight_hail_thunderstorm">Orageux avec éclairs</string>
     <string name="heavy_hail_thunderstorm">Orageux avec éclairs</string>
+    <string name="delete_cities">Supprimer</string>
+    <string name="manage_cities">Gérer les villes</string>
 </resources>

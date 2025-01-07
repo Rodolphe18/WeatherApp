@@ -38,10 +38,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.weatherapp.R
 import com.example.weatherapp.data.datastore.SavedCity
 import com.example.weatherapp.ui.composable.LoadingScreen
 import com.example.weatherapp.ui.composable.SearchAutoComplete
@@ -49,11 +52,23 @@ import com.example.weatherapp.ui.theme.LocalBackgroundColor
 import kotlinx.coroutines.launch
 
 
+@Composable
+fun SearchCityScreen(
+    modifier: Modifier = Modifier,
+    viewModel: SearchCityViewModel = hiltViewModel(),
+    navigateToPagerScreen: (Int) -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    SearchCityScreen(modifier, viewModel, uiState, navigateToPagerScreen)
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchCityScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchCityViewModel = hiltViewModel(),
+    uiState: UserCitiesUiState,
     navigateToPagerScreen: (Int) -> Unit
 ) {
     val autoCompletionResult = viewModel.autoCompletionResult
@@ -65,25 +80,45 @@ fun SearchCityScreen(
     val state = rememberBottomSheetScaffoldState(bottomSheetState = bottomSheetState)
     val scope = rememberCoroutineScope()
     LaunchedEffect(inSelectionMode) {
-        if(inSelectionMode) { state.bottomSheetState.expand() } }
+        if (inSelectionMode) {
+            state.bottomSheetState.expand()
+        }
+    }
     LaunchedEffect(!inSelectionMode) {
-        if(!inSelectionMode) { state.bottomSheetState.hide() } }
-    BottomSheetScaffold(sheetDragHandle = {}, scaffoldState = state, sheetPeekHeight = 0.dp,sheetShape = RectangleShape, sheetContent = {
-        Column(modifier = Modifier.fillMaxWidth().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        Icon(Icons.Outlined.Delete, null, Modifier.size(35.dp).clickable {
-            scope.launch {
-                viewModel.deleteCitiesFromUserCities()
-                state.bottomSheetState.hide()
+        if (!inSelectionMode) {
+            state.bottomSheetState.hide()
+        }
+    }
+    BottomSheetScaffold(
+        sheetDragHandle = {},
+        scaffoldState = state,
+        sheetPeekHeight = 0.dp,
+        sheetShape = RectangleShape,
+        sheetContent = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(Icons.Outlined.Delete, null,
+                    Modifier
+                        .size(35.dp)
+                        .clickable {
+                            scope.launch {
+                                viewModel.deleteCitiesFromUserCities()
+                                state.bottomSheetState.hide()
+                            }
+                        })
+                Text(text = stringResource(R.string.delete_cities))
             }
-       })
-        Text(text = "Supprimer")
-    } }) {
-        if (viewModel.isLoading) { LoadingScreen()
-        } else {
-            Column(modifier = modifier.padding(16.dp)) {
+        }) {
+        when (uiState) {
+            UserCitiesUiState.Error -> TODO()
+            UserCitiesUiState.Loading -> LoadingScreen()
+            is UserCitiesUiState.Success -> Column(modifier = modifier.padding(16.dp)) {
                 Text(
                     modifier = Modifier.padding(vertical = 16.dp),
-                    text = "Gérer les villes",
+                    text = stringResource(R.string.manage_cities),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                 )
@@ -91,17 +126,16 @@ fun SearchCityScreen(
                     viewModel.addCityToUserFavoriteCities(city)
                 }
                 Spacer(Modifier.height(16.dp))
-                if (viewModel.savedCities.isNotEmpty()) {
+                if (uiState.userCities.isNotEmpty()) {
                     UserCitiesList(
                         viewModel = viewModel,
-                        savedCities = viewModel.savedCities,
+                        savedCities = uiState.userCities,
                         inSelectionMode = inSelectionMode,
                         onItemSelected = { index -> navigateToPagerScreen(index) })
                 }
             }
         }
     }
-
 }
 
 
@@ -111,16 +145,26 @@ fun UserCitiesList(
     viewModel: SearchCityViewModel,
     savedCities: List<SavedCity>,
     onItemSelected: (Int) -> Unit,
-    inSelectionMode:Boolean
+    inSelectionMode: Boolean
 ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         itemsIndexed(items = savedCities) { index, savedCity ->
             val selected by remember { derivedStateOf { savedCity in viewModel.selectedCitiesToRemove } }
-            UserCityItem(selected = selected, inSelectionMode = inSelectionMode, savedCity = savedCity,
-                modifier = if(inSelectionMode) { Modifier.clickable { if(selected) viewModel.selectCityToRemove(savedCity) else viewModel.unSelectCityToRemove(savedCity)} } else {Modifier.combinedClickable(
-                onLongClick = { viewModel.unSelectCityToRemove(savedCity) },
-                onClick = { onItemSelected(index) }
-            ) } )
+            UserCityItem(selected = selected,
+                inSelectionMode = inSelectionMode,
+                savedCity = savedCity,
+                modifier = if (inSelectionMode) {
+                    Modifier.clickable {
+                        if (selected) viewModel.selectCityToRemove(savedCity) else viewModel.unSelectCityToRemove(
+                            savedCity
+                        )
+                    }
+                } else {
+                    Modifier.combinedClickable(
+                        onLongClick = { viewModel.unSelectCityToRemove(savedCity) },
+                        onClick = { onItemSelected(index) }
+                    )
+                })
         }
     }
 }
