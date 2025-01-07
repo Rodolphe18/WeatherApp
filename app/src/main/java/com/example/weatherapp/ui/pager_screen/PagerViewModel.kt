@@ -135,11 +135,14 @@ class PagerViewmodel @Inject constructor(
                                 savedCity.latitude,
                                 savedCity.longitude
                             ).collect { hourlyWeatherData ->
-                                val offSet = hourlyWeatherData?.get(0).orEmpty().first().offSetSeconds / 3600
-                                 val today = hourlyWeatherData?.get(0)?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
-                                val tomorrow = hourlyWeatherData?.get(1)
-                                if (today != null && tomorrow != null) {
-                                    _pageHourlyCityWeather[index - 1] = today + tomorrow
+                                if (!hourlyWeatherData.isNullOrEmpty()) {
+                                    val offSet =
+                                        (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600)) ?: 0
+                                    val today = hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
+                                    val tomorrow = hourlyWeatherData[1]
+                                    if (today != null && tomorrow != null) {
+                                        _pageHourlyCityWeather[index-1] = today + tomorrow
+                                    }
                                 } else {
                                     isError = true
                                 }
@@ -151,11 +154,14 @@ class PagerViewmodel @Inject constructor(
                             savedCity.latitude,
                             savedCity.longitude
                         ).collect { hourlyWeatherData ->
-                            val offSet = hourlyWeatherData?.get(0).orEmpty().first().offSetSeconds / 3600
-                           val today = hourlyWeatherData?.get(0)?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
-                            val tomorrow = hourlyWeatherData?.get(1)
-                            if (today != null && tomorrow != null) {
-                                _pageHourlyCityWeather[index] = today + tomorrow
+                            if (!hourlyWeatherData.isNullOrEmpty()) {
+                                val offSet =
+                                    (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600)) ?: 0
+                                val today = hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
+                                val tomorrow = hourlyWeatherData[1]
+                                if (today != null && tomorrow != null) {
+                                    _pageHourlyCityWeather[index] = today + tomorrow
+                                }
                             } else {
                                 isError = true
                             }
@@ -167,11 +173,14 @@ class PagerViewmodel @Inject constructor(
                                 savedCity.latitude,
                                 savedCity.longitude
                             ).collect { hourlyWeatherData ->
-                                val offSet = hourlyWeatherData?.get(0).orEmpty().first().offSetSeconds / 3600
-                                val today = hourlyWeatherData?.get(0)?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
-                                val tomorrow = hourlyWeatherData?.get(1)
-                                if (today != null && tomorrow != null) {
-                                    _pageHourlyCityWeather[index + 1] = today + tomorrow
+                                if (!hourlyWeatherData.isNullOrEmpty()) {
+                                    val offSet =
+                                        (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600)) ?: 0
+                                    val today = hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
+                                    val tomorrow = hourlyWeatherData[1]
+                                    if (today != null && tomorrow != null) {
+                                        _pageHourlyCityWeather[index+1] = today + tomorrow
+                                    }
                                 } else {
                                     isError = true
                                 }

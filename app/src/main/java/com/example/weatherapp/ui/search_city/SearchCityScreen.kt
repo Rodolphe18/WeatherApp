@@ -200,11 +200,13 @@ fun UserCityItem(
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp
         )
-        Text(
-            modifier = Modifier.weight(0.2f),
-            text = "${savedCity.temperature}°",
-            fontWeight = FontWeight.SemiBold
-        )
+        savedCity.temperature?.let { temperature ->
+            Text(
+                modifier = Modifier.weight(0.2f),
+                text = "${temperature}°",
+                fontWeight = FontWeight.SemiBold
+            )
+        }
         if (inSelectionMode) {
             if (selected) {
                 Icon(Icons.Filled.CheckCircle, null, tint = Color.White)
