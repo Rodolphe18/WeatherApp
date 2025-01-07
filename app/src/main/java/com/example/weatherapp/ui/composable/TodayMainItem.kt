@@ -45,7 +45,7 @@ fun TodayWeatherFirstItem(
                 Image(
                     painterResource(id = data.weatherType.iconRes),
                     contentDescription = null,
-                    modifier = Modifier.size(100.dp)
+                    modifier = Modifier.size(100.dp).padding(vertical = 8.dp)
                 )
                 Text(
                     text = "${data.temperatureCelsius} °C",

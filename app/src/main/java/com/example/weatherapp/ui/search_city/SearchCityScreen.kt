@@ -46,6 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.weatherapp.R
 import com.example.weatherapp.data.datastore.SavedCity
+import com.example.weatherapp.ui.composable.ErrorScreen
 import com.example.weatherapp.ui.composable.LoadingScreen
 import com.example.weatherapp.ui.composable.SearchAutoComplete
 import com.example.weatherapp.ui.theme.LocalBackgroundColor
@@ -112,27 +113,28 @@ fun SearchCityScreen(
                 Text(text = stringResource(R.string.delete_cities))
             }
         }) {
-        when (uiState) {
-            UserCitiesUiState.Error -> TODO()
-            UserCitiesUiState.Loading -> LoadingScreen()
-            is UserCitiesUiState.Success -> Column(modifier = modifier.padding(16.dp)) {
-                Text(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    text = stringResource(R.string.manage_cities),
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-                SearchAutoComplete(cities = autoCompletionResult) { city ->
-                    viewModel.addCityToUserFavoriteCities(city)
-                }
-                Spacer(Modifier.height(16.dp))
-                if (uiState.userCities.isNotEmpty()) {
-                    UserCitiesList(
-                        viewModel = viewModel,
-                        savedCities = uiState.userCities,
-                        inSelectionMode = inSelectionMode,
-                        onItemSelected = { index -> navigateToPagerScreen(index) })
-                }
+        Column(modifier = modifier.padding(16.dp)) {
+            Text(
+                modifier = Modifier.padding(vertical = 16.dp),
+                text = stringResource(R.string.manage_cities),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            SearchAutoComplete(cities = autoCompletionResult) { city ->
+                viewModel.addCityToUserFavoriteCities(city)
+            }
+            Spacer(Modifier.height(16.dp))
+            when (uiState) {
+                UserCitiesUiState.Error -> ErrorScreen { viewModel.reload() }
+                UserCitiesUiState.Loading -> LoadingScreen()
+                is UserCitiesUiState.Success ->
+                    if (uiState.userCities.isNotEmpty()) {
+                        UserCitiesList(
+                            viewModel = viewModel,
+                            savedCities = uiState.userCities,
+                            inSelectionMode = inSelectionMode,
+                            onItemSelected = { index -> navigateToPagerScreen(index) })
+                    }
             }
         }
     }

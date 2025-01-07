@@ -12,6 +12,7 @@ import com.example.weatherapp.domain.GetCitiesWithWeatherData
 import com.example.weatherapp.domain.UserDataRepository
 import com.example.weatherapp.domain.WeatherRepository
 import com.example.weatherapp.util.NetworkResult
+import com.example.weatherapp.util.restartableWhileSubscribed
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,12 +33,6 @@ class SearchCityViewModel @Inject constructor(
     getCitiesWithWeatherData: GetCitiesWithWeatherData
 ) : ViewModel() {
 
-
-    var isLoading by mutableStateOf(true)
-
-    var isError by mutableStateOf(false)
-
-    var errorMessage by mutableStateOf("")
 
     private val _autoCompletionResult = mutableStateListOf<AutoCompleteResult>()
     val autoCompletionResult = _autoCompletionResult
@@ -49,7 +45,7 @@ class SearchCityViewModel @Inject constructor(
         .map<List<SavedCity>?, UserCitiesUiState> { UserCitiesUiState.Success(it!!) }
         .catch { UserCitiesUiState.Error }
         .onStart { emit(UserCitiesUiState.Loading) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), UserCitiesUiState.Loading)
+        .stateIn(viewModelScope, restartableWhileSubscribed, UserCitiesUiState.Loading)
 
 
     fun getAutoCompleteSearch(query: String) {
@@ -58,14 +54,17 @@ class SearchCityViewModel @Inject constructor(
                 autoCompleteResults.let { cities ->
                     cities?.let { autoCompletionResult.addAll(it) }
 
-                        }
-                    }
+                }
             }
         }
+    }
+
+    fun reload() {
+        restartableWhileSubscribed.restart()
+    }
 
     fun addCityToUserFavoriteCities(remoteCity: AutoCompleteResult) {
         viewModelScope.launch {
-            isLoading = true
             if (remoteCity.latitude != null && remoteCity.longitude != null) {
                 userDataRepository.addUserCity(
                     SavedCity(
@@ -75,17 +74,16 @@ class SearchCityViewModel @Inject constructor(
                         remoteCity.longitude,
                     )
                 )
+                restartableWhileSubscribed.restart()
             }
-            isLoading = false
         }
     }
 
     fun deleteCitiesFromUserCities() {
         viewModelScope.launch {
-            isLoading = true
             userDataRepository.deleteUserCities(selectedCitiesToRemove)
             selectedCitiesToRemove.clear()
-            isLoading = false
+            restartableWhileSubscribed.restart()
         }
     }
 
@@ -102,6 +100,6 @@ class SearchCityViewModel @Inject constructor(
 sealed interface UserCitiesUiState {
     data object Loading : UserCitiesUiState
     data object Error : UserCitiesUiState
-    data class Success(val userCities: List<SavedCity>) : UserCitiesUiState
+    data class Success(val userCities: List<SavedCity> = emptyList()) : UserCitiesUiState
 }
 

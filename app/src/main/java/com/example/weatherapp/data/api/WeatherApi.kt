@@ -2,7 +2,7 @@ package com.example.weatherapp.data.api
 
 import com.example.weatherapp.data.model.WeatherCurrentDto
 import com.example.weatherapp.data.model.WeatherDailyDto
-import com.example.weatherapp.data.model.WeatherForecastDto
+import com.example.weatherapp.data.model.WeatherHourlyDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -19,7 +19,7 @@ interface WeatherApi {
             "weathercode",
             "wind_speed_10m",
         )
-    ): Response<WeatherForecastDto>
+    ): Response<WeatherHourlyDto>
 
     @GET("forecast")
     suspend fun getCurrentWeatherData(

@@ -4,7 +4,7 @@ package com.example.weatherapp.data.model
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
-data class WeatherForecastDto(@SerializedName("utc_offset_seconds") val offSetSeconds: Int,@SerializedName("hourly") val weatherForecastData: HourlyForecastDataDto)
+data class WeatherHourlyDto(@SerializedName("utc_offset_seconds") val offSetSeconds: Int,@SerializedName("hourly") val weatherForecastData: HourlyForecastDataDto)
 
 data class WeatherCurrentDto(@SerializedName("utc_offset_seconds") val offSetSeconds: Int, @SerializedName("current") val weatherCurrentData: WeatherCurrentDataDto)
 

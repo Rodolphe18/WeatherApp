@@ -3,7 +3,7 @@ package com.example.weatherapp.data.mapper
 import android.annotation.SuppressLint
 import com.example.weatherapp.data.model.WeatherCurrentDto
 import com.example.weatherapp.data.model.WeatherDailyDto
-import com.example.weatherapp.data.model.WeatherForecastDto
+import com.example.weatherapp.data.model.WeatherHourlyDto
 import com.example.weatherapp.domain.model.CurrentWeatherData
 import com.example.weatherapp.domain.model.DailyWeatherData
 import com.example.weatherapp.domain.model.HourlyWeatherData
@@ -14,7 +14,7 @@ private data class IndexedWeatherData(val index:Int, val data: HourlyWeatherData
 
 
 @SuppressLint("NewApi")
-fun WeatherForecastDto.asExternalHourlyWeather(): Map<Int, List<HourlyWeatherData>> {
+fun WeatherHourlyDto.asExternalHourlyWeather(): Map<Int, List<HourlyWeatherData>> {
     return weatherForecastData.times.mapIndexed { index, time ->
         val temperature = weatherForecastData.temperatures[index]
         val weatherCode = weatherForecastData.weatherCodes[index]
