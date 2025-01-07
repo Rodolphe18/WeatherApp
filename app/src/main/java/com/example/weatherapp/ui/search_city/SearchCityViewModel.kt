@@ -1,9 +1,6 @@
 package com.example.weatherapp.ui.search_city
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.data.datastore.SavedCity
@@ -11,18 +8,13 @@ import com.example.weatherapp.data.model.AutoCompleteResult
 import com.example.weatherapp.domain.GetCitiesWithWeatherData
 import com.example.weatherapp.domain.UserDataRepository
 import com.example.weatherapp.domain.WeatherRepository
-import com.example.weatherapp.util.NetworkResult
 import com.example.weatherapp.util.restartableWhileSubscribed
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,8 +34,7 @@ class SearchCityViewModel @Inject constructor(
 
 
     val uiState: StateFlow<UserCitiesUiState> = getCitiesWithWeatherData()
-        .map<List<SavedCity>?, UserCitiesUiState> { UserCitiesUiState.Success(it!!) }
-        .catch { UserCitiesUiState.Error }
+        .map { if(it == null) UserCitiesUiState.Error else UserCitiesUiState.Success(it) }
         .onStart { emit(UserCitiesUiState.Loading) }
         .stateIn(viewModelScope, restartableWhileSubscribed, UserCitiesUiState.Loading)
 
@@ -71,10 +62,9 @@ class SearchCityViewModel @Inject constructor(
                         remoteCity.placeId.toLong(),
                         remoteCity.shortName,
                         remoteCity.latitude,
-                        remoteCity.longitude,
+                        remoteCity.longitude
                     )
                 )
-                restartableWhileSubscribed.restart()
             }
         }
     }
@@ -83,7 +73,7 @@ class SearchCityViewModel @Inject constructor(
         viewModelScope.launch {
             userDataRepository.deleteUserCities(selectedCitiesToRemove)
             selectedCitiesToRemove.clear()
-            restartableWhileSubscribed.restart()
+           restartableWhileSubscribed.restart()
         }
     }
 
@@ -100,6 +90,6 @@ class SearchCityViewModel @Inject constructor(
 sealed interface UserCitiesUiState {
     data object Loading : UserCitiesUiState
     data object Error : UserCitiesUiState
-    data class Success(val userCities: List<SavedCity> = emptyList()) : UserCitiesUiState
+    data class Success(val userCities: Set<SavedCity> = emptySet()) : UserCitiesUiState
 }
 

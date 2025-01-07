@@ -12,10 +12,10 @@ class GetCitiesWithWeatherData @Inject constructor(
     private val userDataRepository: UserDataRepository
 ) {
 
-    operator fun invoke(): Flow<List<SavedCity>?> {
+    operator fun invoke(): Flow<Set<SavedCity>?> {
         return flow {
             try {
-                val savedCitiesWithWeatherData = mutableListOf<SavedCity>()
+                val savedCitiesWithWeatherData = mutableSetOf<SavedCity>()
                 userDataRepository.userData.collect { userData ->
                     userData.userSavedCities?.map { city ->
                       weatherRepository.getCurrentWeatherData(city.latitude, city.longitude)
@@ -26,12 +26,12 @@ class GetCitiesWithWeatherData @Inject constructor(
                                         city.name,
                                         city.latitude,
                                         city.longitude,
-                                        weather?.temperatureCelsius
+                                        weather?.temperatureCelsius!!
                                     )
                                 )
                             }
                     }
-                    emit(savedCitiesWithWeatherData.toList())
+                    emit(savedCitiesWithWeatherData.toSet())
                 }
             } catch (e: Exception) {
                 emit(null)

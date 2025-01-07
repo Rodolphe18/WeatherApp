@@ -28,7 +28,7 @@ fun ErrorScreen(modifier: Modifier = Modifier, onButtonClick: (() -> Unit)) {
     Column(modifier = modifier.fillMaxSize().padding(20.dp).offset(y=20.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         Image(painterResource(R.drawable.ic_error), null)
         Spacer(Modifier.height(16.dp))
-        Text(stringResource(R.string.error_title))
+        Text(stringResource(R.string.error_title),textAlign = TextAlign.Center)
         Spacer(Modifier.height(16.dp))
         Text(
             stringResource(R.string.error_subtitle),

@@ -112,8 +112,9 @@ fun SearchCityScreen(
                         })
                 Text(text = stringResource(R.string.delete_cities))
             }
-        }) {
-        Column(modifier = modifier.padding(16.dp)) {
+        },
+        content = {
+        Column(modifier = modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 modifier = Modifier.padding(vertical = 16.dp),
                 text = stringResource(R.string.manage_cities),
@@ -131,13 +132,13 @@ fun SearchCityScreen(
                     if (uiState.userCities.isNotEmpty()) {
                         UserCitiesList(
                             viewModel = viewModel,
-                            savedCities = uiState.userCities,
+                            savedCities = uiState.userCities.toList(),
                             inSelectionMode = inSelectionMode,
                             onItemSelected = { index -> navigateToPagerScreen(index) })
                     }
             }
         }
-    }
+    })
 }
 
 
@@ -191,7 +192,7 @@ fun UserCityItem(
                     )
                 )
             )
-            .padding(horizontal = 8.dp, vertical = 12.dp)
+            .padding(horizontal = 8.dp, vertical = 16.dp)
     )
     {
         Text(
