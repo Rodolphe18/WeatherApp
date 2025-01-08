@@ -7,11 +7,15 @@ import com.example.weatherapp.R
 
 sealed class WeatherType(
     @StringRes val weatherDesc: Int,
-    @DrawableRes val iconRes: Int
+    @DrawableRes val iconRes: Int,
+    @DrawableRes val iconForDay:Int?=null,
+    @DrawableRes val iconForNight:Int?=null,
 ) {
     data object ClearSky : WeatherType(
         weatherDesc = R.string.sunny,
-        iconRes = R.drawable.ic_sunny
+        iconRes = R.drawable.ic_sunny,
+        iconForDay = R.drawable.ic_small_sunny_day,
+        iconForNight = R.drawable.ic_small_sunny_night
     )
     data object MainlyClear : WeatherType(
         weatherDesc = R.string.mainly_clear,

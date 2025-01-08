@@ -31,6 +31,7 @@ import com.example.weatherapp.R
 import com.example.weatherapp.domain.model.HourlyWeatherData
 import com.example.weatherapp.ui.theme.LocalBackgroundColor
 import com.example.weatherapp.util.DateTimeFormatter
+import com.example.weatherapp.util.WeatherType
 import kotlinx.datetime.LocalDateTime
 import kotlin.math.abs
 
@@ -55,6 +56,7 @@ fun ForecastHourlyList(weatherDataList: List<HourlyWeatherData>) {
 
 @Composable
 fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyWeatherData) {
+    val isDay = LocalDateTime.parse(hourlyWeatherData.time).hour in 7..18
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = DateTimeFormatter.getFormattedTimeForHourly(hourlyWeatherData.time, hourlyWeatherData.offSetSeconds),
@@ -84,7 +86,11 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
                 style = MaterialTheme.typography.titleMedium,
             )
             Image(
-                painterResource(id = hourlyWeatherData.weatherType.iconRes),
+                painterResource(id = when {
+                    hourlyWeatherData.weatherType == WeatherType.ClearSky && isDay -> hourlyWeatherData.weatherType.iconForDay!!
+                    hourlyWeatherData.weatherType == WeatherType.ClearSky && !isDay -> hourlyWeatherData.weatherType.iconForNight!!
+                    else -> hourlyWeatherData.weatherType.iconRes
+                }),
                 contentDescription = null,
                 modifier = Modifier.size(45.dp)
             )
