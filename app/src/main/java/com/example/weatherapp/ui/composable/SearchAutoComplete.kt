@@ -114,10 +114,11 @@ fun SearchAutoComplete(
                     containerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = Color.Gray
+                    cursorColor = Color(0xFFe6e6e5)
                 ),
                 textStyle = TextStyle(
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = Color(0xFFe6e6e5)
                 ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,

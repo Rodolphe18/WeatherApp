@@ -186,7 +186,7 @@ fun UserCityItem(
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(
-                color = Color(0xFF3360d2)
+                color = Color(0xFF3360d2).copy(0.6f)
             )
             .padding(horizontal = 8.dp, vertical = 16.dp)
     )
