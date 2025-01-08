@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,15 +30,18 @@ import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
 import com.example.weatherapp.domain.model.DailyWeatherData
 import com.example.weatherapp.ui.theme.LocalBackgroundColor
+import com.example.weatherapp.ui.theme.darkScheme
+import com.example.weatherapp.ui.theme.lightScheme
 import com.example.weatherapp.util.DateTimeFormatter
 
 @Composable
-fun ForecastDailyList(weatherDataList: List<DailyWeatherData>) {
+fun ForecastDailyList(weatherDataList: List<DailyWeatherData>, parentIsDay: Boolean) {
     Text(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         text = stringResource(R.string.forecast_daily_title),
         fontSize = 24.sp,
-        fontWeight = FontWeight.ExtraBold
+        fontWeight = FontWeight.ExtraBold,
+        color = if(parentIsDay) Color.DarkGray else Color.LightGray
     )
     LazyRow(
         state = rememberLazyListState(),
@@ -45,28 +49,24 @@ fun ForecastDailyList(weatherDataList: List<DailyWeatherData>) {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(weatherDataList) { weatherData ->
-            ForecastDailyItem(weatherData = weatherData)
+            ForecastDailyItem(weatherData = weatherData, parentIsDay = parentIsDay)
         }
     }
 }
 
 @Composable
-fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherData) {
+fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherData,parentIsDay:Boolean) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = DateTimeFormatter.getFormattedDate(weatherData.time),fontWeight = FontWeight.ExtraBold,
-            fontSize = 18.sp)
+            fontSize = 18.sp,
+            color = if(parentIsDay) Color.DarkGray else Color.LightGray)
         Spacer(Modifier.height(8.dp))
         Column(
             modifier = modifier
                 .aspectRatio(3 / 4f)
                 .clip(RoundedCornerShape(8.dp))
                 .background(
-                    brush = Brush.linearGradient(
-                        listOf(
-                            LocalBackgroundColor.current.backgroundColor.copy(0.6f),
-                            LocalBackgroundColor.current.backgroundColor.copy(0.4f)
-                        )
-                    )
+                    color = if (parentIsDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f)
                 )
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -79,7 +79,8 @@ fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherDa
                     "${weatherData.temperatureMin}°"
                 ),
                 fontWeight = FontWeight.Medium,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = if(parentIsDay) Color.DarkGray else Color.LightGray
             )
             Image(
                 painterResource(id = weatherData.weatherType.iconRes),

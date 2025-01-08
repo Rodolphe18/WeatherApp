@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -21,6 +22,8 @@ import com.example.weatherapp.R
 import com.example.weatherapp.domain.model.CurrentWeatherData
 import com.example.weatherapp.domain.model.DailyWeatherData
 import com.example.weatherapp.ui.theme.LocalBackgroundColor
+import com.example.weatherapp.ui.theme.darkScheme
+import com.example.weatherapp.ui.theme.lightScheme
 import com.example.weatherapp.util.DateTimeFormatter
 import kotlin.math.roundToInt
 
@@ -31,46 +34,45 @@ fun TodayWeatherSecondItem(
     currentWeatherData: CurrentWeatherData,
     dailyWeatherData: DailyWeatherData
 ) {
+    val isDay = remember { currentWeatherData.isDay }
     Column {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             text = stringResource(R.string.today_detail_weather_title),
             fontSize = 24.sp,
-            fontWeight = FontWeight.ExtraBold
+            fontWeight = FontWeight.ExtraBold,
+            color = if(isDay) Color.DarkGray else Color.LightGray
         )
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .background(
-                    brush = Brush.linearGradient(
-                        listOf(
-                            LocalBackgroundColor.current.backgroundColor.copy(0.6f),
-                            LocalBackgroundColor.current.backgroundColor.copy(0.4f)
-                        )
-                    )
-                )
+                .background(color = if (isDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f))
                 .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
             Column(Modifier.weight(1f)) {
-                TodayItemMetaData(stringResource(R.string.apparent_temperature), "${currentWeatherData.apparentTemperature}°C")
-                TodayItemMetaData(stringResource(R.string.wind_speed), "${currentWeatherData.windSpeed} km/h")
+                TodayItemMetaData(stringResource(R.string.apparent_temperature), "${currentWeatherData.apparentTemperature}°C",isDay)
+                TodayItemMetaData(stringResource(R.string.wind_speed), "${currentWeatherData.windSpeed} km/h", isDay)
                 TodayItemMetaData(
                     stringResource(R.string.sunrise),
-                    DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunrise)
+                    DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunrise),
+                    isDay
                 )
             }
             Column(Modifier.weight(1f)) {
                 TodayItemMetaData(
                     stringResource(R.string.wind_direction),
-                    currentWeatherData.windDirection.windDirection()
+                    currentWeatherData.windDirection.windDirection(),
+                    isDay
                 )
                 TodayItemMetaData(
                     stringResource(R.string.precipitation),
-                    "${currentWeatherData.precipitation.roundToInt()}%"
+                    "${currentWeatherData.precipitation.roundToInt()}%",
+                    isDay
                 )
                 TodayItemMetaData(
                     stringResource(R.string.sunset),
-                    DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunset)
+                    DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunset),
+                    isDay
                 )
             }
         }
@@ -80,17 +82,19 @@ fun TodayWeatherSecondItem(
 
 
 @Composable
-fun TodayItemMetaData(title: String, data: String) {
+fun TodayItemMetaData(title: String, data: String, isDay:Boolean) {
     Column {
         Text(
             text = title,
             fontWeight = FontWeight.Medium,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            color = if(isDay) Color.DarkGray else Color.LightGray
         )
         Text(
             text = data,
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
+            color = if(isDay) Color.DarkGray else Color.LightGray
         )
         Spacer(Modifier.height(8.dp))
     }

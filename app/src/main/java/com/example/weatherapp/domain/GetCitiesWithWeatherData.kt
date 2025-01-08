@@ -26,9 +26,11 @@ class GetCitiesWithWeatherData @Inject constructor(
                                         city.name,
                                         city.latitude,
                                         city.longitude,
-                                        weather?.temperatureCelsius!!
+                                        weather?.temperatureCelsius!!,
+                                        weather.isDay
                                     )
                                 )
+                                Log.d("debug_v", savedCitiesWithWeatherData.toString())
                             }
                     }
                     emit(savedCitiesWithWeatherData.toSet())

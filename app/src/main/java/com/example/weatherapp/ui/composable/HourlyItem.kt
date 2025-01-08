@@ -1,6 +1,5 @@
 package com.example.weatherapp.ui.composable
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,19 +28,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
 import com.example.weatherapp.domain.model.HourlyWeatherData
-import com.example.weatherapp.ui.theme.LocalBackgroundColor
+import com.example.weatherapp.ui.theme.darkScheme
+import com.example.weatherapp.ui.theme.lightScheme
 import com.example.weatherapp.util.DateTimeFormatter
 import com.example.weatherapp.util.WeatherType
 import kotlinx.datetime.LocalDateTime
-import kotlin.math.abs
 
 @Composable
-fun ForecastHourlyList(weatherDataList: List<HourlyWeatherData>) {
+fun ForecastHourlyList(weatherDataList: List<HourlyWeatherData>, parentIsDay: Boolean) {
     Text(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
         text = stringResource(R.string.forecast_hourly_title),
         fontSize = 24.sp,
-        fontWeight = FontWeight.ExtraBold
+        fontWeight = FontWeight.ExtraBold,
+        color = if(parentIsDay) Color.DarkGray else Color.LightGray
     )
     LazyRow(
         state = rememberLazyListState(),
@@ -49,33 +49,27 @@ fun ForecastHourlyList(weatherDataList: List<HourlyWeatherData>) {
         contentPadding = PaddingValues(8.dp)
     ) {
         items(weatherDataList) { weatherData ->
-            ForecastHourlyItem(hourlyWeatherData = weatherData)
+            ForecastHourlyItem(hourlyWeatherData = weatherData, parentIsDay = parentIsDay)
         }
     }
 }
 
 @Composable
-fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyWeatherData) {
-    val isDay = LocalDateTime.parse(hourlyWeatherData.time).hour in 7..18
+fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyWeatherData, parentIsDay:Boolean) {
+    val isDay = LocalDateTime.parse(hourlyWeatherData.time).hour in 6..18
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = DateTimeFormatter.getFormattedTimeForHourly(hourlyWeatherData.time, hourlyWeatherData.offSetSeconds),
             fontWeight = FontWeight.ExtraBold,
-            fontSize = 18.sp
+            fontSize = 18.sp,
+            color = if(parentIsDay) Color.DarkGray else Color.LightGray
         )
         Spacer(Modifier.height(4.dp))
         Column(
             modifier = modifier
                 .width(120.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(
-                    brush = Brush.linearGradient(
-                        listOf(
-                            LocalBackgroundColor.current.backgroundColor.copy(0.6f),
-                            LocalBackgroundColor.current.backgroundColor.copy(0.4f)
-                        )
-                    )
-                )
+                .background(color = if (parentIsDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f))
                 .padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -84,6 +78,7 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
                 modifier = Modifier.padding(horizontal = 8.dp),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium,
+                color = if(parentIsDay) Color.DarkGray else Color.LightGray
             )
             Image(
                 painterResource(id = when {
@@ -99,6 +94,7 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
                 modifier = Modifier.padding(horizontal = 8.dp),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium,
+                color = if(parentIsDay) Color.DarkGray else Color.LightGray
             )
         }
     }

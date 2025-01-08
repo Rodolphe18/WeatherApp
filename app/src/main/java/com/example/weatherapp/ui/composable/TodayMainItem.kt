@@ -13,24 +13,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.domain.model.CurrentWeatherData
-import com.example.weatherapp.ui.theme.LocalBackgroundColor
+import com.example.weatherapp.ui.theme.darkScheme
+import com.example.weatherapp.ui.theme.lightScheme
+import com.example.weatherapp.util.WeatherType
 
 @Composable
 fun TodayWeatherFirstItem(
     modifier: Modifier = Modifier,
-    currentWeatherData: CurrentWeatherData
+    currentWeatherData: CurrentWeatherData,
 ) {
     currentWeatherData.let { data ->
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .background(color = LocalBackgroundColor.current.backgroundColor)
+                .background(color = if (data.isDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f))
                 .padding(12.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -41,9 +44,14 @@ fun TodayWeatherFirstItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     fontWeight = FontWeight.Bold,
                     fontSize = 30.sp,
+                    color = if(data.isDay) Color.DarkGray else Color.LightGray
                 )
                 Image(
-                    painterResource(id = data.weatherType.iconRes),
+                    painterResource(id = when {
+                        data.weatherType == WeatherType.ClearSky && data.isDay -> data.weatherType.iconForDay!!
+                        data.weatherType == WeatherType.ClearSky && !data.isDay -> data.weatherType.iconForNight!!
+                        else -> data.weatherType.iconRes
+                    }),
                     contentDescription = null,
                     modifier = Modifier.size(100.dp).padding(vertical = 8.dp)
                 )
@@ -52,6 +60,7 @@ fun TodayWeatherFirstItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     fontWeight = FontWeight.Bold,
                     fontSize = 32.sp,
+                    color = if(data.isDay) Color.DarkGray else Color.LightGray
                 )
             }
         }
