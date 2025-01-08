@@ -49,7 +49,8 @@ class PagerViewmodel @Inject constructor(
         )
     )
 
-    val pageCount = userDataRepository.userData.map { it.userSavedCities?.size ?: 0 }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
+    val pageCount = userDataRepository.userData.map { it.userSavedCities?.size ?: 0 }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
     private val _pageCurrentCityWeather = mutableStateMapOf<Int, CurrentWeatherData>()
     val pageCurrentCityWeather: SnapshotStateMap<Int, CurrentWeatherData> = _pageCurrentCityWeather
@@ -74,53 +75,55 @@ class PagerViewmodel @Inject constructor(
         viewModelScope.launch {
             userPreferences.collectLatest { cities ->
                 mutex.withLock {
-                if (cities.userSavedCities?.isNotEmpty() == true) {
-                    if (index > 0) {
-                        cities.userSavedCities[index - 1].let { savedCity ->
-                            weatherRepository.getCurrentWeatherData(
-                                savedCity.latitude,
-                                savedCity.longitude
-                            )
-                                .collect { currentWeatherData ->
-                                    if (currentWeatherData != null) {
-                                        _pageCurrentCityWeather[index - 1] = currentWeatherData
-                                    } else {
-                                        isError = true
+                    if (cities.userSavedCities?.isNotEmpty() == true) {
+                        if (index > 0) {
+                            cities.userSavedCities[index - 1].let { savedCity ->
+                                weatherRepository.getCurrentWeatherData(
+                                    savedCity.latitude,
+                                    savedCity.longitude
+                                )
+                                    .collect { currentWeatherData ->
+                                        if (currentWeatherData != null) {
+                                            _pageCurrentCityWeather[index - 1] = currentWeatherData
+                                        } else {
+                                            isError = true
+                                        }
                                     }
-                                }
-                        }
-                    }
-                    cities.userSavedCities[index].let { savedCity ->
-                        weatherRepository.getCurrentWeatherData(
-                            savedCity.latitude,
-                            savedCity.longitude
-                        )
-                            .collect { currentWeatherData ->
-                                if (currentWeatherData != null) {
-                                    _pageCurrentCityWeather[index] = currentWeatherData
-                                } else {
-                                    isError = true
-                                }
                             }
-
-                    }
-                    if (index < cities.userSavedCities.size - 1) {
-                        cities.userSavedCities[index + 1].let { savedCity ->
-                            weatherRepository.getCurrentWeatherData(
-                                savedCity.latitude,
-                                savedCity.longitude
-                            )
-                                .collect { currentWeatherData ->
-                                    if (currentWeatherData != null) {
-                                        _pageCurrentCityWeather[index + 1] = currentWeatherData
-                                    } else {
-                                        isError = true
+                        }
+                        if (index < cities.userSavedCities.size) {
+                            cities.userSavedCities[index].let { savedCity ->
+                                weatherRepository.getCurrentWeatherData(
+                                    savedCity.latitude,
+                                    savedCity.longitude
+                                )
+                                    .collect { currentWeatherData ->
+                                        if (currentWeatherData != null) {
+                                            _pageCurrentCityWeather[index] = currentWeatherData
+                                        } else {
+                                            isError = true
+                                        }
                                     }
 
-                                }
+                            }
+                        }
+                        if (index < cities.userSavedCities.size - 1) {
+                            cities.userSavedCities[index + 1].let { savedCity ->
+                                weatherRepository.getCurrentWeatherData(
+                                    savedCity.latitude,
+                                    savedCity.longitude
+                                )
+                                    .collect { currentWeatherData ->
+                                        if (currentWeatherData != null) {
+                                            _pageCurrentCityWeather[index + 1] = currentWeatherData
+                                        } else {
+                                            isError = true
+                                        }
+
+                                    }
+                            }
                         }
                     }
-                }
                 }
             }
         }
@@ -132,68 +135,74 @@ class PagerViewmodel @Inject constructor(
         viewModelScope.launch {
             userPreferences.collect { cities ->
                 mutex.withLock {
-                if (cities.userSavedCities?.isNotEmpty() == true) {
-                    if (index > 0) {
-                        cities.userSavedCities[index - 1].let { savedCity ->
-                            weatherRepository.getHourlyWeatherData(
-                                savedCity.latitude,
-                                savedCity.longitude
-                            ).collect { hourlyWeatherData ->
-                                if (!hourlyWeatherData.isNullOrEmpty()) {
-                                    val offSet =
-                                        (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600)) ?: 0
-                                    val today = hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
-                                    val tomorrow = hourlyWeatherData[1]
-                                    if (today != null && tomorrow != null) {
-                                        _pageHourlyCityWeather[index-1] = today + tomorrow
+                    if (cities.userSavedCities?.isNotEmpty() == true) {
+                        if (index > 0) {
+                            cities.userSavedCities[index - 1].let { savedCity ->
+                                weatherRepository.getHourlyWeatherData(
+                                    savedCity.latitude,
+                                    savedCity.longitude
+                                ).collect { hourlyWeatherData ->
+                                    if (!hourlyWeatherData.isNullOrEmpty()) {
+                                        val offSet =
+                                            (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600))
+                                                ?: 0
+                                        val today =
+                                            hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
+                                        val tomorrow = hourlyWeatherData[1]
+                                        if (today != null && tomorrow != null) {
+                                            _pageHourlyCityWeather[index - 1] = today + tomorrow
+                                        }
+                                    } else {
+                                        isError = true
                                     }
-                                } else {
-                                    isError = true
                                 }
                             }
                         }
-                    }
-                    cities.userSavedCities[index].let { savedCity ->
-                        weatherRepository.getHourlyWeatherData(
-                            savedCity.latitude,
-                            savedCity.longitude
-                        ).collect { hourlyWeatherData ->
-                            if (!hourlyWeatherData.isNullOrEmpty()) {
-                                val offSet =
-                                    (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600)) ?: 0
-                                val today = hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
-                                val tomorrow = hourlyWeatherData[1]
-                                if (today != null && tomorrow != null) {
-                                    _pageHourlyCityWeather[index] = today + tomorrow
+                        if (index < cities.userSavedCities.size) {
+                            cities.userSavedCities[index].let { savedCity ->
+                                weatherRepository.getHourlyWeatherData(
+                                    savedCity.latitude,
+                                    savedCity.longitude
+                                ).collect { hourlyWeatherData ->
+                                    if (!hourlyWeatherData.isNullOrEmpty()) {
+                                        val offSet =
+                                            (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600))
+                                                ?: 0
+                                        val today =
+                                            hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
+                                        val tomorrow = hourlyWeatherData[1]
+                                        if (today != null && tomorrow != null) {
+                                            _pageHourlyCityWeather[index] = today + tomorrow
+                                        }
+                                    } else {
+                                        isError = true
+                                    }
                                 }
-                            } else {
-                                isError = true
                             }
                         }
-                    }
-                    if (index < cities.userSavedCities.size - 1) {
-                        cities.userSavedCities[index + 1].let { savedCity ->
-                            weatherRepository.getHourlyWeatherData(
-                                savedCity.latitude,
-                                savedCity.longitude
-                            ).collect { hourlyWeatherData ->
-                                if (!hourlyWeatherData.isNullOrEmpty()) {
-                                    val offSet =
-                                        (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600))
-                                            ?: 0
-                                    val today =
-                                        hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
-                                    val tomorrow = hourlyWeatherData[1]
-                                    if (today != null && tomorrow != null) {
-                                        _pageHourlyCityWeather[index + 1] = today + tomorrow
+                        if (index < cities.userSavedCities.size - 1) {
+                            cities.userSavedCities[index + 1].let { savedCity ->
+                                weatherRepository.getHourlyWeatherData(
+                                    savedCity.latitude,
+                                    savedCity.longitude
+                                ).collect { hourlyWeatherData ->
+                                    if (!hourlyWeatherData.isNullOrEmpty()) {
+                                        val offSet =
+                                            (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600))
+                                                ?: 0
+                                        val today =
+                                            hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
+                                        val tomorrow = hourlyWeatherData[1]
+                                        if (today != null && tomorrow != null) {
+                                            _pageHourlyCityWeather[index + 1] = today + tomorrow
+                                        }
+                                    } else {
+                                        isError = true
                                     }
-                                } else {
-                                    isError = true
-                                }
 
+                                }
                             }
                         }
-                    }
                     }
                 }
             }
@@ -205,51 +214,53 @@ class PagerViewmodel @Inject constructor(
         viewModelScope.launch {
             userPreferences.collectLatest { cities ->
                 mutex.withLock {
-                if (cities.userSavedCities?.isNotEmpty() == true) {
-                    if (index > 0) {
-                        cities.userSavedCities[index - 1].let { savedCity ->
-                            weatherRepository.getDailyWeatherData(
-                                savedCity.latitude,
-                                savedCity.longitude
-                            )
-                                .collect { dailyWeatherData ->
-                                    if (dailyWeatherData != null) {
-                                        _pageDailyCityWeather[index - 1] = dailyWeatherData
-                                    } else {
-                                        isError = true
+                    if (cities.userSavedCities?.isNotEmpty() == true) {
+                        if (index > 0) {
+                            cities.userSavedCities[index - 1].let { savedCity ->
+                                weatherRepository.getDailyWeatherData(
+                                    savedCity.latitude,
+                                    savedCity.longitude
+                                )
+                                    .collect { dailyWeatherData ->
+                                        if (dailyWeatherData != null) {
+                                            _pageDailyCityWeather[index - 1] = dailyWeatherData
+                                        } else {
+                                            isError = true
+                                        }
                                     }
-                                }
-                        }
-                    }
-                    cities.userSavedCities[index].let { savedCity ->
-                        weatherRepository.getDailyWeatherData(
-                            savedCity.latitude,
-                            savedCity.longitude
-                        )
-                            .collect { dailyWeatherData ->
-                                if (dailyWeatherData != null) {
-                                    _pageDailyCityWeather[index] = dailyWeatherData
-                                } else {
-                                    isError = true
-                                }
                             }
-                    }
-                    if (index < cities.userSavedCities.size - 1) {
-                        cities.userSavedCities[index + 1].let { savedCity ->
-                            weatherRepository.getDailyWeatherData(
-                                savedCity.latitude,
-                                savedCity.longitude
-                            )
-                                .collect { dailyWeatherData ->
-                                    if (dailyWeatherData != null) {
-                                        _pageDailyCityWeather[index + 1] = dailyWeatherData
-                                    } else {
-                                        isError = true
+                        }
+                        if (index < cities.userSavedCities.size) {
+                            cities.userSavedCities[index].let { savedCity ->
+                                weatherRepository.getDailyWeatherData(
+                                    savedCity.latitude,
+                                    savedCity.longitude
+                                )
+                                    .collect { dailyWeatherData ->
+                                        if (dailyWeatherData != null) {
+                                            _pageDailyCityWeather[index] = dailyWeatherData
+                                        } else {
+                                            isError = true
+                                        }
                                     }
-                                }
+                            }
+                        }
+                        if (index < cities.userSavedCities.size - 1) {
+                            cities.userSavedCities[index + 1].let { savedCity ->
+                                weatherRepository.getDailyWeatherData(
+                                    savedCity.latitude,
+                                    savedCity.longitude
+                                )
+                                    .collect { dailyWeatherData ->
+                                        if (dailyWeatherData != null) {
+                                            _pageDailyCityWeather[index + 1] = dailyWeatherData
+                                        } else {
+                                            isError = true
+                                        }
+                                    }
+                            }
                         }
                     }
-                }
                 }
             }
         }
