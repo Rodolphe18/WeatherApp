@@ -32,7 +32,7 @@ fun WeatherHourlyDto.asExternalHourlyWeather(): Map<Int, List<HourlyWeatherData>
 @SuppressLint("NewApi")
 fun WeatherCurrentDto.asExternalCurrentWeather() : CurrentWeatherData {
     val now = ZonedDateTime.now()
-    return CurrentWeatherData(now, offSetSeconds, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode), weatherCurrentData.windSpeed, weatherCurrentData.windDirection, weatherCurrentData.isDay == 1, weatherCurrentData.apparentTemperature, weatherCurrentData.precipitation)
+    return CurrentWeatherData(now, offSetSeconds, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode), weatherCurrentData.windSpeed, weatherCurrentData.windDirection, weatherCurrentData.isDay == 1, weatherCurrentData.apparentTemperature, weatherCurrentData.precipitation * 100)
 }
 
 fun WeatherDailyDto.asExternalDailyWeather(): List<DailyWeatherData> {

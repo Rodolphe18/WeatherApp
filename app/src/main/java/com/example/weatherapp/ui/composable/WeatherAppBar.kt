@@ -36,16 +36,16 @@ fun WeatherTopAppBar(
             IconButton(onClick = onActionClick) {
                 Icon(
                     imageVector = actionIcon,
-                    contentDescription = actionIconContentDescription
-                )
+                    contentDescription = actionIconContentDescription,
+                    tint = if(isDay) Color.DarkGray else Color.LightGray)
             }
         },
         navigationIcon = {
             IconButton(onClick = onNavigationClick) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = null
-                )
+                    contentDescription = null,
+                    tint = if(isDay) Color.DarkGray else Color.LightGray)
             }
         },
         colors = colors,

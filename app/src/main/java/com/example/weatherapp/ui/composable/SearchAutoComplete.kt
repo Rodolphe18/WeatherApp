@@ -97,7 +97,7 @@ fun SearchAutoComplete(
                     .fillMaxWidth()
                     .height(heightTextFields)
                     .border(
-                        border = BorderStroke(1.dp, Color.Gray),
+                        border = BorderStroke(1.dp, Color(0xFFe6e6e5)),
                         shape = RoundedCornerShape(15.dp)
                     )
                     .onGloballyPositioned { coordinates ->
@@ -109,7 +109,7 @@ fun SearchAutoComplete(
                     viewModel.getAutoCompleteSearch(query)
                     expanded = true
                 },
-                placeholder = { Text(text = stringResource(R.string.place_holder_hint), fontWeight = FontWeight.SemiBold) },
+                placeholder = { Text(text = stringResource(R.string.place_holder_hint), fontWeight = FontWeight.SemiBold, color = Color(0xFFe6e6e5)) },
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,

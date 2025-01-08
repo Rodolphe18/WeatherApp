@@ -120,6 +120,7 @@ fun SearchCityScreen(
                 text = stringResource(R.string.manage_cities),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
+                color = Color(0xFFe6e6e5)
             )
             SearchAutoComplete(cities = autoCompletionResult) { city ->
                 viewModel.addCityToUserFavoriteCities(city)
@@ -185,12 +186,7 @@ fun UserCityItem(
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(
-                brush = Brush.linearGradient(
-                    listOf(
-                        LocalBackgroundColor.current.backgroundColor.copy(0.6f),
-                        LocalBackgroundColor.current.backgroundColor.copy(0.4f)
-                    )
-                )
+                color = Color(0xFF3360d2)
             )
             .padding(horizontal = 8.dp, vertical = 16.dp)
     )
@@ -199,13 +195,15 @@ fun UserCityItem(
             modifier = Modifier.weight(1f),
             text = savedCity.name,
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp
+            fontSize = 18.sp,
+            color = Color.LightGray
         )
         savedCity.temperature?.let { temperature ->
             Text(
                 modifier = Modifier.weight(0.2f),
                 text = "${temperature}°",
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                color = Color.LightGray
             )
         }
         if (inSelectionMode) {
