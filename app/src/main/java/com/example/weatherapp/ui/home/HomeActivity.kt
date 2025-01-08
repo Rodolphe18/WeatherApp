@@ -3,6 +3,7 @@ package com.example.weatherapp.ui.home
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -34,11 +35,13 @@ class HomeActivity : ComponentActivity() {
                 Row(Modifier.fillMaxSize()) {
                     val userCities by viewModel.userPreferencesCities.collectAsStateWithLifecycle()
                     userCities?.let { cities ->
+
                         val startDestination = if (cities.isNotEmpty()) {
                             PagerRoute(0)
                         } else {
                             SearchCityNavigationRoute
                         }
+                        Log.d("debug_destination", startDestination.toString())
                         WeatherNavHost(startDestination = startDestination)
                     }
                 }

@@ -23,6 +23,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -47,10 +49,7 @@ class PagerViewmodel @Inject constructor(
         )
     )
 
-    val pageCount = userDataRepository.userData.map { it.userSavedCities?.size ?: 0 }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000), 0
-    )
+    val pageCount = userDataRepository.userData.map { it.userSavedCities?.size ?: 0 }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
     private val _pageCurrentCityWeather = mutableStateMapOf<Int, CurrentWeatherData>()
     val pageCurrentCityWeather: SnapshotStateMap<Int, CurrentWeatherData> = _pageCurrentCityWeather
@@ -62,6 +61,8 @@ class PagerViewmodel @Inject constructor(
     private val _pageDailyCityWeather = mutableStateMapOf<Int, List<DailyWeatherData>>()
     val pageDailyCityWeather: SnapshotStateMap<Int, List<DailyWeatherData>> = _pageDailyCityWeather
 
+    private val mutex = Mutex()
+
     fun reload() {
         isError = false
         loadCityCurrentWeather(currentPage)
@@ -72,6 +73,7 @@ class PagerViewmodel @Inject constructor(
     fun loadCityCurrentWeather(index: Int = 0) {
         viewModelScope.launch {
             userPreferences.collectLatest { cities ->
+                mutex.withLock {
                 if (cities.userSavedCities?.isNotEmpty() == true) {
                     if (index > 0) {
                         cities.userSavedCities[index - 1].let { savedCity ->
@@ -119,6 +121,7 @@ class PagerViewmodel @Inject constructor(
                         }
                     }
                 }
+                }
             }
         }
         isLoading = false
@@ -128,6 +131,7 @@ class PagerViewmodel @Inject constructor(
     fun loadCityHourlyWeather(index: Int) {
         viewModelScope.launch {
             userPreferences.collect { cities ->
+                mutex.withLock {
                 if (cities.userSavedCities?.isNotEmpty() == true) {
                     if (index > 0) {
                         cities.userSavedCities[index - 1].let { savedCity ->
@@ -175,11 +179,13 @@ class PagerViewmodel @Inject constructor(
                             ).collect { hourlyWeatherData ->
                                 if (!hourlyWeatherData.isNullOrEmpty()) {
                                     val offSet =
-                                        (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600)) ?: 0
-                                    val today = hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
+                                        (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600))
+                                            ?: 0
+                                    val today =
+                                        hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
                                     val tomorrow = hourlyWeatherData[1]
                                     if (today != null && tomorrow != null) {
-                                        _pageHourlyCityWeather[index+1] = today + tomorrow
+                                        _pageHourlyCityWeather[index + 1] = today + tomorrow
                                     }
                                 } else {
                                     isError = true
@@ -187,7 +193,7 @@ class PagerViewmodel @Inject constructor(
 
                             }
                         }
-
+                    }
                     }
                 }
             }
@@ -198,6 +204,7 @@ class PagerViewmodel @Inject constructor(
     fun loadCityDailyWeather(index: Int) {
         viewModelScope.launch {
             userPreferences.collectLatest { cities ->
+                mutex.withLock {
                 if (cities.userSavedCities?.isNotEmpty() == true) {
                     if (index > 0) {
                         cities.userSavedCities[index - 1].let { savedCity ->
@@ -242,6 +249,7 @@ class PagerViewmodel @Inject constructor(
                                 }
                         }
                     }
+                }
                 }
             }
         }

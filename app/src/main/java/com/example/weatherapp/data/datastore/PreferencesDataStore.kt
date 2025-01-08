@@ -13,6 +13,7 @@ class PreferencesDataSource @Inject constructor(
 ) {
     val userData = userPreferences.data
         .map { userPrefs ->
+            Log.d("debug_userPref", userPrefs.citiesMap.values.toString())
             UserData(userSavedCities = userPrefs.citiesMap.entries.map { (key, value) ->
                 SavedCity(key, value.name, value.latitude, value.longitude)
             })
@@ -21,7 +22,7 @@ class PreferencesDataSource @Inject constructor(
 
     suspend fun addCity(savedCity: SavedCity) {
         userPreferences.updateData { userPrefs ->
-            Log.d("debug_userPref1", userPrefs.citiesMap.values.toString())
+            Log.d("debug_userPref_before_add_city", userPrefs.citiesMap.values.toString())
             userPrefs.copy {
                 this.cities.put(savedCity.placeId,
                     AutoCompleteCity.newBuilder().setName(savedCity.name)
@@ -33,6 +34,7 @@ class PreferencesDataSource @Inject constructor(
 
     suspend fun removeCity(savedCity: SavedCity) {
         userPreferences.updateData { userPrefs ->
+            Log.d("debug_userPref_before_remove_city", userPrefs.citiesMap.values.toString())
             userPrefs.copy {
                 this.cities.remove(savedCity.placeId)
             }

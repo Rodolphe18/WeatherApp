@@ -14,8 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,7 +28,6 @@ import com.example.weatherapp.ui.composable.ForecastHourlyList
 import com.example.weatherapp.ui.composable.LoadingScreen
 import com.example.weatherapp.ui.composable.TodayWeatherFirstItem
 import com.example.weatherapp.ui.composable.TodayWeatherSecondItem
-import com.example.weatherapp.ui.theme.LocalBackgroundColor
 import com.example.weatherapp.ui.theme.darkScheme
 import com.example.weatherapp.ui.theme.lightScheme
 
@@ -46,6 +43,7 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { newPage ->
             viewmodel.currentPage = newPage
+            Log.d("debug_current_page", viewmodel.currentPage.toString())
             viewmodel.loadCityCurrentWeather(newPage)
             viewmodel.loadCityDailyWeather(newPage)
             viewmodel.loadCityHourlyWeather(newPage)

@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.pager_screen
 
+import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -11,6 +12,7 @@ data class PagerRoute(val index:Int)
 
 fun NavController.navigateToPager(index: Int, navOptions: NavOptionsBuilder.() -> Unit = {}) {
     navigate(route = PagerRoute(index)) {
+        Log.d("debug_navigateToPager", index.toString())
         navOptions()
     }
 }

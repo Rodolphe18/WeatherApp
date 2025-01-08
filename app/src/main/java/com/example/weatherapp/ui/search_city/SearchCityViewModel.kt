@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,7 +35,7 @@ class SearchCityViewModel @Inject constructor(
 
 
     val uiState: StateFlow<UserCitiesUiState> = getCitiesWithWeatherData()
-        .map { if(it == null) UserCitiesUiState.Error else UserCitiesUiState.Success(it) }
+        .map { if (it == null) UserCitiesUiState.Error else UserCitiesUiState.Success(it) }
         .onStart { emit(UserCitiesUiState.Loading) }
         .stateIn(viewModelScope, restartableWhileSubscribed, UserCitiesUiState.Loading)
 
@@ -42,7 +44,10 @@ class SearchCityViewModel @Inject constructor(
         viewModelScope.launch {
             weatherRepository.getAutoCompleteResult(query).collect { autoCompleteResults ->
                 autoCompleteResults.let { cities ->
-                    cities?.let { autoCompletionResult.addAll(it) }
+                    cities?.let {
+                        autoCompletionResult.clear()
+                        autoCompletionResult.addAll(it)
+                    }
 
                 }
             }
@@ -70,9 +75,11 @@ class SearchCityViewModel @Inject constructor(
 
     fun deleteCitiesFromUserCities() {
         viewModelScope.launch {
-            userDataRepository.deleteUserCities(selectedCitiesToRemove)
-            selectedCitiesToRemove.clear()
-           restartableWhileSubscribed.restart()
+            Mutex().withLock {
+                userDataRepository.deleteUserCities(selectedCitiesToRemove)
+                selectedCitiesToRemove.clear()
+            }
+            restartableWhileSubscribed.restart()
         }
     }
 
