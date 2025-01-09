@@ -2,7 +2,7 @@
 syntax = "proto3";
 import "auto_complete_city.proto";
 
-option java_package = "com.example.weatherapp.protobuf";
+option java_package = "com.francotte.weatherapp.protobuf";
 option java_multiple_files = true;
 
 
