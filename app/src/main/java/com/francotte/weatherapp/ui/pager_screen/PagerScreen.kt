@@ -58,6 +58,7 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
     if (showSettingsDialog) {
         SettingsDialog(
             onDismiss = { showSettingsDialog = false },
+            onClick = { viewmodel.deleteCitiesFromUserCities() }
         )
     }
     if (userCities?.isNotEmpty() == true) {

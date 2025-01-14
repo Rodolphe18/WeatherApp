@@ -16,6 +16,7 @@ import com.francotte.weatherapp.domain.WeatherRepository
 import com.francotte.weatherapp.domain.model.CurrentWeatherData
 import com.francotte.weatherapp.domain.model.DailyWeatherData
 import com.francotte.weatherapp.domain.model.HourlyWeatherData
+import com.francotte.weatherapp.util.restartableWhileSubscribed
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
@@ -31,7 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PagerViewmodel @Inject constructor(
     private val weatherRepository: WeatherRepository,
-    userDataRepository: UserDataRepository,
+    private val userDataRepository: UserDataRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -265,6 +266,20 @@ class PagerViewmodel @Inject constructor(
             }
         }
         isLoading = false
+    }
+
+    fun deleteCitiesFromUserCities() {
+        viewModelScope.launch {
+            Mutex().withLock {
+                userPreferences.value.userSavedCities?.let {
+                    userDataRepository.deleteUserCities(it)
+                }
+                _pageCurrentCityWeather.clear()
+                _pageHourlyCityWeather.clear()
+                _pageDailyCityWeather.clear()
+                isError = false
+            }
+        }
     }
 
     override fun onCleared() {

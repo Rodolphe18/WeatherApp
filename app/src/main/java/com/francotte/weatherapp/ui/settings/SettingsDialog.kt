@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -20,16 +21,21 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import com.francotte.weatherapp.R
 
 
 @Composable
 fun SettingsDialog(
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onClick: () -> Unit
 ) {
     val configuration = LocalConfiguration.current
 
@@ -41,19 +47,23 @@ fun SettingsDialog(
             Text(
                 text = stringResource(R.string.feature_settings_title),
                 style = MaterialTheme.typography.titleLarge,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
             )
         },
         text = {
-            HorizontalDivider()
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.verticalScroll(rememberScrollState()), horizontalAlignment = Alignment.CenterHorizontally) {
+                SettingsDialogSectionTitle(text = "Effacer toutes mes villes", onClick)
+                HorizontalDivider()
                 LinksPanel()
             }
+
         },
         confirmButton = {
             Text(
                 text = stringResource(R.string.feature_settings_dismiss_dialog_button_text),
                 style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary,
+                color = Color.Black,
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .clickable { onDismiss() },
@@ -111,5 +121,19 @@ fun WeatherAppTextButton(
             contentColor = MaterialTheme.colorScheme.onBackground,
         ),
         content = content,
+    )
+}
+
+@Composable
+private fun SettingsDialogSectionTitle(text: String, onClick: () -> Unit) {
+    Text(
+        text = text,
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.titleMedium,
+        color = Color.Red,
+        fontWeight = FontWeight.SemiBold,
+        modifier = Modifier
+            .padding(top = 8.dp, bottom = 16.dp)
+            .clickable { onClick() },
     )
 }
