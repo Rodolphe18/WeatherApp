@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">WeatherApp</string>
-    <string name="message1">Nous téléchargeons les données…</string>
-    <string name="message2">C’est presque fini…</string>
-    <string name="message3">Plus que quelques secondes avant d’avoir le résultat…</string>
     <string name="welcome_message">Welcome to Weather App ! \n Click on the button below</string>
     <string name="retry">Réessayer</string>
     <string name="card_meta_data_text">%1$s / %2$s</string>
