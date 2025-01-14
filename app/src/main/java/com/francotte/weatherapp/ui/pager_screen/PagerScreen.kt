@@ -37,6 +37,7 @@ import com.francotte.weatherapp.ui.theme.lightScheme
 fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: () -> Unit) {
     val userPref by viewmodel.userPreferences.collectAsStateWithLifecycle()
     val pageCount by viewmodel.pageCount.collectAsStateWithLifecycle()
+    Log.d("debug_count",pageCount.toString())
     val userCities = userPref.userSavedCities
     val pagerState = rememberPagerState(initialPage = viewmodel.currentIndex, pageCount = { pageCount })
     val isDay = viewmodel.pageCurrentCityWeather[viewmodel.currentPage]?.isDay == true

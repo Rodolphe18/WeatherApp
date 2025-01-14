@@ -19,15 +19,15 @@ android {
         applicationId = "com.francotte.weatherapp"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -108,6 +108,7 @@ dependencies {
 
     implementation(libs.gson)
     implementation(libs.converter.gson)
+    implementation(libs.androidx.security.crypto)
 
 }
 

@@ -34,6 +34,7 @@ class HomeActivity : ComponentActivity() {
             AppTheme {
                 Row(Modifier.fillMaxSize()) {
                     val userCities by viewModel.userPreferencesCities.collectAsStateWithLifecycle()
+                    Log.d("debug_cities", userCities.toString())
                     userCities?.let { cities ->
 
                         val startDestination = if (cities.isNotEmpty()) {
