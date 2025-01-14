@@ -16,6 +16,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -28,6 +31,7 @@ import com.francotte.weatherapp.ui.composable.LoadingScreen
 import com.francotte.weatherapp.ui.composable.TodayWeatherFirstItem
 import com.francotte.weatherapp.ui.composable.TodayWeatherSecondItem
 import com.francotte.weatherapp.ui.composable.WeatherTopAppBar
+import com.francotte.weatherapp.ui.settings.SettingsDialog
 import com.francotte.weatherapp.ui.theme.darkScheme
 import com.francotte.weatherapp.ui.theme.lightScheme
 
@@ -35,6 +39,7 @@ import com.francotte.weatherapp.ui.theme.lightScheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: () -> Unit) {
+    var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
     val userPref by viewmodel.userPreferences.collectAsStateWithLifecycle()
     val pageCount by viewmodel.pageCount.collectAsStateWithLifecycle()
     Log.d("debug_count",pageCount.toString())
@@ -50,6 +55,11 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
             viewmodel.loadCityHourlyWeather(newPage)
         }
     }
+    if (showSettingsDialog) {
+        SettingsDialog(
+            onDismiss = { showSettingsDialog = false },
+        )
+    }
     if (userCities?.isNotEmpty() == true) {
         Scaffold(
             topBar = {
@@ -57,7 +67,8 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
                     text = userCities[viewmodel.currentPage].name,
                     isDay = isDay,
                     actionIcon = Icons.Filled.MoreVert,
-                    onNavigationClick = onNavigationClick
+                    onNavigationClick = onNavigationClick,
+                    onActionClick = { showSettingsDialog = true }
                 )
             }) { padding ->
             HorizontalPager(

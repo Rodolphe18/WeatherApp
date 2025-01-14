@@ -59,7 +59,7 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
     val isDay = LocalDateTime.parse(hourlyWeatherData.time).hour in 6..18
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            text = DateTimeFormatter.getFormattedTimeForHourly(hourlyWeatherData.time, hourlyWeatherData.offSetSeconds),
+            text = DateTimeFormatter.getFormattedTimeForHourly(hourlyWeatherData.time),
             fontWeight = FontWeight.ExtraBold,
             fontSize = 18.sp,
             color = if(parentIsDay) Color.DarkGray else Color.LightGray

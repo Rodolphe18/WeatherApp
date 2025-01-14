@@ -23,13 +23,10 @@ object DateTimeFormatter {
         return formattedDate
     }
 
-    fun getFormattedTimeForHourly(value: String, offSetSeconds:Int?):String {
-        val offSetInHour = (offSetSeconds?.div(3600) ?: 0)
+    fun getFormattedTimeForHourly(value: String):String {
         val nonFormattedHour = LocalDateTime.parse(value).hour
-       // val hour = if(abs(offSetInHour) > abs(nonFormattedHour) && offSetInHour < 0) nonFormattedHour+offSetInHour+24 else nonFormattedHour + offSetInHour
         val formattedHour = if(nonFormattedHour >= 24) nonFormattedHour -24 else nonFormattedHour
-        val formattedDate = "$formattedHour h"
-        return formattedDate
+        return "$formattedHour h"
     }
 
 }
