@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,7 +36,7 @@ import com.francotte.weatherapp.util.DateTimeFormatter
 @Composable
 fun ForecastDailyList(weatherDataList: List<DailyWeatherData>, parentIsDay: Boolean) {
     Text(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp),
         text = stringResource(R.string.forecast_daily_title),
         fontSize = 24.sp,
         fontWeight = FontWeight.ExtraBold,
@@ -56,16 +57,15 @@ fun ForecastDailyList(weatherDataList: List<DailyWeatherData>, parentIsDay: Bool
 fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherData,parentIsDay:Boolean) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = DateTimeFormatter.getFormattedDate(weatherData.time),fontWeight = FontWeight.ExtraBold,
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             color = if(parentIsDay) Color.DarkGray else Color.LightGray)
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(4.dp))
         Column(
             modifier = modifier
                 .aspectRatio(3 / 4f)
                 .clip(RoundedCornerShape(8.dp))
                 .background(
-                    color = if (parentIsDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f)
-                )
+                    brush = Brush.linearGradient(listOf(Color(0xfff3b9df).copy(0.4f), Color(0xFFAFC6FF).copy(0.2f))))
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -83,7 +83,7 @@ fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherDa
             Image(
                 painterResource(id = weatherData.weatherType.iconRes),
                 contentDescription = null,
-                modifier = Modifier.size(45.dp)
+                modifier = Modifier.size(35.dp)
             )
         }
     }

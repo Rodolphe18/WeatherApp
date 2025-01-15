@@ -34,7 +34,7 @@ fun TodayWeatherSecondItem(
     val isDay = remember { currentWeatherData.isDay }
     Column {
         Text(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
             text = stringResource(R.string.today_detail_weather_title),
             fontSize = 24.sp,
             fontWeight = FontWeight.ExtraBold,
@@ -44,7 +44,7 @@ fun TodayWeatherSecondItem(
             modifier = modifier
                 .fillMaxWidth()
                 .background(color = if (isDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f))
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             Column(Modifier.weight(1f)) {
                 TodayItemMetaData(stringResource(R.string.apparent_temperature), "${currentWeatherData.apparentTemperature}°C",isDay)

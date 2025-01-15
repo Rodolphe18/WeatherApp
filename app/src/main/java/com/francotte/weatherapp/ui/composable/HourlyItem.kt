@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -61,7 +62,7 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
         Text(
             text = DateTimeFormatter.getFormattedTimeForHourly(hourlyWeatherData.time),
             fontWeight = FontWeight.ExtraBold,
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             color = if(parentIsDay) Color.DarkGray else Color.LightGray
         )
         Spacer(Modifier.height(4.dp))
@@ -69,7 +70,7 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
             modifier = modifier
                 .width(120.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(color = if (parentIsDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f))
+                .background(brush = Brush.linearGradient(listOf(Color(0xfff3b9df).copy(0.4f), Color(0xFFAFC6FF).copy(0.2f))))
                 .padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -87,7 +88,7 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
                     else -> hourlyWeatherData.weatherType.iconRes
                 }),
                 contentDescription = null,
-                modifier = Modifier.size(45.dp)
+                modifier = Modifier.size(35.dp)
             )
             Text(
                 text = "${hourlyWeatherData.windSpeed} km/h",

@@ -34,11 +34,10 @@ fun TodayWeatherFirstItem(
             modifier = modifier
                 .fillMaxWidth()
                 .background(color = if (data.isDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f))
-                .padding(12.dp),
+                .padding(8.dp),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Spacer(Modifier.height(6.dp))
                 Text(
                     text = stringResource(data.weatherType.weatherDesc),
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -53,7 +52,7 @@ fun TodayWeatherFirstItem(
                         else -> data.weatherType.iconRes
                     }),
                     contentDescription = null,
-                    modifier = Modifier.size(100.dp).padding(vertical = 8.dp)
+                    modifier = Modifier.size(80.dp).padding(vertical = 8.dp)
                 )
                 Text(
                     text = "${data.temperatureCelsius} °C",
