@@ -83,13 +83,13 @@ fun TodayItemMetaData(title: String, data: String, isDay:Boolean) {
     Column {
         Text(
             text = title,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Normal,
             fontSize = 14.sp,
             color = if(isDay) Color.DarkGray else Color.LightGray
         )
         Text(
             text = data,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 20.sp,
             color = if(isDay) Color.DarkGray else Color.LightGray
         )
