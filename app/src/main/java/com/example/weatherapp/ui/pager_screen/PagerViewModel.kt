@@ -1,5 +1,6 @@
-package com.francotte.weatherapp.ui.pager_screen
+package com.example.weatherapp.ui.pager_screen
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -10,18 +11,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.francotte.weatherapp.data.datastore.UserData
-import com.francotte.weatherapp.domain.UserDataRepository
-import com.francotte.weatherapp.domain.WeatherRepository
-import com.francotte.weatherapp.domain.model.CurrentWeatherData
-import com.francotte.weatherapp.domain.model.DailyWeatherData
-import com.francotte.weatherapp.domain.model.HourlyWeatherData
-import com.francotte.weatherapp.util.restartableWhileSubscribed
+import com.example.weatherapp.data.datastore.UserData
+import com.example.weatherapp.domain.UserDataRepository
+import com.example.weatherapp.domain.WeatherRepository
+import com.example.weatherapp.domain.model.CurrentWeatherData
+import com.example.weatherapp.domain.model.DailyWeatherData
+import com.example.weatherapp.domain.model.HourlyWeatherData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -32,7 +31,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PagerViewmodel @Inject constructor(
     private val weatherRepository: WeatherRepository,
-    private val userDataRepository: UserDataRepository,
+    userDataRepository: UserDataRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -266,20 +265,6 @@ class PagerViewmodel @Inject constructor(
             }
         }
         isLoading = false
-    }
-
-    fun deleteCitiesFromUserCities() {
-        viewModelScope.launch {
-            Mutex().withLock {
-                userPreferences.value.userSavedCities?.let {
-                    userDataRepository.deleteUserCities(it)
-                }
-                _pageCurrentCityWeather.clear()
-                _pageHourlyCityWeather.clear()
-                _pageDailyCityWeather.clear()
-                isError = false
-            }
-        }
     }
 
     override fun onCleared() {

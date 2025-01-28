@@ -1,5 +1,6 @@
-package com.francotte.weatherapp.ui.pager_screen
+package com.example.weatherapp.ui.pager_screen
 
+import WeatherTopAppBar
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
@@ -16,33 +17,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.francotte.weatherapp.ui.composable.ErrorScreen
-import com.francotte.weatherapp.ui.composable.ForecastDailyList
-import com.francotte.weatherapp.ui.composable.ForecastHourlyList
-import com.francotte.weatherapp.ui.composable.LoadingScreen
-import com.francotte.weatherapp.ui.composable.TodayWeatherFirstItem
-import com.francotte.weatherapp.ui.composable.TodayWeatherSecondItem
-import com.francotte.weatherapp.ui.composable.WeatherTopAppBar
-import com.francotte.weatherapp.ui.settings.SettingsDialog
-import com.francotte.weatherapp.ui.theme.darkScheme
-import com.francotte.weatherapp.ui.theme.lightScheme
+import com.example.weatherapp.ui.composable.ErrorScreen
+import com.example.weatherapp.ui.composable.ForecastDailyList
+import com.example.weatherapp.ui.composable.ForecastHourlyList
+import com.example.weatherapp.ui.composable.LoadingScreen
+import com.example.weatherapp.ui.composable.TodayWeatherFirstItem
+import com.example.weatherapp.ui.composable.TodayWeatherSecondItem
+import com.example.weatherapp.ui.theme.darkScheme
+import com.example.weatherapp.ui.theme.lightScheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: () -> Unit) {
-    var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
     val userPref by viewmodel.userPreferences.collectAsStateWithLifecycle()
     val pageCount by viewmodel.pageCount.collectAsStateWithLifecycle()
-    Log.d("debug_count",pageCount.toString())
     val userCities = userPref.userSavedCities
     val pagerState = rememberPagerState(initialPage = viewmodel.currentIndex, pageCount = { pageCount })
     val isDay = viewmodel.pageCurrentCityWeather[viewmodel.currentPage]?.isDay == true
@@ -55,12 +49,6 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
             viewmodel.loadCityHourlyWeather(newPage)
         }
     }
-    if (showSettingsDialog) {
-        SettingsDialog(
-            onDismiss = { showSettingsDialog = false },
-            onClick = { viewmodel.deleteCitiesFromUserCities() }
-        )
-    }
     if (userCities?.isNotEmpty() == true) {
         Scaffold(
             topBar = {
@@ -68,8 +56,7 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
                     text = userCities[viewmodel.currentPage].name,
                     isDay = isDay,
                     actionIcon = Icons.Filled.MoreVert,
-                    onNavigationClick = onNavigationClick,
-                    onActionClick = { showSettingsDialog = true }
+                    onNavigationClick = onNavigationClick
                 )
             }) { padding ->
             HorizontalPager(
