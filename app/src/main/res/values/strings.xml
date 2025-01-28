@@ -6,7 +6,7 @@
     <string name="welcome_message">Welcome to Weather App ! \n Click on the button below</string>
     <string name="retry">Réessayer</string>
     <string name="card_meta_data_text">%1$s / %2$s</string>
-    <string name="forecast_daily_title">Prévisions sur 5 jours</string>
+    <string name="forecast_daily_title">Prévisions sur 7 jours</string>
     <string name="forecast_hourly_title">Dans les prochaines heures</string>
     <string name="place_holder_hint">Entrer le nom d\'une ville</string>
     <string name="today_detail_weather_title">Données météorologiques</string>
@@ -48,4 +48,23 @@
     <string name="error_title">Une erreur est survenue lors du chargement</string>
     <string name="error_subtitle">Veuillez réssayer en cliquant sur le lien ci-dessous.</string>
     <string name="error_button_text">Réessayer</string>
+    <string name="feature_settings_top_app_bar_action_icon_description">Settings</string>
+    <string name="feature_settings_top_app_bar_navigation_icon_description">Search</string>
+    <string name="feature_settings_title">Settings</string>
+    <string name="feature_settings_loading">Loading…</string>
+    <string name="feature_settings_privacy_policy">Privacy policy</string>
+    <string name="feature_settings_licenses">Licenses</string>
+    <string name="feature_settings_brand_guidelines">Brand Guidelines</string>
+    <string name="feature_settings_feedback">Feedback</string>
+    <string name="feature_settings_theme">Theme</string>
+    <string name="feature_settings_brand_default">Default</string>
+    <string name="feature_settings_brand_android">Android</string>
+    <string name="feature_settings_dark_mode_preference">Dark mode preference</string>
+    <string name="feature_settings_dark_mode_config_system_default">System default</string>
+    <string name="feature_settings_dark_mode_config_light">Light</string>
+    <string name="feature_settings_dark_mode_config_dark">Dark</string>
+    <string name="feature_settings_dynamic_color_preference">Use Dynamic Color</string>
+    <string name="feature_settings_dynamic_color_yes">Yes</string>
+    <string name="feature_settings_dynamic_color_no">No</string>
+    <string name="feature_settings_dismiss_dialog_button_text">OK</string>
 </resources>

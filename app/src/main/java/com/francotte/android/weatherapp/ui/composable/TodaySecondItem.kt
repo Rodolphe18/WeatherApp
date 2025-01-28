@@ -37,14 +37,14 @@ fun TodayWeatherSecondItem(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             text = stringResource(R.string.today_detail_weather_title),
             fontSize = 24.sp,
-            fontWeight = FontWeight.ExtraBold,
+            fontWeight = FontWeight.SemiBold,
             color = if(isDay) Color.DarkGray else Color.LightGray
         )
         Row(
             modifier = modifier
                 .fillMaxWidth()
                 .background(color = if (isDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f))
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
             Column(Modifier.weight(1f)) {
                 TodayItemMetaData(stringResource(R.string.apparent_temperature), "${currentWeatherData.apparentTemperature}°C",isDay)
@@ -93,7 +93,7 @@ fun TodayItemMetaData(title: String, data: String, isDay:Boolean) {
             fontSize = 20.sp,
             color = if(isDay) Color.DarkGray else Color.LightGray
         )
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(6.dp))
     }
 }
 

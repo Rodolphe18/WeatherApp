@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.francotte.android.weatherapp.ui.theme.LocalAppBarColor
 import com.francotte.android.weatherapp.ui.theme.darkScheme
 import com.francotte.android.weatherapp.ui.theme.lightScheme
 

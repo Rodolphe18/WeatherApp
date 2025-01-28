@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,10 +38,10 @@ import kotlinx.datetime.LocalDateTime
 @Composable
 fun ForecastHourlyList(weatherDataList: List<HourlyWeatherData>, parentIsDay: Boolean) {
     Text(
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp),
         text = stringResource(R.string.forecast_hourly_title),
         fontSize = 24.sp,
-        fontWeight = FontWeight.ExtraBold,
+        fontWeight = FontWeight.SemiBold,
         color = if(parentIsDay) Color.DarkGray else Color.LightGray
     )
     LazyRow(
@@ -60,7 +61,7 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = DateTimeFormatter.getFormattedTimeForHourly(hourlyWeatherData.time, hourlyWeatherData.offSetSeconds),
-            fontWeight = FontWeight.ExtraBold,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
             color = if(parentIsDay) Color.DarkGray else Color.LightGray
         )
@@ -69,14 +70,15 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
             modifier = modifier
                 .width(120.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(color = if (parentIsDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f))
+                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(lightScheme.onPrimary.copy(0.8f),lightScheme.onPrimary.copy(0.1f)))  else Brush.linearGradient(
+                    listOf(darkScheme.onPrimary.copy(0.8f), darkScheme.onPrimary.copy(0.1f))))
                 .padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "${hourlyWeatherData.temperatureCelsius} °C",
                 modifier = Modifier.padding(horizontal = 8.dp),
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.SemiBold,
                 style = MaterialTheme.typography.titleMedium,
                 color = if(parentIsDay) Color.DarkGray else Color.LightGray
             )
@@ -87,12 +89,12 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
                     else -> hourlyWeatherData.weatherType.iconRes
                 }),
                 contentDescription = null,
-                modifier = Modifier.size(45.dp)
+                modifier = Modifier.size(40.dp)
             )
             Text(
                 text = "${hourlyWeatherData.windSpeed} km/h",
                 modifier = Modifier.padding(horizontal = 8.dp),
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.SemiBold,
                 style = MaterialTheme.typography.titleMedium,
                 color = if(parentIsDay) Color.DarkGray else Color.LightGray
             )

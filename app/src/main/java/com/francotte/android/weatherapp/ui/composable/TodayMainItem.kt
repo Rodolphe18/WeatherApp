@@ -37,28 +37,28 @@ fun TodayWeatherFirstItem(
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Spacer(Modifier.height(6.dp))
+                //Spacer(Modifier.height(6.dp))
                 Text(
                     text = stringResource(data.weatherType.weatherDesc),
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 32.sp,
                     color = if(data.isDay) Color.DarkGray else Color.LightGray
                 )
-                Image(
-                    painterResource(id = when {
-                        data.weatherType == WeatherType.ClearSky && data.isDay -> data.weatherType.iconForDay!!
-                        data.weatherType == WeatherType.ClearSky && !data.isDay -> data.weatherType.iconForNight!!
-                        else -> data.weatherType.iconRes
-                    }),
-                    contentDescription = null,
-                    modifier = Modifier.size(100.dp).padding(vertical = 8.dp)
-                )
+//                Image(
+//                    painterResource(id = when {
+//                        data.weatherType == WeatherType.ClearSky && data.isDay -> data.weatherType.iconForDay!!
+//                        data.weatherType == WeatherType.ClearSky && !data.isDay -> data.weatherType.iconForNight!!
+//                        else -> data.weatherType.iconRes
+//                    }),
+//                    contentDescription = null,
+//                    modifier = Modifier.size(100.dp).padding(vertical = 8.dp)
+//                )
                 Text(
                     text = "${data.temperatureCelsius} °C",
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 32.sp,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 10.dp),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 60.sp,
                     color = if(data.isDay) Color.DarkGray else Color.LightGray
                 )
             }

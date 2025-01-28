@@ -16,6 +16,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -28,6 +31,7 @@ import com.francotte.android.weatherapp.ui.composable.LoadingScreen
 import com.francotte.android.weatherapp.ui.composable.TodayWeatherFirstItem
 import com.francotte.android.weatherapp.ui.composable.TodayWeatherSecondItem
 import com.francotte.android.weatherapp.ui.composable.WeatherTopAppBar
+import com.francotte.android.weatherapp.ui.settings.SettingsDialog
 import com.francotte.android.weatherapp.ui.theme.darkScheme
 import com.francotte.android.weatherapp.ui.theme.lightScheme
 
@@ -40,6 +44,8 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
     val userCities = userPref.userSavedCities
     val pagerState = rememberPagerState(initialPage = viewmodel.currentIndex, pageCount = { pageCount })
     val isDay = viewmodel.pageCurrentCityWeather[viewmodel.currentPage]?.isDay == true
+    var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
+
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { newPage ->
             viewmodel.currentPage = newPage
@@ -49,6 +55,11 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
             viewmodel.loadCityHourlyWeather(newPage)
         }
     }
+    if (showSettingsDialog) {
+        SettingsDialog(
+            onDismiss = { showSettingsDialog = false },
+        )
+    }
     if (userCities?.isNotEmpty() == true) {
         Scaffold(
             topBar = {
@@ -56,7 +67,8 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
                     text = userCities[viewmodel.currentPage].name,
                     isDay = isDay,
                     actionIcon = Icons.Filled.MoreVert,
-                    onNavigationClick = onNavigationClick
+                    onNavigationClick = onNavigationClick,
+                    onActionClick = { showSettingsDialog = true }
                 )
             }) { padding ->
             HorizontalPager(
