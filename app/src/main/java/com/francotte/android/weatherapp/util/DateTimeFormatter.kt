@@ -1,24 +1,30 @@
 package com.francotte.android.weatherapp.util
 
 
-import android.util.Log
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import java.text.SimpleDateFormat
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import kotlin.math.abs
 
 
 object DateTimeFormatter {
 
-    fun getFormattedDate(value: String):String {
+    fun getFormattedDate(value: String): String {
         val offSet = LocalDate.parse(value)
         val dayOfMonth = offSet.dayOfMonth
-        val month = offSet.month.value
-        val formattedDate = "$dayOfMonth/$month"
-        return formattedDate
+        val day = convertToFrenchDay(offSet.dayOfWeek.name)
+        return "$day $dayOfMonth"
+    }
+
+    private fun convertToFrenchDay(englishDay:String):String{
+        return when (englishDay) {
+            "MONDAY" -> "lun"
+            "TUESDAY" -> "mar"
+            "WEDNESDAY" -> "mer"
+            "THURSDAY" -> "jeu"
+            "FRIDAY" -> "ven"
+            "SATURDAY" -> "sam"
+            "SUNDAY" -> "dim"
+            else -> ""
+        }
     }
 
     fun getFormattedTimeForSunsetAndSunrise(value: String):String {

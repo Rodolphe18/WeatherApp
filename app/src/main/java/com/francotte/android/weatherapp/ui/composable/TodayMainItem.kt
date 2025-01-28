@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,7 +33,7 @@ fun TodayWeatherFirstItem(
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .background(color = if (data.isDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f))
+                .background(brush = if (data.isDay) Brush.verticalGradient(listOf(lightScheme.onPrimary.copy(0.6f), Color(0xffe899a9).copy(0.05f), lightScheme.onPrimary.copy(0.05f)))  else Brush.verticalGradient(listOf(darkScheme.onPrimary.copy(0.6f),Color(0xffe899a9).copy(0.05f), Color.Transparent)))
                 .padding(12.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -57,7 +58,7 @@ fun TodayWeatherFirstItem(
                 Text(
                     text = "${data.temperatureCelsius} °C",
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 10.dp),
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Normal,
                     fontSize = 60.sp,
                     color = if(data.isDay) Color.DarkGray else Color.LightGray
                 )

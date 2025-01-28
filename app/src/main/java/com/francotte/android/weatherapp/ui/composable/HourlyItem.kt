@@ -70,8 +70,8 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
             modifier = modifier
                 .width(120.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(lightScheme.onPrimary.copy(0.8f),lightScheme.onPrimary.copy(0.1f)))  else Brush.linearGradient(
-                    listOf(darkScheme.onPrimary.copy(0.8f), darkScheme.onPrimary.copy(0.1f))))
+                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(lightScheme.onPrimary.copy(0.8f),Color(0xffe0cda9).copy(0.1f), lightScheme.onPrimary.copy(0.1f)))  else Brush.linearGradient(
+                    listOf(darkScheme.onPrimary.copy(0.8f),Color(0xffe0cda9).copy(0.2f), darkScheme.onPrimary.copy(0.1f))))
                 .padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

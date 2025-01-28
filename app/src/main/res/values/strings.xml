@@ -6,7 +6,7 @@
     <string name="welcome_message">Welcome to Weather App ! \n Click on the button below</string>
     <string name="retry">Réessayer</string>
     <string name="card_meta_data_text">%1$s / %2$s</string>
-    <string name="forecast_daily_title">Prévisions sur 7 jours</string>
+    <string name="forecast_daily_title">Prévisions sur 6 jours</string>
     <string name="forecast_hourly_title">Dans les prochaines heures</string>
     <string name="place_holder_hint">Entrer le nom d\'une ville</string>
     <string name="today_detail_weather_title">Données météorologiques</string>

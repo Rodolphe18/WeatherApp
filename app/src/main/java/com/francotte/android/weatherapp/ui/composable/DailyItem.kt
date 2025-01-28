@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -47,7 +48,8 @@ fun ForecastDailyList(weatherDataList: List<DailyWeatherData>, parentIsDay: Bool
         contentPadding = PaddingValues(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(weatherDataList) { weatherData ->
+        val dailyWeatherData = weatherDataList.drop(1)
+        items(dailyWeatherData) { weatherData ->
             ForecastDailyItem(weatherData = weatherData, parentIsDay = parentIsDay)
         }
     }
@@ -56,17 +58,17 @@ fun ForecastDailyList(weatherDataList: List<DailyWeatherData>, parentIsDay: Bool
 @Composable
 fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherData, parentIsDay:Boolean) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = DateTimeFormatter.getFormattedDate(weatherData.time),fontWeight = FontWeight.ExtraBold,
+        Text(text = DateTimeFormatter.getFormattedDate(weatherData.time),fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
             color = if(parentIsDay) Color.DarkGray else Color.LightGray)
         Spacer(Modifier.height(4.dp))
         Column(
             modifier = modifier
-                .aspectRatio(3 / 4f)
+                .width(125.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(lightScheme.onPrimary.copy(0.8f),lightScheme.onPrimary.copy(0.1f)))  else Brush.linearGradient(
-                    listOf(darkScheme.onPrimary.copy(0.8f), darkScheme.onPrimary.copy(0.1f))))
-                .padding(8.dp),
+                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(lightScheme.onPrimary.copy(0.8f),Color(0xffe0cda9).copy(0.1f), lightScheme.onPrimary.copy(0.1f)))  else Brush.linearGradient(
+                    listOf(darkScheme.onPrimary.copy(0.8f), Color(0xffe0cda9).copy(0.15f), darkScheme.onPrimary.copy(0.1f))))
+                .padding(horizontal = 8.dp, vertical = 4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(

@@ -31,7 +31,7 @@ fun WeatherTopAppBar(
     onNavigationClick:() -> Unit = {}
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(text = text, fontSize = 26.sp, fontWeight = FontWeight.ExtraBold, color = if(isDay) Color.DarkGray else Color.LightGray) },
+        title = { Text(text = text, fontSize = 30.sp, fontWeight = FontWeight.Bold, color = if(isDay) Color.DarkGray else Color.LightGray) },
         actions = {
             IconButton(onClick = onActionClick) {
                 Icon(

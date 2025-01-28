@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,8 +44,7 @@ fun TodayWeatherSecondItem(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .background(color = if (isDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f))
-                .padding(horizontal = 16.dp, vertical = 10.dp)
+                .background(brush = if (isDay) Brush.verticalGradient(listOf(lightScheme.onPrimary.copy(0.6f),Color(0xffe899a9).copy(0.05f), lightScheme.onPrimary.copy(0.05f)))  else Brush.verticalGradient(listOf(darkScheme.onPrimary.copy(0.6f),Color(0xffe899a9).copy(0.05f), Color.Transparent))).padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
             Column(Modifier.weight(1f)) {
                 TodayItemMetaData(stringResource(R.string.apparent_temperature), "${currentWeatherData.apparentTemperature}°C",isDay)
