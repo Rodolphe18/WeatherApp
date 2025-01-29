@@ -33,7 +33,7 @@ fun TodayWeatherFirstItem(
                 .background(brush = if (data.isDay) Brush.verticalGradient(listOf(BlueSky.copy(0.6f),
                      Color(0xffe899a9).copy(0.05f), BlueSky.copy(0.05f)))  else Brush.verticalGradient(listOf(
                     NightSky.copy(0.6f),Color(0xffe899a9).copy(0.05f), NightSky.copy(0.6f))))
-                .padding(8.dp),
+                .padding(6.dp),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -55,7 +55,7 @@ fun TodayWeatherFirstItem(
 //                )
                 Text(
                     text = "${data.temperatureCelsius} °C",
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 14.dp, bottom = 6.dp),
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 4.dp),
                     fontWeight = FontWeight.Normal,
                     fontSize = 60.sp,
                     color = if(data.isDay) Color.DarkGray else Color.LightGray

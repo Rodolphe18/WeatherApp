@@ -73,7 +73,7 @@ fun ForecastHourlyItem(hourlyWeatherData: HourlyWeatherData, parentIsDay:Boolean
             modifier = Modifier
                 .width(120.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(BlueSky.copy(0.8f), BlueSky.copy(0.1f)))  else Brush.linearGradient(
+                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(BlueSky.copy(0.5f), BlueSky.copy(0.1f)))  else Brush.linearGradient(
                     listOf(NightSky.copy(0.8f), NightSky.copy(0.1f))))
                 .padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally

@@ -68,7 +68,7 @@ fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherDa
             modifier = modifier
                 .width(125.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(SandColor, SandColor.copy(0.3f), BlueSky.copy(0.1f)))  else Brush.linearGradient(
+                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(SandColor.copy(0.7f), SandColor.copy(0.3f), BlueSky.copy(0.1f)))  else Brush.linearGradient(
                     listOf(NightSky.copy(0.8f), NightSky.copy(0.1f))))
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
