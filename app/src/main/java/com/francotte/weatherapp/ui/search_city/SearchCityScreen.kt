@@ -97,6 +97,7 @@ fun SearchCityScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .background(Color.White)
                     .padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(Icons.Outlined.Delete, null,
@@ -107,8 +108,8 @@ fun SearchCityScreen(
                                 viewModel.deleteCitiesFromUserCities()
                                 state.bottomSheetState.hide()
                             }
-                        })
-                Text(text = stringResource(R.string.delete_cities))
+                        }, Color.Black)
+                Text(text = stringResource(R.string.delete_cities), color = Color.Black)
             }
         },
         content = {
