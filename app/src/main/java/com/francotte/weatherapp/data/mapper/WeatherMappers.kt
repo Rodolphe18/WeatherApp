@@ -1,12 +1,12 @@
 package com.francotte.weatherapp.data.mapper
 
 import android.annotation.SuppressLint
-import com.francotte.weatherapp.domain.model.CurrentWeatherData
-import com.francotte.weatherapp.domain.model.DailyWeatherData
-import com.francotte.weatherapp.domain.model.HourlyWeatherData
 import com.francotte.weatherapp.data.model.WeatherCurrentDto
 import com.francotte.weatherapp.data.model.WeatherDailyDto
 import com.francotte.weatherapp.data.model.WeatherHourlyDto
+import com.francotte.weatherapp.domain.model.CurrentWeatherData
+import com.francotte.weatherapp.domain.model.DailyWeatherData
+import com.francotte.weatherapp.domain.model.HourlyWeatherData
 import com.francotte.weatherapp.util.WeatherType
 import java.time.ZonedDateTime
 

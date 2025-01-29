@@ -78,6 +78,7 @@ val searchCityTextColor = Color.White
 val SandColor = Color(0xffe0cda9)
 val NightSky = Color(0xFF132F60)
 val BlueSky = Color(0xFFAFC6FF)
+val KingBlue = Color(0xFF3360d2)
 
 
 

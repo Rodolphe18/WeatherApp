@@ -48,6 +48,7 @@ import com.francotte.weatherapp.data.datastore.SavedCity
 import com.francotte.weatherapp.ui.composable.ErrorScreen
 import com.francotte.weatherapp.ui.composable.LoadingScreen
 import com.francotte.weatherapp.ui.composable.SearchAutoComplete
+import com.francotte.weatherapp.ui.theme.KingBlue
 import kotlinx.coroutines.launch
 
 
@@ -185,7 +186,7 @@ fun UserCityItem(
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(
-                color = Color(0xFF3360d2).copy(0.6f)
+                color = KingBlue.copy(0.6f)
             )
             .padding(horizontal = 8.dp, vertical = 16.dp)
     )

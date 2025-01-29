@@ -17,9 +17,6 @@ import androidx.compose.ui.unit.sp
 import com.francotte.weatherapp.domain.model.CurrentWeatherData
 import com.francotte.weatherapp.ui.theme.BlueSky
 import com.francotte.weatherapp.ui.theme.NightSky
-import com.francotte.weatherapp.ui.theme.SandColor
-import com.francotte.weatherapp.ui.theme.darkScheme
-import com.francotte.weatherapp.ui.theme.lightScheme
 
 @Composable
 fun TodayWeatherFirstItem(

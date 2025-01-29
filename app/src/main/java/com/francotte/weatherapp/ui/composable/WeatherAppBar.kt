@@ -17,8 +17,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.francotte.weatherapp.ui.theme.BlueSky
 import com.francotte.weatherapp.ui.theme.NightSky
-import com.francotte.weatherapp.ui.theme.darkScheme
-import com.francotte.weatherapp.ui.theme.lightScheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
