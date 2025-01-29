@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.francotte.weatherapp.ui.theme.BlueSky
+import com.francotte.weatherapp.ui.theme.NightSky
 import com.francotte.weatherapp.ui.theme.darkScheme
 import com.francotte.weatherapp.ui.theme.lightScheme
 
@@ -26,7 +28,7 @@ fun WeatherTopAppBar(
     actionIcon: ImageVector,
     actionIconContentDescription: String? = null,
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = if(isDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f)),
+    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = if(isDay) BlueSky.copy(0.6f)  else NightSky.copy(0.6f)),
     onActionClick: () -> Unit = {},
     onNavigationClick:() -> Unit = {}
 ) {

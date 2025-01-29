@@ -15,6 +15,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.francotte.weatherapp.domain.model.CurrentWeatherData
+import com.francotte.weatherapp.ui.theme.BlueSky
+import com.francotte.weatherapp.ui.theme.NightSky
+import com.francotte.weatherapp.ui.theme.SandColor
 import com.francotte.weatherapp.ui.theme.darkScheme
 import com.francotte.weatherapp.ui.theme.lightScheme
 
@@ -27,12 +30,13 @@ fun TodayWeatherFirstItem(
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .background(brush = if (data.isDay) Brush.verticalGradient(listOf(lightScheme.onPrimary.copy(0.6f), Color(0xffe899a9).copy(0.05f), lightScheme.onPrimary.copy(0.05f)))  else Brush.verticalGradient(listOf(darkScheme.onPrimary.copy(0.6f),Color(0xffe899a9).copy(0.05f), Color.Transparent)))
-                .padding(12.dp),
+                .background(brush = if (data.isDay) Brush.verticalGradient(listOf(BlueSky.copy(0.6f),
+                     Color(0xffe899a9).copy(0.05f), BlueSky.copy(0.05f)))  else Brush.verticalGradient(listOf(
+                    NightSky.copy(0.6f),Color(0xffe899a9).copy(0.05f), NightSky.copy(0.6f))))
+                .padding(8.dp),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                //Spacer(Modifier.height(6.dp))
                 Text(
                     text = stringResource(data.weatherType.weatherDesc),
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -51,7 +55,7 @@ fun TodayWeatherFirstItem(
 //                )
                 Text(
                     text = "${data.temperatureCelsius} °C",
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 10.dp),
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 14.dp, bottom = 6.dp),
                     fontWeight = FontWeight.Normal,
                     fontSize = 60.sp,
                     color = if(data.isDay) Color.DarkGray else Color.LightGray

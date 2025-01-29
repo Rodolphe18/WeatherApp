@@ -1,5 +1,6 @@
 package com.francotte.weatherapp.ui.settings
 
+import androidx.compose.foundation.background
 import com.francotte.weatherapp.R
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
@@ -21,10 +23,15 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.francotte.weatherapp.ui.theme.BlueSky
+import com.francotte.weatherapp.ui.theme.SandColor
 
 
 @Composable
@@ -35,11 +42,13 @@ fun SettingsDialog(
     AlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),
         modifier = Modifier.widthIn(max = configuration.screenWidthDp.dp - 80.dp),
+        containerColor = SandColor,
         onDismissRequest = { onDismiss() },
         title = {
             Text(
                 text = stringResource(R.string.feature_settings_title),
                 style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold
             )
         },
         text = {
@@ -52,7 +61,8 @@ fun SettingsDialog(
             Text(
                 text = stringResource(R.string.feature_settings_dismiss_dialog_button_text),
                 style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White,
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .clickable { onDismiss() },
@@ -92,6 +102,7 @@ private fun LinksPanel() {
         }
     }
 }
+
 @Composable
 fun WeatherAppTextButton(
     onClick: () -> Unit,
@@ -103,9 +114,7 @@ fun WeatherAppTextButton(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        colors = ButtonDefaults.textButtonColors(
-            contentColor = MaterialTheme.colorScheme.onBackground,
-        ),
+        colors = ButtonDefaults.textButtonColors(contentColor = Color.White),
         content = content,
     )
 }

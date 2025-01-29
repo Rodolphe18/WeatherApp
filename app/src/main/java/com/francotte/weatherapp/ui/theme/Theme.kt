@@ -6,11 +6,12 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
 
 val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
-    primaryContainer = primaryContainerLight,
+    primaryContainer = Color.Transparent,
     onPrimaryContainer = onPrimaryContainerLight,
     secondary = secondaryLight,
     onSecondary = onSecondaryLight,
@@ -18,7 +19,7 @@ val lightScheme = lightColorScheme(
     onSecondaryContainer = onSecondaryContainerLight,
     tertiary = tertiaryLight,
     onTertiary = onTertiaryLight,
-    tertiaryContainer = tertiaryContainerLight,
+    tertiaryContainer = BlueSky,
     onTertiaryContainer = onTertiaryContainerLight,
     error = errorLight,
     onError = onErrorLight,
@@ -29,7 +30,7 @@ val lightScheme = lightColorScheme(
     surface = surfaceLight,
     onSurface = onSurfaceLight,
     surfaceVariant = surfaceVariantLight,
-    onSurfaceVariant = onSurfaceVariantLight,
+    onSurfaceVariant = SandColor,
     outline = outlineLight,
     outlineVariant = outlineVariantLight,
     scrim = scrimLight,
@@ -46,41 +47,41 @@ val lightScheme = lightColorScheme(
 )
 
 val darkScheme = darkColorScheme(
-    primary = primaryDark,
-    onPrimary = onPrimaryDark,
-    primaryContainer = primaryContainerDark,
-    onPrimaryContainer = onPrimaryContainerDark,
-    secondary = secondaryDark,
-    onSecondary = onSecondaryDark,
-    secondaryContainer = secondaryContainerDark,
-    onSecondaryContainer = onSecondaryContainerDark,
-    tertiary = tertiaryDark,
-    onTertiary = onTertiaryDark,
-    tertiaryContainer = tertiaryContainerDark,
-    onTertiaryContainer = onTertiaryContainerDark,
-    error = errorDark,
-    onError = onErrorDark,
-    errorContainer = errorContainerDark,
-    onErrorContainer = onErrorContainerDark,
-    background = backgroundDark,
-    onBackground = onBackgroundDark,
-    surface = surfaceDark,
-    onSurface = onSurfaceDark,
-    surfaceVariant = surfaceVariantDark,
-    onSurfaceVariant = onSurfaceVariantDark,
-    outline = outlineDark,
-    outlineVariant = outlineVariantDark,
-    scrim = scrimDark,
-    inverseSurface = inverseSurfaceDark,
-    inverseOnSurface = inverseOnSurfaceDark,
-    inversePrimary = inversePrimaryDark,
-    surfaceDim = surfaceDimDark,
-    surfaceBright = surfaceBrightDark,
-    surfaceContainerLowest = surfaceContainerLowestDark,
-    surfaceContainerLow = surfaceContainerLowDark,
-    surfaceContainer = surfaceContainerDark,
-    surfaceContainerHigh = surfaceContainerHighDark,
-    surfaceContainerHighest = surfaceContainerHighestDark,
+    primary = Color.Transparent,
+    onPrimary = Color.Transparent,
+    primaryContainer = Color.Transparent,
+    onPrimaryContainer = Color.Transparent,
+    secondary = Color.Transparent,
+    onSecondary = Color.Transparent,
+    secondaryContainer = Color.Transparent,
+    onSecondaryContainer = Color.Transparent,
+    tertiary = Color.Transparent,
+    onTertiary = Color.Transparent,
+    tertiaryContainer = NightSky,
+    onTertiaryContainer = Color.Transparent,
+    error = Color.Transparent,
+    onError = Color.Transparent,
+    errorContainer = Color.Transparent,
+    onErrorContainer = Color.Transparent,
+    background = Color.Transparent,
+    onBackground = Color.Transparent,
+    surface = Color.Transparent,
+    onSurface = surfaceDark,
+    surfaceVariant = Color.Transparent,
+    onSurfaceVariant = NightSky,
+    outline = Color.Transparent,
+    outlineVariant = Color.Transparent,
+    scrim = Color.Transparent,
+    inverseSurface = Color.Transparent,
+    inverseOnSurface = Color.Transparent,
+    inversePrimary = Color.Transparent,
+    surfaceDim = Color.Transparent,
+    surfaceBright = Color.Transparent,
+    surfaceContainerLowest = Color.Transparent,
+    surfaceContainerLow = Color.Transparent,
+    surfaceContainer = Color.Transparent,
+    surfaceContainerHigh = Color.Transparent,
+    surfaceContainerHighest = Color.Transparent,
 )
 
 
@@ -90,13 +91,13 @@ fun AppTheme(
     content: @Composable() () -> Unit
 ) {
     val colorScheme = if (darkTheme) darkScheme else lightScheme
-    val backgroundColor = BackgroundColor(colorScheme.onPrimary.copy(0.6f))
-    val appBarColor = AppBarColor(colorScheme.onPrimary)
-    val defaultGradientColors = GradientColors(
-        top = colorScheme.primary,
-        bottom = colorScheme.tertiaryContainer,
+    val backgroundColor = GradientColors(
+        top = colorScheme.tertiaryContainer.copy(0.9f),
+        bottom = colorScheme.onSurfaceVariant.copy(0.7f),
     )
-    CompositionLocalProvider(LocalAppBarColor provides appBarColor,LocalGradientColors provides defaultGradientColors, LocalBackgroundColor provides backgroundColor) {
+    val containerColor = ContainerColor(colorScheme.tertiaryContainer.copy(0.9f))
+     CompositionLocalProvider(
+         LocalBackGroundColors provides backgroundColor, LocalContainerColor provides containerColor) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = AppTypography,

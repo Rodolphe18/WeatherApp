@@ -5,8 +5,8 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 @Immutable
-data class BackgroundColor(
-    val backgroundColor: Color = Color.Unspecified,
+data class ContainerColor(
+    val containerColor: Color = Color.Unspecified,
 )
 
-val LocalBackgroundColor = staticCompositionLocalOf { BackgroundColor() }
+val LocalContainerColor = staticCompositionLocalOf { ContainerColor() }

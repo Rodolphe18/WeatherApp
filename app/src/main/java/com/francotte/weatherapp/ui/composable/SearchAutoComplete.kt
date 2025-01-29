@@ -2,6 +2,7 @@ package com.francotte.weatherapp.ui.composable
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -167,9 +168,10 @@ fun ItemsCategory(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onSelect(city) }
+            .background(Color.LightGray)
             .padding(8.dp)
     ) {
-        Text(text = city.longName, fontSize = 16.sp)
+        Text(text = city.longName, fontSize = 16.sp, color = Color.Black)
     }
 
 }

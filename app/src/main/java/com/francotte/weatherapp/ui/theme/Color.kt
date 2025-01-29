@@ -20,8 +20,8 @@ val errorContainerLight = Color(0xFFFFDAD6)
 val onErrorContainerLight = Color(0xFF410002)
 val backgroundLight = Color(0xFFFAF9FF)
 val onBackgroundLight = Color.DarkGray
-val surfaceLight = Color(0xFFFAF9FF)
-val onSurfaceLight = Color(0xFF1A1B20)
+val surfaceLight = Color.DarkGray
+val onSurfaceLight = Color.DarkGray
 val surfaceVariantLight = Color(0xFFE1E2EC)
 val onSurfaceVariantLight = Color(0xFF44474F)
 val outlineLight = Color(0xFF757780)
@@ -56,8 +56,8 @@ val errorContainerDark = Color(0xFF93000A)
 val onErrorContainerDark = Color(0xFFFFDAD6)
 val backgroundDark = Color(0xFF121318)
 val onBackgroundDark = Color.LightGray
-val surfaceDark = Color(0xFF121318)
-val onSurfaceDark = Color(0xFFE2E2E9)
+val surfaceDark = Color.White
+val onSurfaceDark = Color.White
 val surfaceVariantDark = Color(0xFF44474F)
 val onSurfaceVariantDark = Color(0xFFC5C6D0)
 val outlineDark = Color(0xFF8E9099)
@@ -73,6 +73,11 @@ val surfaceContainerLowDark = Color(0xFF1A1B20)
 val surfaceContainerDark = Color(0xFF1E1F25)
 val surfaceContainerHighDark = Color(0xFF282A2F)
 val surfaceContainerHighestDark = Color(0xFF33353A)
+val searchCityTextColor = Color.White
+
+val SandColor = Color(0xffe0cda9)
+val NightSky = Color(0xFF132F60)
+val BlueSky = Color(0xFFAFC6FF)
 
 
 

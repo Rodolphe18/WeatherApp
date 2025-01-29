@@ -21,6 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,8 +33,9 @@ import com.francotte.weatherapp.ui.composable.TodayWeatherFirstItem
 import com.francotte.weatherapp.ui.composable.TodayWeatherSecondItem
 import com.francotte.weatherapp.ui.composable.WeatherTopAppBar
 import com.francotte.weatherapp.ui.settings.SettingsDialog
-import com.francotte.weatherapp.ui.theme.darkScheme
-import com.francotte.weatherapp.ui.theme.lightScheme
+import com.francotte.weatherapp.ui.theme.BlueSky
+import com.francotte.weatherapp.ui.theme.NightSky
+import com.francotte.weatherapp.ui.theme.SandColor
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,8 +62,18 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
             onDismiss = { showSettingsDialog = false },
         )
     }
+
     if (userCities?.isNotEmpty() == true) {
         Scaffold(
+            modifier = Modifier.background(brush = Brush.verticalGradient(
+                    colors =if(isDay) listOf(
+                        BlueSky.copy(0.6f),
+                        SandColor.copy(0.3f)
+                    ) else listOf(
+                        NightSky.copy(0.6f),
+                        SandColor.copy(0.3f)
+                    )
+                    )),
             topBar = {
                 WeatherTopAppBar(
                     text = userCities[viewmodel.currentPage].name,
@@ -84,7 +96,15 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(if(isDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f)),
+                            .background(Brush.verticalGradient(
+                                colors =if(isDay) listOf(
+                                    BlueSky.copy(0.6f),
+                                    SandColor.copy(0.3f)
+                                ) else listOf(
+                                    NightSky.copy(0.6f),
+                                    NightSky.copy(0.4f),
+                                )
+                            )),
                         contentPadding = padding,
                         state = rememberLazyListState()
                     ) {

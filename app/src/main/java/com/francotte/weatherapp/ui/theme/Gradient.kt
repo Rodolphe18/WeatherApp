@@ -10,4 +10,5 @@ data class GradientColors(
     val bottom: Color = Color.Transparent
 )
 
-val LocalGradientColors = staticCompositionLocalOf { GradientColors() }
+val LocalBackGroundColors = staticCompositionLocalOf { GradientColors() }
+

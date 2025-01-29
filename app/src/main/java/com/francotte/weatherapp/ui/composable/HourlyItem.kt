@@ -29,34 +29,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.francotte.weatherapp.R
 import com.francotte.weatherapp.domain.model.HourlyWeatherData
-import com.francotte.weatherapp.ui.theme.darkScheme
-import com.francotte.weatherapp.ui.theme.lightScheme
+import com.francotte.weatherapp.ui.theme.BlueSky
+import com.francotte.weatherapp.ui.theme.NightSky
 import com.francotte.weatherapp.util.DateTimeFormatter
 import com.francotte.weatherapp.util.WeatherType
 import kotlinx.datetime.LocalDateTime
 
 @Composable
-fun ForecastHourlyList(weatherDataList: List<HourlyWeatherData>, parentIsDay: Boolean) {
-    Text(
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp),
-        text = stringResource(R.string.forecast_hourly_title),
-        fontSize = 24.sp,
-        fontWeight = FontWeight.SemiBold,
-        color = if(parentIsDay) Color.DarkGray else Color.LightGray
-    )
-    LazyRow(
-        state = rememberLazyListState(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(8.dp)
-    ) {
-        items(weatherDataList) { weatherData ->
-            ForecastHourlyItem(hourlyWeatherData = weatherData, parentIsDay = parentIsDay)
+fun ForecastHourlyList(modifier: Modifier = Modifier, weatherDataList: List<HourlyWeatherData>, parentIsDay: Boolean) {
+    Column(modifier = modifier) {
+        Text(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp),
+            text = stringResource(R.string.forecast_hourly_title),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = if(parentIsDay) Color.DarkGray else Color.LightGray
+        )
+        LazyRow(
+            state = rememberLazyListState(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(8.dp)
+        ) {
+            items(weatherDataList) { weatherData ->
+                ForecastHourlyItem(hourlyWeatherData = weatherData, parentIsDay = parentIsDay)
+            }
         }
     }
+
 }
 
 @Composable
-fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyWeatherData, parentIsDay:Boolean) {
+fun ForecastHourlyItem(hourlyWeatherData: HourlyWeatherData, parentIsDay:Boolean) {
     val isDay = LocalDateTime.parse(hourlyWeatherData.time).hour in 6..18
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
@@ -67,11 +70,11 @@ fun ForecastHourlyItem(modifier: Modifier = Modifier, hourlyWeatherData: HourlyW
         )
         Spacer(Modifier.height(4.dp))
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .width(120.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(lightScheme.onPrimary.copy(0.8f),Color(0xffe0cda9).copy(0.1f), lightScheme.onPrimary.copy(0.1f)))  else Brush.linearGradient(
-                    listOf(darkScheme.onPrimary.copy(0.8f),Color(0xffe0cda9).copy(0.2f), darkScheme.onPrimary.copy(0.1f))))
+                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(BlueSky.copy(0.8f), BlueSky.copy(0.1f)))  else Brush.linearGradient(
+                    listOf(NightSky.copy(0.8f), NightSky.copy(0.1f))))
                 .padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

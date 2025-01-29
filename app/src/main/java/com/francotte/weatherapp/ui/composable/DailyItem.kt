@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,6 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.francotte.weatherapp.R
 import com.francotte.weatherapp.domain.model.DailyWeatherData
+import com.francotte.weatherapp.ui.theme.BlueSky
+import com.francotte.weatherapp.ui.theme.NightSky
+import com.francotte.weatherapp.ui.theme.SandColor
 import com.francotte.weatherapp.ui.theme.darkScheme
 import com.francotte.weatherapp.ui.theme.lightScheme
 import com.francotte.weatherapp.util.DateTimeFormatter
@@ -66,8 +68,8 @@ fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherDa
             modifier = modifier
                 .width(125.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(lightScheme.onPrimary.copy(0.8f),lightScheme.onPrimary.copy(0.1f)))  else Brush.linearGradient(
-                    listOf(darkScheme.onPrimary.copy(0.8f), darkScheme.onPrimary.copy(0.1f))))
+                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(SandColor, SandColor.copy(0.3f), BlueSky.copy(0.1f)))  else Brush.linearGradient(
+                    listOf(NightSky.copy(0.8f), NightSky.copy(0.1f))))
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
