@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:name="com.francotte.android.weatherapp.MyApplication"
+        android:name="com.francotte.weatherapp.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
-            android:name=".ui.home.HomeActivity"
+            android:name="com.francotte.weatherapp.ui.home.HomeActivity"
             android:exported="true"
             android:theme="@style/Theme.WeatherApp.SplashScreen">
             <intent-filter>

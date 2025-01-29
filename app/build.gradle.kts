@@ -12,11 +12,11 @@ plugins {
 }
 
 android {
-    namespace = "com.francotte.android.weatherapp"
+    namespace = "com.francotte.weatherapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.francotte.android.weatherapp"
+        applicationId = "com.francotte.weatherapp"
         minSdk = 26
         targetSdk = 34
         versionCode = 5
