@@ -17,9 +17,10 @@ object DateTimeFormatter {
     fun getFormattedDate2(value: String): String {
         val offSet = LocalDate.parse(value)
         val year = offSet.year
-        val dayOfMonth = offSet.dayOfMonth
+        val dayOfMonth = if(offSet.dayOfMonth < 10) "0${offSet.dayOfMonth}" else offSet.dayOfMonth
         val day = convertToFrenchDay2(offSet.dayOfWeek.name)
-        return "$day $dayOfMonth $year"
+        val month = convertToFrenchMonth(offSet.month.name)
+        return "$day $dayOfMonth $month $year"
     }
 
     private fun convertToFrenchDay1(englishDay:String):String{
@@ -44,6 +45,24 @@ object DateTimeFormatter {
             "FRIDAY" -> "vendredi"
             "SATURDAY" -> "samedi"
             "SUNDAY" -> "dimamnche"
+            else -> ""
+        }
+    }
+
+    private fun convertToFrenchMonth(englishMonth:String):String{
+        return when (englishMonth) {
+            "JANUARY" -> "janvier"
+            "FEBRUARY" -> "février"
+            "MARCH" -> "mars"
+            "APRIL" -> "avril"
+            "MAY" -> "mai"
+            "JUNE" -> "juin"
+            "JULY" -> "juillet"
+            "AUGUST" -> "août"
+            "SEPTEMBER" -> "septembre"
+            "OCTOBER" -> "octobre"
+            "NOVEMBER" -> "novembre"
+            "DECEMBER" -> "décembre"
             else -> ""
         }
     }

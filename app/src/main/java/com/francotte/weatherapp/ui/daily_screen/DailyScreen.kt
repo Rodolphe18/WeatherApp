@@ -94,7 +94,7 @@ fun DailyScreen(onBackClick: () -> Unit, viewmodel: DailyScreenViewmodel = hiltV
             Text(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
                 text = viewmodel.currentDate,
-                fontSize = 30.sp,
+                fontSize = 26.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.DarkGray
             )
@@ -105,6 +105,13 @@ fun DailyScreen(onBackClick: () -> Unit, viewmodel: DailyScreenViewmodel = hiltV
                     .padding(horizontal = 16.dp, vertical = 10.dp)
             ) {
                 Column {
+                    TodayItemMetaData(
+                        "Temps",
+                        viewmodel.weatherDesc,
+                        fontSize1 = 16.sp,
+                        fontSize2 = 24.sp
+                    )
+                    Spacer(Modifier.height(8.dp))
                     TodayItemMetaData(
                         "Température min.",
                         "${viewmodel.minTemp} °",
@@ -132,6 +139,13 @@ fun DailyScreen(onBackClick: () -> Unit, viewmodel: DailyScreenViewmodel = hiltV
                         fontSize1 = 16.sp,
                         fontSize2 = 24.sp
                     )
+                    Spacer(Modifier.height(8.dp))
+                    TodayItemMetaData(
+                        stringResource(R.string.wind_direction),
+                        viewmodel.windDirection,
+                        fontSize1 = 16.sp,
+                        fontSize2 = 24.sp
+                    )
                 }
 
             }
@@ -151,7 +165,7 @@ class DailyScreenViewmodel @Inject constructor(
     val currentDate = savedStateHandle.toRoute<DailyRoute>().date
     val sunset = savedStateHandle.toRoute<DailyRoute>().sunset
     val sunrise = savedStateHandle.toRoute<DailyRoute>().sunrise
-    val weatherType = savedStateHandle.toRoute<DailyRoute>().weatherDesc
+    val weatherDesc = savedStateHandle.toRoute<DailyRoute>().weatherDesc
     val windDirection = savedStateHandle.toRoute<DailyRoute>().windDirection
     val minTemp = savedStateHandle.toRoute<DailyRoute>().temperatureMin
     val maxTemp = savedStateHandle.toRoute<DailyRoute>().temperatureMax
