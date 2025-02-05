@@ -44,7 +44,7 @@ object DateTimeFormatter {
             "THURSDAY" -> "jeudi"
             "FRIDAY" -> "vendredi"
             "SATURDAY" -> "samedi"
-            "SUNDAY" -> "dimamnche"
+            "SUNDAY" -> "dimanche"
             else -> ""
         }
     }
