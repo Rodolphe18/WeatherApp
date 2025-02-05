@@ -10,11 +10,19 @@ object DateTimeFormatter {
     fun getFormattedDate(value: String): String {
         val offSet = LocalDate.parse(value)
         val dayOfMonth = offSet.dayOfMonth
-        val day = convertToFrenchDay(offSet.dayOfWeek.name)
+        val day = convertToFrenchDay1(offSet.dayOfWeek.name)
         return "$day $dayOfMonth"
     }
 
-    private fun convertToFrenchDay(englishDay:String):String{
+    fun getFormattedDate2(value: String): String {
+        val offSet = LocalDate.parse(value)
+        val year = offSet.year
+        val dayOfMonth = offSet.dayOfMonth
+        val day = convertToFrenchDay2(offSet.dayOfWeek.name)
+        return "$day $dayOfMonth $year"
+    }
+
+    private fun convertToFrenchDay1(englishDay:String):String{
         return when (englishDay) {
             "MONDAY" -> "lun"
             "TUESDAY" -> "mar"
@@ -26,6 +34,20 @@ object DateTimeFormatter {
             else -> ""
         }
     }
+
+    private fun convertToFrenchDay2(englishDay:String):String{
+        return when (englishDay) {
+            "MONDAY" -> "lundi"
+            "TUESDAY" -> "mardi"
+            "WEDNESDAY" -> "mercredi"
+            "THURSDAY" -> "jeudi"
+            "FRIDAY" -> "vendredi"
+            "SATURDAY" -> "samedi"
+            "SUNDAY" -> "dimamnche"
+            else -> ""
+        }
+    }
+
 
     fun getFormattedTimeForSunsetAndSunrise(value: String):String {
         val time = LocalDateTime.parse(value)

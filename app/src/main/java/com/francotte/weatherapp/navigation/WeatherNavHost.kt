@@ -5,6 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.francotte.weatherapp.ui.daily_screen.dailyScreen
+import com.francotte.weatherapp.ui.daily_screen.navigateToDailyScreen
 import com.francotte.weatherapp.ui.pager_screen.navigateToPager
 import com.francotte.weatherapp.ui.pager_screen.pagerScreen
 import com.francotte.weatherapp.ui.search_city.navigateToSearchCityScreen
@@ -22,7 +24,9 @@ fun WeatherNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ) {
-        pagerScreen(navController::navigateToSearchCityScreen)
+        pagerScreen(navController::navigateToSearchCityScreen, navController::navigateToDailyScreen) {
+            dailyScreen(navController::popBackStack)
+        }
         searchCityRoute(navController::navigateToPager)
     }
 }

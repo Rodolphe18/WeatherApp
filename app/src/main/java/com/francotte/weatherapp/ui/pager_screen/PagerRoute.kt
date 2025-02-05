@@ -12,13 +12,13 @@ data class PagerRoute(val index:Int)
 
 fun NavController.navigateToPager(index: Int, navOptions: NavOptionsBuilder.() -> Unit = {}) {
     navigate(route = PagerRoute(index)) {
-        Log.d("debug_navigateToPager", index.toString())
         navOptions()
     }
 }
 
-fun NavGraphBuilder.pagerScreen(onNavigationClick:() -> Unit) {
+fun NavGraphBuilder.pagerScreen(onNavigationClick: () -> Unit, onDailyItemClick:(String, String,String, Double, Double,String, String,String)-> Unit, dailyScreenDestination: NavGraphBuilder.() -> Unit) {
     composable<PagerRoute> {
-        PagerScreen(onNavigationClick = onNavigationClick)
+        PagerScreen(onNavigationClick = onNavigationClick, onDailyItemClick = onDailyItemClick)
     }
+    dailyScreenDestination()
 }

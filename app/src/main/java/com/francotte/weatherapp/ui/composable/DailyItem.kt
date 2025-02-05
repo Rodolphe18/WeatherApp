@@ -2,6 +2,7 @@ package com.francotte.weatherapp.ui.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,13 +37,18 @@ import com.francotte.weatherapp.ui.theme.SandColor
 import com.francotte.weatherapp.util.DateTimeFormatter
 
 @Composable
-fun ForecastDailyList(weatherDataList: List<DailyWeatherData>, parentIsDay: Boolean) {
+fun ForecastDailyList(
+    cityName: String,
+    weatherDataList: List<DailyWeatherData>,
+    parentIsDay: Boolean,
+    onClick: (String, String, String, Double, Double, String, String, String) -> Unit
+) {
     Text(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
         text = stringResource(R.string.forecast_daily_title),
         fontSize = 24.sp,
         fontWeight = FontWeight.SemiBold,
-        color = if(parentIsDay) Color.DarkGray else Color.LightGray
+        color = if (parentIsDay) Color.DarkGray else Color.LightGray
     )
     LazyRow(
         state = rememberLazyListState(),
@@ -50,24 +57,60 @@ fun ForecastDailyList(weatherDataList: List<DailyWeatherData>, parentIsDay: Bool
     ) {
         val dailyWeatherData = weatherDataList.drop(1)
         items(dailyWeatherData) { weatherData ->
-            ForecastDailyItem(weatherData = weatherData, parentIsDay = parentIsDay)
+            ForecastDailyItem(
+                weatherData = weatherData,
+                cityName = cityName,
+                parentIsDay = parentIsDay,
+                onClick = onClick
+            )
         }
     }
 }
 
 @Composable
-fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherData, parentIsDay:Boolean) {
+fun ForecastDailyItem(
+    modifier: Modifier = Modifier,
+    cityName: String,
+    weatherData: DailyWeatherData,
+    parentIsDay: Boolean,
+    onClick: (String, String, String, Double, Double, String, String, String) -> Unit
+) {
+    val context = LocalContext.current
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = DateTimeFormatter.getFormattedDate(weatherData.time),fontWeight = FontWeight.SemiBold,
+        Text(
+            text = DateTimeFormatter.getFormattedDate(weatherData.time),
+            fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
-            color = if(parentIsDay) Color.DarkGray else Color.LightGray)
+            color = if (parentIsDay) Color.DarkGray else Color.LightGray
+        )
         Spacer(Modifier.height(4.dp))
         Column(
             modifier = modifier
                 .width(125.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(SandColor.copy(0.7f), SandColor.copy(0.3f), BlueSky.copy(0.1f)))  else Brush.linearGradient(
-                    listOf(NightSky.copy(0.8f), NightSky.copy(0.1f))))
+                .clickable {
+                    onClick(
+                        cityName,
+                        DateTimeFormatter.getFormattedDate2(weatherData.time),
+                        context.getString(weatherData.weatherType.weatherDesc),
+                        weatherData.temperatureMax,
+                        weatherData.temperatureMin,
+                        weatherData.windDirection.windDirection(),
+                        weatherData.sunrise,
+                        weatherData.sunset
+                    )
+                }
+                .background(
+                    brush = if (parentIsDay) Brush.linearGradient(
+                        listOf(
+                            SandColor.copy(0.7f),
+                            SandColor.copy(0.3f),
+                            BlueSky.copy(0.1f)
+                        )
+                    ) else Brush.linearGradient(
+                        listOf(NightSky.copy(0.8f), NightSky.copy(0.1f))
+                    )
+                )
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -80,7 +123,7 @@ fun ForecastDailyItem(modifier: Modifier = Modifier, weatherData: DailyWeatherDa
                 ),
                 fontWeight = FontWeight.Medium,
                 style = MaterialTheme.typography.titleMedium,
-                color = if(parentIsDay) Color.DarkGray else Color.LightGray
+                color = if (parentIsDay) Color.DarkGray else Color.LightGray
             )
             Image(
                 painterResource(id = weatherData.weatherType.iconRes),

@@ -40,13 +40,14 @@ import com.francotte.weatherapp.ui.theme.SandColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: () -> Unit) {
+fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: () -> Unit, onDailyItemClick:(String, String,String, Double, Double,String, String,String)-> Unit) {
     val userPref by viewmodel.userPreferences.collectAsStateWithLifecycle()
     val pageCount by viewmodel.pageCount.collectAsStateWithLifecycle()
     val userCities = userPref.userSavedCities
     val pagerState = rememberPagerState(initialPage = viewmodel.currentIndex, pageCount = { pageCount })
     val isDay = viewmodel.pageCurrentCityWeather[viewmodel.currentPage]?.isDay == true
     var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
+    var cityName = ""
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { newPage ->
@@ -64,6 +65,7 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
     }
 
     if (userCities?.isNotEmpty() == true) {
+        cityName= userCities[viewmodel.currentPage].name
         Scaffold(
             modifier = Modifier.background(brush = Brush.verticalGradient(
                     colors =if(isDay) listOf(
@@ -76,7 +78,7 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
                     )),
             topBar = {
                 WeatherTopAppBar(
-                    text = userCities[viewmodel.currentPage].name,
+                    text = cityName,
                     isDay = isDay,
                     actionIcon = Icons.Filled.MoreVert,
                     onNavigationClick = onNavigationClick,
@@ -132,8 +134,8 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
                             }
                         }
                         item {
-                            viewmodel.pageDailyCityWeather[index]?.let {
-                                ForecastDailyList(it, isDay)
+                            viewmodel.pageDailyCityWeather[index]?.let { dailyWeatherList ->
+                                ForecastDailyList(cityName, dailyWeatherList, isDay, onDailyItemClick)
                             }
                         }
                         item {

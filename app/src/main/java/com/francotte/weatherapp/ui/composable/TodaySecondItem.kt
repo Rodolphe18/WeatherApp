@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.francotte.weatherapp.R
@@ -31,7 +32,7 @@ fun TodayWeatherSecondItem(
     val isDay = remember { currentWeatherData.isDay }
     Column {
         Text(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
             text = stringResource(R.string.today_detail_weather_title),
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
@@ -82,18 +83,18 @@ fun TodayWeatherSecondItem(
 
 
 @Composable
-fun TodayItemMetaData(title: String, data: String, isDay: Boolean) {
+fun TodayItemMetaData(title: String, data: String, isDay: Boolean = true, fontSize1:TextUnit = 14.sp, fontSize2:TextUnit = 20.sp) {
     Column {
         Text(
             text = title,
             fontWeight = FontWeight.Normal,
-            fontSize = 14.sp,
+            fontSize = fontSize1,
             color = if (isDay) Color.DarkGray else Color.LightGray
         )
         Text(
             text = data,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 20.sp,
+            fontSize = fontSize2,
             color = if (isDay) Color.DarkGray else Color.LightGray
         )
         Spacer(Modifier.height(6.dp))
