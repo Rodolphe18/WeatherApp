@@ -1,6 +1,5 @@
 package com.francotte.weatherapp.ui.pager_screen
 
-import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder

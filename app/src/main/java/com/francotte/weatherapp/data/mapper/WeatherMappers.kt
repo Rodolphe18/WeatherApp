@@ -8,6 +8,7 @@ import com.francotte.weatherapp.domain.model.CurrentWeatherData
 import com.francotte.weatherapp.domain.model.DailyWeatherData
 import com.francotte.weatherapp.domain.model.HourlyWeatherData
 import com.francotte.weatherapp.util.WeatherType
+import java.time.LocalDateTime
 import java.time.ZonedDateTime
 
 private data class IndexedWeatherData(val index:Int, val data: HourlyWeatherData)
@@ -15,7 +16,7 @@ private data class IndexedWeatherData(val index:Int, val data: HourlyWeatherData
 
 @SuppressLint("NewApi")
 fun WeatherHourlyDto.asExternalHourlyWeather(): Map<Int, List<HourlyWeatherData>> {
-    return weatherForecastData.times.mapIndexed { index, time ->
+    val list:List<IndexedWeatherData> = weatherForecastData.times.mapIndexed { index, time ->
         val temperature = weatherForecastData.temperatures[index]
         val weatherCode = weatherForecastData.weatherCodes[index]
         val windSpeed = weatherForecastData.windSpeeds[index]
@@ -27,13 +28,17 @@ fun WeatherHourlyDto.asExternalHourlyWeather(): Map<Int, List<HourlyWeatherData>
                 weatherType = WeatherType.fromApi(weatherCode),
                 windSpeed = windSpeed)
         )
-    }.groupBy { indexedWeatherData -> indexedWeatherData.index / 24 }.mapValues { it.value.map { it.data } }
+    }
+    val groupMap:Map<Int, List<IndexedWeatherData>> =  list.groupBy { indexedWeatherData -> indexedWeatherData.index / 24 }
+
+
+    return groupMap.mapValues { it.value.map { it.data } }
 }
 
 @SuppressLint("NewApi")
 fun WeatherCurrentDto.asExternalCurrentWeather() : CurrentWeatherData {
-    val now = ZonedDateTime.now()
-    return CurrentWeatherData(now, offSetSeconds, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode), weatherCurrentData.windSpeed, weatherCurrentData.windDirection, weatherCurrentData.isDay == 1, weatherCurrentData.apparentTemperature, weatherCurrentData.precipitation * 100)
+
+    return CurrentWeatherData(LocalDateTime.now(), offSetSeconds, weatherCurrentData.temperature, WeatherType.fromApi(weatherCurrentData.weatherCode), weatherCurrentData.windSpeed, weatherCurrentData.windDirection, weatherCurrentData.isDay == 1, weatherCurrentData.apparentTemperature, weatherCurrentData.precipitation * 100)
 }
 
 fun WeatherDailyDto.asExternalDailyWeather(): List<DailyWeatherData> {

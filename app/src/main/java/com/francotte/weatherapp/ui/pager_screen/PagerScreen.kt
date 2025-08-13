@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -67,15 +68,15 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
     if (userCities?.isNotEmpty() == true) {
         cityName= userCities[viewmodel.currentPage].name
         Scaffold(
-            modifier = Modifier.background(brush = Brush.verticalGradient(
-                    colors =if(isDay) listOf(
-                        BlueSky.copy(0.6f),
-                        SandColor.copy(0.3f)
-                    ) else listOf(
-                        NightSky.copy(0.6f),
-                        SandColor.copy(0.3f)
-                    )
-                    )),
+//            modifier = Modifier.background(brush = Brush.verticalGradient(
+//                    colors =if(isDay) listOf(
+//                        BlueSky.copy(0.6f),
+//                        SandColor.copy(0.3f)
+//                    ) else listOf(
+//                        NightSky.copy(0.6f),
+//                        SandColor.copy(0.3f)
+//                    )
+//                    )),
             topBar = {
                 WeatherTopAppBar(
                     text = cityName,

@@ -6,6 +6,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +30,7 @@ class HomeActivity : ComponentActivity() {
         val handler = Handler(Looper.getMainLooper())
         val runner = Runnable { keep = false }
         handler.postDelayed(runner, 2000)
+        enableEdgeToEdge()
         installSplashScreen().setKeepOnScreenCondition { keep }
         setContent {
             AppTheme {

@@ -115,6 +115,7 @@ fun SearchCityScreen(
         },
         content = {
         Column(modifier = modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Spacer(Modifier.height(12.dp))
             Text(
                 modifier = Modifier.padding(vertical = 16.dp),
                 text = stringResource(R.string.manage_cities),

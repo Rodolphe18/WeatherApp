@@ -103,8 +103,7 @@ fun ForecastDailyItem(
                 .background(
                     brush = if (parentIsDay) Brush.linearGradient(
                         listOf(
-                            SandColor.copy(0.7f),
-                            SandColor.copy(0.3f),
+                            BlueSky.copy(0.3f),
                             BlueSky.copy(0.1f)
                         )
                     ) else Brush.linearGradient(

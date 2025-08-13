@@ -21,7 +21,7 @@ class PreferencesDataSource @Inject constructor(
 
 
     suspend fun addCity(savedCity: SavedCity) {
-        userPreferences.updateData { userPrefs ->
+        userPreferences.updateData { userPrefs:UserPreferences ->
             Log.d("debug_userPref_before_add_city", userPrefs.citiesMap.values.toString())
             userPrefs.copy {
                 this.cities.put(savedCity.placeId,

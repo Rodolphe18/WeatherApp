@@ -48,10 +48,10 @@
     <string name="feature_settings_title">Réglages</string>
     <string name="feature_settings_privacy_policy">Politique de confidentialité</string>
     <string name="feature_settings_licenses">Licences</string>
-    <string name="feature_settings_brand_guidelines">Guidelines</string>
-    <string name="feature_settings_feedback">Feedback</string>
+    <string name="feature_settings_brand_guidelines">Lignes directrices</string>
+    <string name="feature_settings_feedback">Retour</string>
     <string name="feature_settings_theme">Theme</string>
-    <string name="feature_settings_brand_default">Default</string>
+    <string name="feature_settings_brand_default">Défaut</string>
     <string name="feature_settings_brand_android">Android</string>
     <string name="feature_settings_dark_mode_preference">Dark mode preference</string>
     <string name="feature_settings_dark_mode_config_system_default">System default</string>

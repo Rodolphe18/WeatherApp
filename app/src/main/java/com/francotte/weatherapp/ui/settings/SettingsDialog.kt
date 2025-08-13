@@ -70,11 +70,8 @@ fun SettingsDialog(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun LinksPanel() {
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(
-            space = 16.dp,
-            alignment = Alignment.CenterHorizontally,
-        ),
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth(),
     ) {
         WeatherAppTextButton(

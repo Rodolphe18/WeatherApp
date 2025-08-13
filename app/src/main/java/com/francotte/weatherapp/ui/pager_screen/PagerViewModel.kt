@@ -61,6 +61,7 @@ class PagerViewmodel @Inject constructor(
     private val _pageDailyCityWeather = mutableStateMapOf<Int, List<DailyWeatherData>>()
     val pageDailyCityWeather: SnapshotStateMap<Int, List<DailyWeatherData>> = _pageDailyCityWeather
 
+
     private val mutex = Mutex()
 
     fun reload() {
@@ -99,7 +100,7 @@ class PagerViewmodel @Inject constructor(
                                     .collect { currentWeatherData ->
                                         if (currentWeatherData != null) {
                                             _pageCurrentCityWeather[index] = currentWeatherData
-                                        } else {
+                                         } else {
                                             isError = true
                                         }
                                     }
@@ -115,7 +116,7 @@ class PagerViewmodel @Inject constructor(
                                     .collect { currentWeatherData ->
                                         if (currentWeatherData != null) {
                                             _pageCurrentCityWeather[index + 1] = currentWeatherData
-                                        } else {
+                                         } else {
                                             isError = true
                                         }
 
@@ -146,7 +147,7 @@ class PagerViewmodel @Inject constructor(
                                             (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600))
                                                 ?: 0
                                         val today =
-                                            hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
+                                            hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet -1) }
                                         val tomorrow = hourlyWeatherData[1]
                                         if (today != null && tomorrow != null) {
                                             _pageHourlyCityWeather[index - 1] = today + tomorrow
@@ -168,7 +169,7 @@ class PagerViewmodel @Inject constructor(
                                             (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600))
                                                 ?: 0
                                         val today =
-                                            hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
+                                            hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet -1) }
                                         val tomorrow = hourlyWeatherData[1]
                                         if (today != null && tomorrow != null) {
                                             _pageHourlyCityWeather[index] = today + tomorrow
@@ -190,7 +191,7 @@ class PagerViewmodel @Inject constructor(
                                             (hourlyWeatherData[0]?.first()?.offSetSeconds?.div(3600))
                                                 ?: 0
                                         val today =
-                                            hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet) }
+                                            hourlyWeatherData[0]?.filter { LocalDateTime.parse(it.time).hour >= (LocalDateTime.now().hour + offSet - 1) }
                                         val tomorrow = hourlyWeatherData[1]
                                         if (today != null && tomorrow != null) {
                                             _pageHourlyCityWeather[index + 1] = today + tomorrow

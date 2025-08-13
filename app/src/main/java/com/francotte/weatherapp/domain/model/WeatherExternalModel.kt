@@ -1,10 +1,11 @@
 package com.francotte.weatherapp.domain.model
 
 import com.francotte.weatherapp.util.WeatherType
+import java.time.LocalDateTime
 import java.time.ZonedDateTime
 
 data class CurrentWeatherData(
-    val time: ZonedDateTime,
+    val time: LocalDateTime,
     val offSetSeconds: Int,
     val temperatureCelsius: Double,
     val weatherType: WeatherType,

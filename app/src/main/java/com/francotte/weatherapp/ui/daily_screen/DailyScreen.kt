@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,6 +34,8 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.toRoute
 import com.francotte.weatherapp.R
 import com.francotte.weatherapp.ui.composable.TodayItemMetaData
+import com.francotte.weatherapp.ui.theme.BlueSky
+import com.francotte.weatherapp.ui.theme.KingBlue
 import com.francotte.weatherapp.ui.theme.SandColor
 import com.francotte.weatherapp.util.DateTimeFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,14 +48,13 @@ import javax.inject.Inject
 fun DailyScreen(onBackClick: () -> Unit, viewmodel: DailyScreenViewmodel = hiltViewModel()) {
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .background(color = SandColor.copy(0.9f)),
+            .fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = viewmodel.cityName,
-                        fontSize = 30.sp,
+                        text = "${viewmodel.cityName} (${viewmodel.currentDate})",
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.DarkGray
                     )
@@ -66,72 +68,58 @@ fun DailyScreen(onBackClick: () -> Unit, viewmodel: DailyScreenViewmodel = hiltV
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SandColor.copy(
-                        0.6f
+                    containerColor = BlueSky.copy(
+                        0.2f
                     )
                 )
             )
         }) {
         Column(modifier = Modifier.fillMaxSize().background(
-            brush = Brush.verticalGradient(
-                listOf(
-                    SandColor.copy(1f),
-                    SandColor.copy(0.6f),
-                    SandColor.copy(0.2f)
-                )
-            )
+            brush = Brush.verticalGradient(listOf(BlueSky.copy(0.2f), BlueSky.copy(0.1f)))
         ), horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(Modifier.height(70.dp))
-            Text(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
-                text = viewmodel.currentDate,
-                fontSize = 26.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.DarkGray
-            )
-            Spacer(Modifier.height(8.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 10.dp)
             ) {
                 Column {
-                    TodayItemMetaData(
+                    TodayItemMetaDataForDailyScreen(
                         "Temps",
                         viewmodel.weatherDesc,
                         fontSize1 = 16.sp,
                         fontSize2 = 24.sp
                     )
                     Spacer(Modifier.height(8.dp))
-                    TodayItemMetaData(
+                    TodayItemMetaDataForDailyScreen(
                         "Température min.",
                         "${viewmodel.minTemp} °",
                         fontSize1 = 16.sp,
                         fontSize2 = 24.sp
                     )
                     Spacer(Modifier.height(8.dp))
-                    TodayItemMetaData(
+                    TodayItemMetaDataForDailyScreen(
                         "Température max.",
                         "${viewmodel.maxTemp} °",
                         fontSize1 = 16.sp,
                         fontSize2 = 24.sp
                     )
                     Spacer(Modifier.height(8.dp))
-                    TodayItemMetaData(
+                    TodayItemMetaDataForDailyScreen(
                         stringResource(R.string.sunrise),
                         DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(viewmodel.sunrise),
                         fontSize1 = 16.sp,
                         fontSize2 = 24.sp
                     )
                     Spacer(Modifier.height(8.dp))
-                    TodayItemMetaData(
+                    TodayItemMetaDataForDailyScreen(
                         stringResource(R.string.sunset),
                         DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(viewmodel.sunset),
                         fontSize1 = 16.sp,
                         fontSize2 = 24.sp
                     )
                     Spacer(Modifier.height(8.dp))
-                    TodayItemMetaData(
+                    TodayItemMetaDataForDailyScreen(
                         stringResource(R.string.wind_direction),
                         viewmodel.windDirection,
                         fontSize1 = 16.sp,
@@ -141,6 +129,25 @@ fun DailyScreen(onBackClick: () -> Unit, viewmodel: DailyScreenViewmodel = hiltV
 
             }
         }
+    }
+}
+
+@Composable
+fun TodayItemMetaDataForDailyScreen(title: String, data: String, fontSize1:TextUnit = 14.sp, fontSize2:TextUnit = 20.sp) {
+    Column {
+        Text(
+            text = title,
+            fontWeight = FontWeight.Normal,
+            fontSize = fontSize1,
+            color = Color.DarkGray
+        )
+        Text(
+            text = data,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = fontSize2,
+            color = Color.DarkGray
+        )
+        Spacer(Modifier.height(6.dp))
     }
 }
 

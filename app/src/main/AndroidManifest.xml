@@ -11,13 +11,13 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/ic_splash_icon"
         android:label="@string/app_name"
+        android:theme="@style/Theme.WeatherApp.SplashScreen"
         android:roundIcon="@drawable/ic_splash_icon"
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
             android:name="com.francotte.weatherapp.ui.home.HomeActivity"
-            android:exported="true"
-            android:theme="@style/Theme.WeatherApp.SplashScreen">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
