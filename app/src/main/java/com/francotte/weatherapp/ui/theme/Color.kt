@@ -79,6 +79,8 @@ val SandColor = Color(0xffe0cda9)
 val NightSky = Color(0xFF132F60)
 val BlueSky = Color(0xFFAFC6FF)
 val KingBlue = Color(0xFF3360d2)
+val LightBlueGray = Color(0xffc9d1e0)
+val DarkBlueGray = Color(0xffb1b7c1)
 
 
 

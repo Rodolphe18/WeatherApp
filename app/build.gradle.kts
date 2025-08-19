@@ -27,9 +27,6 @@ android {
 
     lint {
         disable += setOf("NullSafeMutableLiveData")
-        // facultatif si tu veux débloquer la CI le temps de corriger :
-        // checkReleaseBuilds = false
-        // abortOnError = false
     }
 
     signingConfigs {

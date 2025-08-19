@@ -32,15 +32,19 @@ import androidx.compose.ui.unit.sp
 import com.francotte.weatherapp.R
 import com.francotte.weatherapp.domain.model.DailyWeatherData
 import com.francotte.weatherapp.ui.theme.BlueSky
+import com.francotte.weatherapp.ui.theme.DarkBlueGray
 import com.francotte.weatherapp.ui.theme.NightSky
 import com.francotte.weatherapp.ui.theme.SandColor
 import com.francotte.weatherapp.util.DateTimeFormatter
+import com.francotte.weatherapp.util.WeatherType
 
 @Composable
 fun ForecastDailyList(
     cityName: String,
     weatherDataList: List<DailyWeatherData>,
     parentIsDay: Boolean,
+    parentIsSunset: Boolean,
+    parentWeatherType: WeatherType?,
     onClick: (String, String, String, Double, Double, String, String, String) -> Unit
 ) {
     Text(
@@ -61,6 +65,8 @@ fun ForecastDailyList(
                 weatherData = weatherData,
                 cityName = cityName,
                 parentIsDay = parentIsDay,
+                parentIsSunset = parentIsSunset,
+                parentWeatherType = parentWeatherType,
                 onClick = onClick
             )
         }
@@ -72,7 +78,9 @@ fun ForecastDailyItem(
     modifier: Modifier = Modifier,
     cityName: String,
     weatherData: DailyWeatherData,
+    parentWeatherType: WeatherType?,
     parentIsDay: Boolean,
+    parentIsSunset: Boolean,
     onClick: (String, String, String, Double, Double, String, String, String) -> Unit
 ) {
     val context = LocalContext.current
@@ -101,13 +109,20 @@ fun ForecastDailyItem(
                     )
                 }
                 .background(
-                    brush = if (parentIsDay) Brush.linearGradient(
+                    brush = if (parentIsDay&& (parentWeatherType == WeatherType.ClearSky || parentWeatherType == WeatherType.MainlyClear)) Brush.linearGradient(
                         listOf(
                             BlueSky.copy(0.3f),
                             BlueSky.copy(0.1f)
                         )
-                    ) else Brush.linearGradient(
+                    )
+                    else if (parentIsDay) Brush.linearGradient(listOf(Color.White.copy(0.05f),Color.White.copy(0.05f) ))
+                    else if (!parentIsSunset) Brush.linearGradient(
                         listOf(NightSky.copy(0.8f), NightSky.copy(0.1f))
+                    ) else Brush.linearGradient(
+                        listOf(
+                            DarkBlueGray.copy(0.2f),
+                            DarkBlueGray.copy(0.24f)
+                        )
                     )
                 )
                 .padding(horizontal = 8.dp, vertical = 4.dp),

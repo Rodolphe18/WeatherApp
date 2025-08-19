@@ -32,18 +32,6 @@ fun TodayWeatherFirstItem(
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .background(
-                    brush = if (data.isDay) Brush.verticalGradient(
-                        listOf(
-                            BlueSky.copy(0.6f),
-                            Color(0xffe899a9).copy(0.05f), BlueSky.copy(0.05f)
-                        )
-                    ) else Brush.verticalGradient(
-                        listOf(
-                            NightSky.copy(0.6f), Color(0xffe899a9).copy(0.05f), NightSky.copy(0.6f)
-                        )
-                    )
-                )
                 .padding(6.dp),
             contentAlignment = Alignment.Center
         ) {

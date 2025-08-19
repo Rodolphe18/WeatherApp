@@ -30,20 +30,28 @@ import androidx.compose.ui.unit.sp
 import com.francotte.weatherapp.R
 import com.francotte.weatherapp.domain.model.HourlyWeatherData
 import com.francotte.weatherapp.ui.theme.BlueSky
+import com.francotte.weatherapp.ui.theme.DarkBlueGray
 import com.francotte.weatherapp.ui.theme.NightSky
+import com.francotte.weatherapp.ui.theme.SandColor
 import com.francotte.weatherapp.util.DateTimeFormatter
 import com.francotte.weatherapp.util.WeatherType
 import kotlinx.datetime.LocalDateTime
 
 @Composable
-fun ForecastHourlyList(modifier: Modifier = Modifier, weatherDataList: List<HourlyWeatherData>, parentIsDay: Boolean) {
+fun ForecastHourlyList(
+    modifier: Modifier = Modifier,
+    weatherDataList: List<HourlyWeatherData>,
+    parentWeatherType: WeatherType?,
+    parentIsDay: Boolean,
+    parentIsSunset: Boolean
+) {
     Column(modifier = modifier) {
         Text(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp),
             text = stringResource(R.string.forecast_hourly_title),
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
-            color = if(parentIsDay) Color.DarkGray else Color.LightGray
+            color = if (parentIsDay) Color.DarkGray else Color.LightGray
         )
         LazyRow(
             state = rememberLazyListState(),
@@ -51,7 +59,12 @@ fun ForecastHourlyList(modifier: Modifier = Modifier, weatherDataList: List<Hour
             contentPadding = PaddingValues(8.dp)
         ) {
             items(weatherDataList) { weatherData ->
-                ForecastHourlyItem(hourlyWeatherData = weatherData, parentIsDay = parentIsDay)
+                ForecastHourlyItem(
+                    hourlyWeatherData = weatherData,
+                    parentIsDay = parentIsDay,
+                    parentWeatherType = parentWeatherType,
+                    parentIsSunset = parentIsSunset
+                )
             }
         }
     }
@@ -59,22 +72,29 @@ fun ForecastHourlyList(modifier: Modifier = Modifier, weatherDataList: List<Hour
 }
 
 @Composable
-fun ForecastHourlyItem(hourlyWeatherData: HourlyWeatherData, parentIsDay:Boolean) {
+fun ForecastHourlyItem(
+    hourlyWeatherData: HourlyWeatherData,
+    parentIsDay: Boolean,
+    parentIsSunset: Boolean,
+    parentWeatherType: WeatherType?
+) {
     val isDay = LocalDateTime.parse(hourlyWeatherData.time).hour in 6..18
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            text = DateTimeFormatter.getFormattedTimeForHourly(hourlyWeatherData.time, hourlyWeatherData.offSetSeconds),
+            text = DateTimeFormatter.getFormattedTimeForHourly(
+                hourlyWeatherData.time,
+                hourlyWeatherData.offSetSeconds
+            ),
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
-            color = if(parentIsDay) Color.DarkGray else Color.LightGray
+            color = if (parentIsDay) Color.DarkGray else Color.LightGray
         )
         Spacer(Modifier.height(4.dp))
         Column(
             modifier = Modifier
                 .width(120.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(brush = if (parentIsDay) Brush.linearGradient(listOf(BlueSky.copy(0.5f), BlueSky.copy(0.1f)))  else Brush.linearGradient(
-                    listOf(NightSky.copy(0.8f), NightSky.copy(0.1f))))
+                .background(brush = brushForHourlyItem(parentIsDay, parentIsSunset, parentWeatherType))
                 .padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -83,14 +103,16 @@ fun ForecastHourlyItem(hourlyWeatherData: HourlyWeatherData, parentIsDay:Boolean
                 modifier = Modifier.padding(horizontal = 8.dp),
                 fontWeight = FontWeight.SemiBold,
                 style = MaterialTheme.typography.titleMedium,
-                color = if(parentIsDay) Color.DarkGray else Color.LightGray
+                color = if (parentIsDay) Color.DarkGray else Color.LightGray
             )
             Image(
-                painterResource(id = when {
-                    hourlyWeatherData.weatherType == WeatherType.ClearSky && isDay -> hourlyWeatherData.weatherType.iconForDay!!
-                    hourlyWeatherData.weatherType == WeatherType.ClearSky && !isDay -> hourlyWeatherData.weatherType.iconForNight!!
-                    else -> hourlyWeatherData.weatherType.iconRes
-                }),
+                painterResource(
+                    id = when {
+                        hourlyWeatherData.weatherType == WeatherType.ClearSky && isDay -> hourlyWeatherData.weatherType.iconForDay!!
+                        hourlyWeatherData.weatherType == WeatherType.ClearSky && !isDay -> hourlyWeatherData.weatherType.iconForNight!!
+                        else -> hourlyWeatherData.weatherType.iconRes
+                    }
+                ),
                 contentDescription = null,
                 modifier = Modifier.size(40.dp)
             )
@@ -99,8 +121,22 @@ fun ForecastHourlyItem(hourlyWeatherData: HourlyWeatherData, parentIsDay:Boolean
                 modifier = Modifier.padding(horizontal = 8.dp),
                 fontWeight = FontWeight.SemiBold,
                 style = MaterialTheme.typography.titleMedium,
-                color = if(parentIsDay) Color.DarkGray else Color.LightGray
+                color = if (parentIsDay) Color.DarkGray else Color.LightGray
             )
         }
     }
 }
+
+@Composable
+private fun brushForHourlyItem(
+    isDay: Boolean,
+    isSunset: Boolean,
+    weatherType: WeatherType?
+): Brush =
+    when {
+        (isDay && (weatherType == WeatherType.ClearSky || weatherType == WeatherType.MainlyClear)) -> Brush.linearGradient(listOf(BlueSky.copy(0.5f), BlueSky.copy(0.1f)))
+        isSunset -> Brush.linearGradient(listOf(Color.White.copy(0.05f),Color.White.copy(0.05f) ))
+        !isDay -> Brush.linearGradient(listOf(NightSky.copy(0.8f), NightSky.copy(0.1f)))
+        else -> Brush.linearGradient(listOf(DarkBlueGray.copy(0.2f), DarkBlueGray.copy(0.24f))
+        )
+    }

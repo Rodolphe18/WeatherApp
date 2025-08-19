@@ -93,9 +93,9 @@ private fun WeatherWidgetContent(
         Column(GlanceModifier.defaultWeight()) {
             Text(
                 text = "$temp°",
-                style = TextStyle(fontSize = 26.sp, color = GlanceTheme.colors.surface)
+                style = TextStyle(fontSize = 34.sp, color = GlanceTheme.colors.surface)
             )
-            Spacer(GlanceModifier.height(8.dp))
+            Spacer(GlanceModifier.height(4.dp))
             Text(
                 text = city,
                 style = TextStyle(fontSize = 14.sp, color = GlanceTheme.colors.surface)
@@ -110,7 +110,7 @@ private fun WeatherWidgetContent(
                             contentDescription = null,
                             modifier = GlanceModifier.size(35.dp)
                         )
-                        Spacer(GlanceModifier.height(8.dp))
+                        Spacer(GlanceModifier.height(4.dp))
                         Text(
                             text = desc,
                             style = TextStyle(fontSize = 14.sp, color = GlanceTheme.colors.surface)

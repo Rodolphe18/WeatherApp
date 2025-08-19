@@ -16,28 +16,46 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.francotte.weatherapp.ui.theme.BlueSky
+import com.francotte.weatherapp.ui.theme.LightBlueGray
 import com.francotte.weatherapp.ui.theme.NightSky
+import com.francotte.weatherapp.util.WeatherType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherTopAppBar(
+    modifier: Modifier = Modifier,
     text: String,
-    isDay:Boolean,
+    isDay: Boolean,
+    weatherType: WeatherType?,
+    isSunset: Boolean = false,
     actionIcon: ImageVector,
     actionIconContentDescription: String? = null,
-    modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = if(isDay) BlueSky.copy(0.6f)  else NightSky.copy(0.6f)),
+    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+        containerColor = weatherColor(
+            isDay,
+            isSunset,
+            weatherType
+        )
+    ),
     onActionClick: () -> Unit = {},
-    onNavigationClick:() -> Unit = {}
+    onNavigationClick: () -> Unit = {}
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(text = text, fontSize = 30.sp, fontWeight = FontWeight.Bold, color = if(isDay) Color.DarkGray else Color.LightGray) },
+        title = {
+            Text(
+                text = text,
+                fontSize = 34.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = if (isDay) Color.DarkGray else Color.LightGray
+            )
+        },
         actions = {
             IconButton(onClick = onActionClick) {
                 Icon(
                     imageVector = actionIcon,
                     contentDescription = actionIconContentDescription,
-                    tint = if(isDay) Color.DarkGray else Color.LightGray)
+                    tint = if (isDay) Color.DarkGray else Color.LightGray
+                )
             }
         },
         navigationIcon = {
@@ -45,10 +63,24 @@ fun WeatherTopAppBar(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
-                    tint = if(isDay) Color.DarkGray else Color.LightGray)
+                    tint = if (isDay) Color.DarkGray else Color.LightGray
+                )
             }
         },
         colors = colors,
         modifier = modifier,
     )
 }
+
+@Composable
+private fun weatherColor(
+    isDay: Boolean,
+    isSunset: Boolean,
+    weatherType: WeatherType?
+): Color =
+    when {
+        isDay && (weatherType == WeatherType.ClearSky || weatherType == WeatherType.MainlyClear) -> BlueSky.copy(alpha = 0.6f)
+        isSunset -> NightSky.copy(alpha = 0.05f)
+        !isDay -> NightSky.copy(alpha = 0.6f)
+        else -> LightBlueGray
+    }

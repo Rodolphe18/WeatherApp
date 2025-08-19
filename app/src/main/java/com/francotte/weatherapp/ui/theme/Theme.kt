@@ -100,7 +100,6 @@ fun AppTheme(
          LocalBackGroundColors provides backgroundColor, LocalContainerColor provides containerColor) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = AppTypography,
             content = content
         )
     }

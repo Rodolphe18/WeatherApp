@@ -18,7 +18,7 @@ sealed class WeatherType(
     )
     data object MainlyClear : WeatherType(
         weatherDesc = R.string.mainly_clear,
-        iconRes = R.drawable.ic_cloudy
+        iconRes = R.drawable.partly_sunny_2
     )
     data object PartlyCloudy : WeatherType(
         weatherDesc = R.string.partly_cloudy,
