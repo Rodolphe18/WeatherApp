@@ -31,7 +31,7 @@ fun WeatherTopAppBar(
     actionIcon: ImageVector,
     actionIconContentDescription: String? = null,
     colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-        containerColor = weatherColor(
+        containerColor = weatherColorForAppBar(
             isDay,
             isSunset,
             weatherType
@@ -73,7 +73,7 @@ fun WeatherTopAppBar(
 }
 
 @Composable
-private fun weatherColor(
+private fun weatherColorForAppBar(
     isDay: Boolean,
     isSunset: Boolean,
     weatherType: WeatherType?
