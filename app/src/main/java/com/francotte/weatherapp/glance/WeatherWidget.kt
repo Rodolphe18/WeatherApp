@@ -93,12 +93,12 @@ private fun WeatherWidgetContent(
         Column(GlanceModifier.defaultWeight()) {
             Text(
                 text = "$temp°",
-                style = TextStyle(fontSize = 34.sp, color = GlanceTheme.colors.surface)
+                style = TextStyle(fontSize = 36.sp, color = GlanceTheme.colors.surface)
             )
             Spacer(GlanceModifier.height(4.dp))
             Text(
                 text = city,
-                style = TextStyle(fontSize = 14.sp, color = GlanceTheme.colors.surface)
+                style = TextStyle(fontSize = 16.sp, color = GlanceTheme.colors.surface)
             )
         }
         Column(GlanceModifier.defaultWeight(),horizontalAlignment = androidx.glance.layout.Alignment.End) {
@@ -108,12 +108,12 @@ private fun WeatherWidgetContent(
                         Image(
                             provider = ImageProvider(resId = it),
                             contentDescription = null,
-                            modifier = GlanceModifier.size(35.dp)
+                            modifier = GlanceModifier.size(40.dp)
                         )
-                        Spacer(GlanceModifier.height(4.dp))
+                        Spacer(GlanceModifier.height(6.dp))
                         Text(
                             text = desc,
-                            style = TextStyle(fontSize = 14.sp, color = GlanceTheme.colors.surface)
+                            style = TextStyle(fontSize = 16.sp, color = GlanceTheme.colors.surface)
                         )
                     }
                 }
