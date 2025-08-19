@@ -1,6 +1,7 @@
 [versions]
 agp = "8.7.2"
 converterGson = "2.11.0"
+glanceBom = "1.1.1"
 gson = "2.11.0"
 dotlottieAndroid = "0.0.3"
 kotlin = "2.0.20"
@@ -8,7 +9,7 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.7"
+lifecycleRuntimeKtx = "2.8.4"
 activityCompose = "1.9.3"
 composeBom = "2024.04.01"
 androidxLifecycle = "2.8.6"
@@ -26,17 +27,23 @@ okhttp = "4.12.0"
 protobufPlugin = "0.9.4"
 protobuf = "4.26.1"
 androidxDataStore = "1.1.1"
+workRuntimeKtx = "2.9.1"
+glanceAppwidget = "1.1.1"
+hiltWork = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget" }
+androidx-glance-bom = { module = "androidx.glance:glance", version.ref = "glanceBom" }
+androidx-glance-material3 = { module = "androidx.glance:glance-material3" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycleRuntimeKtx" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-dotlottie-android = { module = "com.github.LottieFiles:dotlottie-android", version.ref = "dotlottieAndroid" }
-
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
@@ -77,6 +84,8 @@ retrofit-kotlin-serialization = { group = "com.squareup.retrofit2", name = "conv
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
 androidx-dataStore = { group = "androidx.datastore", name = "datastore", version.ref = "androidxDataStore" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
+glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glanceAppwidget" }
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWork" }
 
 [plugins]
 hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

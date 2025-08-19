@@ -10,6 +10,10 @@ import com.francotte.weatherapp.data.model.asExternalModel
 import com.francotte.weatherapp.domain.model.CurrentWeatherData
 import com.francotte.weatherapp.domain.model.DailyWeatherData
 import com.francotte.weatherapp.domain.model.HourlyWeatherData
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,24 +22,25 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WeatherRepository @Inject constructor(
+class WeatherRepositoryImpl @Inject constructor(
     private val api: WeatherApi, private val autoCompleteApi: AutoCompleteApi
-) {
+) : WeatherRepository {
 
 
-    fun getAutoCompleteResult(query:String): Flow<List<AutoCompleteResult>?> {
+    override fun getAutoCompleteResult(query: String): Flow<List<AutoCompleteResult>?> {
         return flow {
             try {
                 val response = autoCompleteApi.getAutoCompleteResult(query)
                 val body = response.body()?.map { it.asExternalModel() }?.distinct()
                 emit(body)
             } catch (e: Exception) {
-                emit(null) }
+                emit(null)
+            }
         }.flowOn(Dispatchers.IO)
     }
 
 
-    fun getCurrentWeatherData(lat: Double, long: Double): Flow<CurrentWeatherData?> {
+    override fun getCurrentWeatherData(lat: Double, long: Double): Flow<CurrentWeatherData?> {
         return flow {
             try {
                 val body = api.getCurrentWeatherData(lat, long).body()?.asExternalCurrentWeather()
@@ -46,7 +51,7 @@ class WeatherRepository @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    fun getHourlyWeatherData(
+    override fun getHourlyWeatherData(
         lat: Double,
         long: Double
     ): Flow<Map<Int, List<HourlyWeatherData>>?> {
@@ -56,23 +61,42 @@ class WeatherRepository @Inject constructor(
                 val body = response.body()?.asExternalHourlyWeather()
                 emit(body)
             } catch (e: Exception) {
-                emit(null)}
+                emit(null)
+            }
         }.flowOn(Dispatchers.IO)
     }
 
 
-    fun getDailyWeatherData(
+    override fun getDailyWeatherData(
         lat: Double,
         long: Double
     ): Flow<List<DailyWeatherData>?> {
         return flow {
             try {
                 val response = api.getDailyWeather(lat, long)
-               val body = response.body()?.asExternalDailyWeather()
+                val body = response.body()?.asExternalDailyWeather()
                 emit(body)
             } catch (e: Exception) {
                 emit(null)
-        }}.flowOn(Dispatchers.IO)
+            }
+        }.flowOn(Dispatchers.IO)
     }
 
 }
+
+interface WeatherRepository {
+    fun getAutoCompleteResult(query: String): Flow<List<AutoCompleteResult>?>
+    fun getCurrentWeatherData(lat: Double, long: Double): Flow<CurrentWeatherData?>
+    fun getHourlyWeatherData(lat: Double, long: Double): Flow<Map<Int, List<HourlyWeatherData>>?>
+    fun getDailyWeatherData(lat: Double, long: Double): Flow<List<DailyWeatherData>?>
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class WeatherModule {
+
+    @Binds
+    abstract fun bindsWeatherModule(weatherRepositoryImpl: WeatherRepositoryImpl): WeatherRepository
+
+}
+

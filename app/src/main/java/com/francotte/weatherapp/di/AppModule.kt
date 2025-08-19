@@ -4,6 +4,7 @@ package com.francotte.weatherapp.di
 import com.francotte.weatherapp.data.api.AutoCompleteApi
 import com.francotte.weatherapp.data.api.HttpLoggingInterceptor
 import com.francotte.weatherapp.data.api.WeatherApi
+import com.francotte.weatherapp.domain.WeatherRepositoryImpl
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -47,6 +48,12 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWeatherRepo(api: WeatherApi, autoCompleteApi: AutoCompleteApi) : WeatherRepositoryImpl {
+        return WeatherRepositoryImpl(api, autoCompleteApi)
     }
 
 }

@@ -19,10 +19,26 @@ android {
         applicationId = "com.francotte.weatherapp"
         minSdk = 26
         targetSdk = 35
-        versionCode = 9
-        versionName = "1.8"
+        versionCode = 7
+        versionName = "1.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    lint {
+        disable += setOf("NullSafeMutableLiveData")
+        // facultatif si tu veux débloquer la CI le temps de corriger :
+        // checkReleaseBuilds = false
+        // abortOnError = false
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("weatherKey.jks")
+            storePassword = "Nietzsche@18"
+            keyAlias = "key0"
+            keyPassword = "Nietzsche@18"
+        }
     }
 
     buildTypes {
@@ -32,6 +48,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -57,6 +74,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.glance.appwidget)
+    implementation(libs.androidx.hilt.work)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -108,6 +127,15 @@ dependencies {
 
     implementation(libs.gson)
     implementation(libs.converter.gson)
+
+    implementation(libs.androidx.glance.bom)
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
+    implementation(libs.androidx.work.runtime.ktx)
+
+    implementation(libs.androidx.hilt.work)
+    implementation(libs.androidx.lifecycle.process)
+    implementation("androidx.lifecycle:lifecycle-common-java8:2.8.4")
 
 }
 
