@@ -11,8 +11,10 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -41,6 +43,7 @@ import com.francotte.weatherapp.ui.theme.BlueSky
 import com.francotte.weatherapp.ui.theme.NightSky
 import com.francotte.weatherapp.ui.theme.SandColor
 import com.francotte.weatherapp.util.WeatherType
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.datetime.LocalDateTime
 import java.time.ZoneId
 import kotlin.math.abs
@@ -71,11 +74,6 @@ fun PagerScreen(
             if (sunsetHour != null) abs(currentHour - sunsetHour) <= 2 else false
         }
     }
-
-    Log.d("debug_sunset0", sunset.toString())
-    Log.d("debug_sunset1", sunsetHour.toString())
-    Log.d("debug_sunset2", currentHour.toString())
-    Log.d("debug_sunset3", isSunset.toString())
     val weatherType = viewmodel.pageCurrentCityWeather[viewmodel.currentPage]?.weatherType
     var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
     var cityName = ""
@@ -94,6 +92,7 @@ fun PagerScreen(
             onDismiss = { showSettingsDialog = false },
         )
     }
+
 
     if (userCities?.isNotEmpty() == true) {
         cityName = userCities[viewmodel.currentPage].name
@@ -123,7 +122,7 @@ fun PagerScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(
-                                getWeatherBrushForPagerScreen(isDay,isSunset, weatherType)
+                                getWeatherBrushForPagerScreen(isDay, isSunset, weatherType)
                             ),
                         contentPadding = padding,
                         state = rememberLazyListState()
@@ -199,3 +198,4 @@ private fun getWeatherBrushForPagerScreen(
         NightSky.copy(0.4f),
     ) else listOf(LightBlueGray, Color.White)
 )
+

@@ -12,6 +12,7 @@ import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.francotte.weatherapp.glance.UnlockReceiver
 import com.francotte.weatherapp.glance.WeatherRefreshWorker
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -33,6 +34,7 @@ class MyApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         WorkManager.initialize(this, workManagerConfiguration)
+        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = true
 
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_USER_PRESENT)   // user vient de déverrouiller
