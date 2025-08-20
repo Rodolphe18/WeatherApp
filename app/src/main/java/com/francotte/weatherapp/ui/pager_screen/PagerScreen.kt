@@ -11,10 +11,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -43,7 +41,6 @@ import com.francotte.weatherapp.ui.theme.BlueSky
 import com.francotte.weatherapp.ui.theme.NightSky
 import com.francotte.weatherapp.ui.theme.SandColor
 import com.francotte.weatherapp.util.WeatherType
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.datetime.LocalDateTime
 import java.time.ZoneId
 import kotlin.math.abs
