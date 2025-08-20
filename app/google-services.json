@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1048575687740",
+    "project_id": "weatherapp-638d6",
+    "storage_bucket": "weatherapp-638d6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048575687740:android:f2bb1b217d6d93ef7dd739",
+        "android_client_info": {
+          "package_name": "com.francotte.weatherapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhk2iTm2UbMDgVbLbnaYbwX1dFz96uY1w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

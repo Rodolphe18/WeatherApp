@@ -9,6 +9,8 @@ plugins {
     alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.ksp)
     alias(libs.plugins.protobuf)
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -133,6 +135,13 @@ dependencies {
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.lifecycle.process)
     implementation("androidx.lifecycle:lifecycle-common-java8:2.8.4")
+
+    implementation(platform("com.google.firebase:firebase-bom:34.1.0"))
+
+    // Crashlytics (plus besoin de -ktx depuis 2025, utiliser les modules “main”)
+    implementation("com.google.firebase:firebase-crashlytics")
+    // (Optionnel) Analytics — utile pour les regroupements Crashlytics
+    implementation("com.google.firebase:firebase-analytics")
 
 }
 
