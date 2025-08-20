@@ -86,7 +86,7 @@ private fun WeatherWidgetContent(
     Row(
         modifier = GlanceModifier
             .fillMaxSize()
-            .padding(horizontal = 4.dp, vertical = 6.dp)
+            .padding(horizontal = 4.dp, vertical = 2.dp)
             .clickable(onClick = actionStartActivity(Intent(ctx, HomeActivity::class.java))),
         verticalAlignment = androidx.glance.layout.Alignment.CenterVertically
     ) {
@@ -95,7 +95,7 @@ private fun WeatherWidgetContent(
                 text = "$temp°",
                 style = TextStyle(fontSize = 36.sp, color = GlanceTheme.colors.surface)
             )
-            Spacer(GlanceModifier.height(4.dp))
+            Spacer(GlanceModifier.height(2.dp))
             Text(
                 text = city,
                 style = TextStyle(fontSize = 16.sp, color = GlanceTheme.colors.surface)

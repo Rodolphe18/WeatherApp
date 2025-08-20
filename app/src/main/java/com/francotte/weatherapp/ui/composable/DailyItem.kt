@@ -43,7 +43,6 @@ fun ForecastDailyList(
     cityName: String,
     weatherDataList: List<DailyWeatherData>,
     parentIsDay: Boolean,
-    parentIsSunset: Boolean,
     parentWeatherType: WeatherType?,
     onClick: (String, String, String, Double, Double, String, String, String) -> Unit
 ) {
@@ -52,7 +51,7 @@ fun ForecastDailyList(
         text = stringResource(R.string.forecast_daily_title),
         fontSize = 24.sp,
         fontWeight = FontWeight.SemiBold,
-        color = if (parentIsDay) Color.DarkGray else Color.LightGray
+        color =  if (parentIsDay) Color.DarkGray else Color.LightGray
     )
     LazyRow(
         state = rememberLazyListState(),
@@ -65,7 +64,6 @@ fun ForecastDailyList(
                 weatherData = weatherData,
                 cityName = cityName,
                 parentIsDay = parentIsDay,
-                parentIsSunset = parentIsSunset,
                 parentWeatherType = parentWeatherType,
                 onClick = onClick
             )
@@ -80,7 +78,6 @@ fun ForecastDailyItem(
     weatherData: DailyWeatherData,
     parentWeatherType: WeatherType?,
     parentIsDay: Boolean,
-    parentIsSunset: Boolean,
     onClick: (String, String, String, Double, Double, String, String, String) -> Unit
 ) {
     val context = LocalContext.current
@@ -89,7 +86,7 @@ fun ForecastDailyItem(
             text = DateTimeFormatter.getFormattedDate(weatherData.time),
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
-            color = if (parentIsDay) Color.DarkGray else Color.LightGray
+            color =  if (parentIsDay) Color.DarkGray else Color.LightGray
         )
         Spacer(Modifier.height(4.dp))
         Column(
@@ -115,8 +112,7 @@ fun ForecastDailyItem(
                             BlueSky.copy(0.1f)
                         )
                     )
-                    else if (parentIsDay) Brush.linearGradient(listOf(Color.White.copy(0.05f),Color.White.copy(0.05f) ))
-                    else if (!parentIsSunset) Brush.linearGradient(
+                    else if (!parentIsDay) Brush.linearGradient(
                         listOf(NightSky.copy(0.8f), NightSky.copy(0.1f))
                     ) else Brush.linearGradient(
                         listOf(
@@ -137,7 +133,7 @@ fun ForecastDailyItem(
                 ),
                 fontWeight = FontWeight.Medium,
                 style = MaterialTheme.typography.titleMedium,
-                color = if (parentIsDay) Color.DarkGray else Color.LightGray
+                color =  if (parentIsDay) Color.DarkGray else Color.LightGray
             )
             Image(
                 painterResource(id = weatherData.weatherType.iconRes),

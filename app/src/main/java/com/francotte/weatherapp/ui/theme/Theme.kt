@@ -91,13 +91,8 @@ fun AppTheme(
     content: @Composable() () -> Unit
 ) {
     val colorScheme = if (darkTheme) darkScheme else lightScheme
-    val backgroundColor = GradientColors(
-        top = colorScheme.tertiaryContainer.copy(0.9f),
-        bottom = colorScheme.onSurfaceVariant.copy(0.7f),
-    )
     val containerColor = ContainerColor(colorScheme.tertiaryContainer.copy(0.9f))
-     CompositionLocalProvider(
-         LocalBackGroundColors provides backgroundColor, LocalContainerColor provides containerColor) {
+     CompositionLocalProvider(LocalContainerColor provides containerColor) {
         MaterialTheme(
             colorScheme = colorScheme,
             content = content

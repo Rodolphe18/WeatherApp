@@ -63,6 +63,7 @@ class PagerViewmodel @Inject constructor(
 
     private val mutex = Mutex()
 
+
     fun reload() {
         isError = false
         loadCityCurrentWeather(currentPage)

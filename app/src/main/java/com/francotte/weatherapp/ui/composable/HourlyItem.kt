@@ -42,8 +42,7 @@ fun ForecastHourlyList(
     modifier: Modifier = Modifier,
     weatherDataList: List<HourlyWeatherData>,
     parentWeatherType: WeatherType?,
-    parentIsDay: Boolean,
-    parentIsSunset: Boolean
+    parentIsDay: Boolean
 ) {
     Column(modifier = modifier) {
         Text(
@@ -62,8 +61,7 @@ fun ForecastHourlyList(
                 ForecastHourlyItem(
                     hourlyWeatherData = weatherData,
                     parentIsDay = parentIsDay,
-                    parentWeatherType = parentWeatherType,
-                    parentIsSunset = parentIsSunset
+                    parentWeatherType = parentWeatherType
                 )
             }
         }
@@ -75,7 +73,6 @@ fun ForecastHourlyList(
 fun ForecastHourlyItem(
     hourlyWeatherData: HourlyWeatherData,
     parentIsDay: Boolean,
-    parentIsSunset: Boolean,
     parentWeatherType: WeatherType?
 ) {
     val isDay = LocalDateTime.parse(hourlyWeatherData.time).hour in 6..18
@@ -94,7 +91,7 @@ fun ForecastHourlyItem(
             modifier = Modifier
                 .width(120.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(brush = brushForHourlyItem(parentIsDay, parentIsSunset, parentWeatherType))
+                .background(brush = brushForHourlyItem(parentIsDay, parentWeatherType))
                 .padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -130,12 +127,10 @@ fun ForecastHourlyItem(
 @Composable
 private fun brushForHourlyItem(
     isDay: Boolean,
-    isSunset: Boolean,
     weatherType: WeatherType?
 ): Brush =
     when {
         (isDay && (weatherType == WeatherType.ClearSky || weatherType == WeatherType.MainlyClear)) -> Brush.linearGradient(listOf(BlueSky.copy(0.5f), BlueSky.copy(0.1f)))
-        isSunset -> Brush.linearGradient(listOf(Color.White.copy(0.05f),Color.White.copy(0.05f) ))
         !isDay -> Brush.linearGradient(listOf(NightSky.copy(0.8f), NightSky.copy(0.1f)))
         else -> Brush.linearGradient(listOf(DarkBlueGray.copy(0.2f), DarkBlueGray.copy(0.24f))
         )

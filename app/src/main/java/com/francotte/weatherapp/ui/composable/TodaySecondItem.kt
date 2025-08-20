@@ -27,7 +27,7 @@ import kotlin.math.roundToInt
 fun TodayWeatherSecondItem(
     modifier: Modifier = Modifier,
     currentWeatherData: CurrentWeatherData,
-    dailyWeatherData: DailyWeatherData
+    dailyWeatherData: DailyWeatherData,
 ) {
     val isDay = remember { currentWeatherData.isDay }
     Column {
@@ -36,7 +36,7 @@ fun TodayWeatherSecondItem(
             text = stringResource(R.string.today_detail_weather_title),
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
-            color = if (isDay) Color.DarkGray else Color.LightGray
+            color =   if (isDay) Color.DarkGray else Color.LightGray
         )
         Row(
             modifier = modifier
@@ -52,8 +52,7 @@ fun TodayWeatherSecondItem(
                 TodayItemMetaData(
                     stringResource(R.string.wind_speed),
                     "${currentWeatherData.windSpeed} km/h",
-                    isDay
-                )
+                    isDay)
                 TodayItemMetaData(
                     stringResource(R.string.sunrise),
                     DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunrise),
@@ -70,11 +69,13 @@ fun TodayWeatherSecondItem(
                     stringResource(R.string.precipitation),
                     "${currentWeatherData.precipitation.roundToInt()}%",
                     isDay
+
                 )
                 TodayItemMetaData(
                     stringResource(R.string.sunset),
                     DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunset),
                     isDay
+
                 )
             }
         }
@@ -89,13 +90,13 @@ fun TodayItemMetaData(title: String, data: String, isDay: Boolean = true, fontSi
             text = title,
             fontWeight = FontWeight.Normal,
             fontSize = fontSize1,
-            color = if (isDay) Color.DarkGray else Color.LightGray
+            color = if(isDay) Color.DarkGray else Color.LightGray
         )
         Text(
             text = data,
             fontWeight = FontWeight.SemiBold,
             fontSize = fontSize2,
-            color = if (isDay) Color.DarkGray else Color.LightGray
+            color = if(isDay) Color.DarkGray else Color.LightGray
         )
         Spacer(Modifier.height(6.dp))
     }

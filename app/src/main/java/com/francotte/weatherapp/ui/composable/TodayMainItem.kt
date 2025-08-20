@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun TodayWeatherFirstItem(
     modifier: Modifier = Modifier,
-    currentWeatherData: CurrentWeatherData,
+    currentWeatherData: CurrentWeatherData
 ) {
     currentWeatherData.let { data ->
         Box(

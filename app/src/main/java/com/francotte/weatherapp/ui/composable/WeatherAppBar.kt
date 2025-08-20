@@ -44,9 +44,8 @@ fun WeatherTopAppBar(
         title = {
             Text(
                 text = text,
-                fontSize = 34.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = if (isDay) Color.DarkGray else Color.LightGray
+                fontSize = 36.sp,
+                color =if (isSunset) Color.White else if (isDay) Color.DarkGray else Color.LightGray
             )
         },
         actions = {
@@ -54,7 +53,7 @@ fun WeatherTopAppBar(
                 Icon(
                     imageVector = actionIcon,
                     contentDescription = actionIconContentDescription,
-                    tint = if (isDay) Color.DarkGray else Color.LightGray
+                    tint = if (isSunset) Color.White else if (isDay) Color.DarkGray else Color.LightGray
                 )
             }
         },
@@ -63,7 +62,7 @@ fun WeatherTopAppBar(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
-                    tint = if (isDay) Color.DarkGray else Color.LightGray
+                    tint = if (isSunset) Color.White else if (isDay) Color.DarkGray else Color.LightGray
                 )
             }
         },
