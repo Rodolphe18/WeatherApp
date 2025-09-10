@@ -1,27 +1,40 @@
 package com.francotte.weatherapp.di
 
 
+import android.content.Context
 import com.francotte.weatherapp.data.api.AutoCompleteApi
 import com.francotte.weatherapp.data.api.HttpLoggingInterceptor
 import com.francotte.weatherapp.data.api.WeatherApi
 import com.francotte.weatherapp.domain.WeatherRepositoryImpl
+import com.francotte.weatherapp.util.ApplicationScope
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
+import java.io.File
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private val client = OkHttpClient.Builder().apply {
-        addInterceptor(
+    @Provides
+    @Singleton
+    fun providesCache(@ApplicationContext context: Context): Cache = Cache(File(context.cacheDir, "http_cache"), 10L * 1024 * 1024)
+
+    @Provides
+    @Singleton
+    fun providesOkHttpClient(cache: Cache): OkHttpClient = OkHttpClient
+        .Builder().apply {
+            cache(cache)
+            addInterceptor(
             HttpLoggingInterceptor()
                 .setLevel(HttpLoggingInterceptor.Level.BODY)
         )
@@ -29,10 +42,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesOpenMeteoApi() : WeatherApi {
+    fun providesOpenMeteoApi(okHttpClient: OkHttpClient) : WeatherApi {
         return Retrofit.Builder()
             .baseUrl(OPEN_METEO_BASE_URL)
-            .client(client)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create()
@@ -41,10 +54,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesLocationIq() : AutoCompleteApi {
+    fun providesLocationIq(okHttpClient: OkHttpClient) : AutoCompleteApi {
         return Retrofit.Builder()
             .baseUrl(LOCATION_IQ)
-            .client(client)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create()
