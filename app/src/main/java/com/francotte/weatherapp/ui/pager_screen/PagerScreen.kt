@@ -54,8 +54,6 @@ fun PagerScreen(
     val pagerState =
         rememberPagerState(initialPage = viewmodel.currentIndex, pageCount = { pageCount })
     val isDay = viewmodel.pageCurrentCityWeather[viewmodel.currentPage]?.isDay == true
-
-
     val weatherType = viewmodel.pageCurrentCityWeather[viewmodel.currentPage]?.weatherType
     var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
     var cityName = ""
@@ -65,9 +63,7 @@ fun PagerScreen(
         snapshotFlow { pagerState.currentPage }.collect { newPage ->
             viewmodel.currentPage = newPage
             Log.d("debug_current_page", viewmodel.currentPage.toString())
-            viewmodel.loadCityCurrentWeather(newPage)
-            viewmodel.loadCityDailyWeather(newPage)
-            viewmodel.loadCityHourlyWeather(newPage)
+            viewmodel.loadCityWeather(newPage)
         }
     }
     if (showSettingsDialog) {
