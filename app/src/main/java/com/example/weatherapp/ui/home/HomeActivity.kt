@@ -25,13 +25,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         val viewModel by viewModels<HomeViewModel>()
         var keep = true
         val handler = Handler(Looper.getMainLooper())
         val runner = Runnable { keep = false }
         handler.postDelayed(runner, 2000)
         installSplashScreen().setKeepOnScreenCondition { keep }
+        enableEdgeToEdge()
         setContent {
             AppTheme {
                 Row(Modifier.fillMaxSize()) {

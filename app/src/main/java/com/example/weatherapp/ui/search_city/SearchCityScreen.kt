@@ -4,10 +4,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -36,10 +39,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -51,7 +53,14 @@ import com.example.weatherapp.data.datastore.SavedCity
 import com.example.weatherapp.ui.composable.ErrorScreen
 import com.example.weatherapp.ui.composable.LoadingScreen
 import com.example.weatherapp.ui.composable.SearchAutoComplete
-import com.example.weatherapp.ui.theme.LocalBackgroundColor
+import com.example.weatherapp.ui.theme.MoonTint
+import com.example.weatherapp.ui.theme.Poppins
+import com.example.weatherapp.ui.theme.RainTint
+import com.example.weatherapp.ui.theme.SunTint
+import com.example.weatherapp.ui.theme.glassCard
+import com.example.weatherapp.ui.theme.inkColor
+import com.example.weatherapp.ui.theme.mutedColor
+import com.example.weatherapp.ui.theme.skyBrush
 import kotlinx.coroutines.launch
 
 
@@ -74,6 +83,7 @@ fun SearchCityScreen(
     uiState: UserCitiesUiState,
     navigateToPagerScreen: (Int) -> Unit
 ) {
+    val isDay = !isSystemInDarkTheme()
     val autoCompletionResult = viewModel.autoCompletionResult
     val inSelectionMode by remember { derivedStateOf { viewModel.selectedCitiesToRemove.isNotEmpty() } }
     val bottomSheetState = rememberStandardBottomSheetState(
@@ -92,57 +102,74 @@ fun SearchCityScreen(
             state.bottomSheetState.hide()
         }
     }
-    BottomSheetScaffold(
-        sheetDragHandle = {},
-        scaffoldState = state,
-        sheetPeekHeight = 0.dp,
-        sheetShape = RectangleShape,
-        sheetContent = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(Icons.Outlined.Delete, null,
-                    Modifier
-                        .size(35.dp)
-                        .clickable {
-                            scope.launch {
-                                viewModel.deleteCitiesFromUserCities()
-                                state.bottomSheetState.hide()
-                            }
-                        })
-                Text(text = stringResource(R.string.delete_cities))
-            }
-        },
-        content = {
-        Column(modifier = modifier.safeDrawingPadding().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                modifier = Modifier.padding(vertical = 16.dp),
-                text = stringResource(R.string.manage_cities),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFe6e6e5)
-            )
-            SearchAutoComplete(cities = autoCompletionResult) { city ->
-                viewModel.addCityToUserFavoriteCities(city)
-            }
-            Spacer(Modifier.height(16.dp))
-            when (uiState) {
-                UserCitiesUiState.Error -> ErrorScreen { viewModel.reload() }
-                UserCitiesUiState.Loading -> LoadingScreen()
-                is UserCitiesUiState.Success ->
-                    if (uiState.userCities.isNotEmpty()) {
-                        UserCitiesList(
-                            viewModel = viewModel,
-                            savedCities = uiState.userCities.toList(),
-                            inSelectionMode = inSelectionMode,
-                            onItemSelected = { index -> navigateToPagerScreen(index) })
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(skyBrush(isDay))) {
+        BottomSheetScaffold(
+            containerColor = Color.Transparent,
+            sheetDragHandle = {},
+            scaffoldState = state,
+            sheetPeekHeight = 0.dp,
+            sheetShape = RectangleShape,
+            sheetContent = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(Icons.Outlined.Delete, null, tint = RainTint,
+                        modifier = Modifier
+                            .size(35.dp)
+                            .clickable {
+                                scope.launch {
+                                    viewModel.deleteCitiesFromUserCities()
+                                    state.bottomSheetState.hide()
+                                }
+                            })
+                    Text(
+                        text = stringResource(R.string.delete_cities),
+                        fontFamily = Poppins,
+                        fontWeight = FontWeight.Medium,
+                        color = inkColor(isDay)
+                    )
+                }
+            },
+            content = {
+                Column(
+                    modifier = modifier
+                        .safeDrawingPadding()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        text = stringResource(R.string.manage_cities),
+                        fontFamily = Poppins,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = inkColor(isDay)
+                    )
+                    SearchAutoComplete(cities = autoCompletionResult, isDay = isDay) { city ->
+                        viewModel.addCityToUserFavoriteCities(city)
                     }
-            }
-        }
-    })
+                    Spacer(Modifier.height(16.dp))
+                    when (uiState) {
+                        UserCitiesUiState.Error -> ErrorScreen { viewModel.reload() }
+                        UserCitiesUiState.Loading -> LoadingScreen()
+                        is UserCitiesUiState.Success ->
+                            if (uiState.userCities.isNotEmpty()) {
+                                UserCitiesList(
+                                    viewModel = viewModel,
+                                    savedCities = uiState.userCities.toList(),
+                                    inSelectionMode = inSelectionMode,
+                                    isDay = isDay,
+                                    onItemSelected = { index -> navigateToPagerScreen(index) })
+                            }
+                    }
+                }
+            })
+    }
 }
 
 
@@ -152,14 +179,17 @@ fun UserCitiesList(
     viewModel: SearchCityViewModel,
     savedCities: List<SavedCity>,
     onItemSelected: (Int) -> Unit,
-    inSelectionMode: Boolean
+    inSelectionMode: Boolean,
+    isDay: Boolean
 ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         itemsIndexed(items = savedCities) { index, savedCity ->
             val selected by remember { derivedStateOf { savedCity in viewModel.selectedCitiesToRemove } }
-            UserCityItem(selected = selected,
+            UserCityItem(
+                selected = selected,
                 inSelectionMode = inSelectionMode,
                 savedCity = savedCity,
+                isDay = isDay,
                 modifier = if (inSelectionMode) {
                     Modifier.clickable {
                         if (selected) viewModel.selectCityToRemove(savedCity) else viewModel.unSelectCityToRemove(
@@ -182,41 +212,49 @@ fun UserCityItem(
     selected: Boolean,
     inSelectionMode: Boolean,
     savedCity: SavedCity,
+    isDay: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val cityIsDay = savedCity.isDay ?: isDay
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(
-                color = Color(0xFF3360d2).copy(0.6f)
-            )
-            .padding(horizontal = 8.dp, vertical = 16.dp)
-    )
-    {
+            .glassCard(isDay)
+            .padding(horizontal = 14.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Icon(
+            painter = painterResource(
+                id = if (cityIsDay) R.drawable.ic_ph_sun else R.drawable.ic_ph_moon
+            ),
+            contentDescription = null,
+            tint = if (cityIsDay) SunTint else MoonTint,
+            modifier = Modifier.size(30.dp)
+        )
         Text(
             modifier = Modifier.weight(1f),
             text = savedCity.name,
-            fontWeight = FontWeight.Bold,
+            fontFamily = Poppins,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
-            color = Color.LightGray
+            color = inkColor(isDay)
         )
         savedCity.temperature?.let { temperature ->
             Text(
-                modifier = Modifier.weight(0.2f),
                 text = "${temperature}°",
+                fontFamily = Poppins,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.LightGray
+                fontSize = 18.sp,
+                color = inkColor(isDay)
             )
         }
         if (inSelectionMode) {
             if (selected) {
-                Icon(Icons.Filled.CheckCircle, null, tint = Color.White)
+                Icon(Icons.Filled.CheckCircle, null, tint = RainTint)
             } else {
-                Icon(Icons.Filled.RadioButtonUnchecked, null, tint = Color.White)
+                Icon(Icons.Filled.RadioButtonUnchecked, null, tint = mutedColor(isDay))
             }
         }
-
     }
 }
-

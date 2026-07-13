@@ -1,8 +1,6 @@
 package com.example.weatherapp.ui.composable
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -10,18 +8,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -47,10 +40,11 @@ import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.R
 import com.example.weatherapp.data.model.AutoCompleteResult
-import com.example.weatherapp.data.model.AutoCompleteResultItem
 import com.example.weatherapp.ui.search_city.SearchCityViewModel
-import com.example.weatherapp.ui.theme.LocalAppBarColor
-import com.example.weatherapp.ui.theme.LocalBackgroundColor
+import com.example.weatherapp.ui.theme.Poppins
+import com.example.weatherapp.ui.theme.glassCard
+import com.example.weatherapp.ui.theme.inkColor
+import com.example.weatherapp.ui.theme.mutedColor
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,6 +52,7 @@ import com.example.weatherapp.ui.theme.LocalBackgroundColor
 fun SearchAutoComplete(
     viewModel: SearchCityViewModel = hiltViewModel(),
     cities: List<AutoCompleteResult>,
+    isDay: Boolean,
     onSelect: (AutoCompleteResult) -> Unit
 ) {
 
@@ -96,10 +91,7 @@ fun SearchAutoComplete(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(heightTextFields)
-                    .border(
-                        border = BorderStroke(1.dp, Color(0xFFe6e6e5)),
-                        shape = RoundedCornerShape(15.dp)
-                    )
+                    .glassCard(isDay, RoundedCornerShape(15.dp))
                     .onGloballyPositioned { coordinates ->
                         autocompleteTextFieldWidth = coordinates.size.toSize()
                     },
@@ -109,16 +101,28 @@ fun SearchAutoComplete(
                     viewModel.getAutoCompleteSearch(query)
                     expanded = true
                 },
-                placeholder = { Text(text = stringResource(R.string.place_holder_hint), fontWeight = FontWeight.SemiBold, color = Color(0xFFe6e6e5)) },
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.place_holder_hint),
+                        fontFamily = Poppins,
+                        fontWeight = FontWeight.Medium,
+                        color = mutedColor(isDay)
+                    )
+                },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = Color(0xFFe6e6e5)
+                    disabledIndicatorColor = Color.Transparent,
+                    cursorColor = inkColor(isDay),
+                    focusedTextColor = inkColor(isDay),
+                    unfocusedTextColor = inkColor(isDay)
                 ),
                 textStyle = TextStyle(
-                    fontSize = 16.sp,
-                    color = Color(0xFFe6e6e5)
+                    fontFamily = Poppins,
+                    fontSize = 16.sp
                 ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
@@ -151,7 +155,7 @@ fun SearchAutoComplete(
                                 city = city,
                                 onSelect = {
                                     onSelect(city)
-                                   expanded = !expanded
+                                    expanded = !expanded
                                     query = ""
                                     keyboardController?.hide()
                                     focusManager.clearFocus()
@@ -177,7 +181,7 @@ fun ItemsCategory(
             .clickable { onSelect(city) }
             .padding(8.dp)
     ) {
-        Text(text = city.longName, fontSize = 16.sp)
+        Text(text = city.longName, fontFamily = Poppins, fontSize = 16.sp)
     }
 
 }

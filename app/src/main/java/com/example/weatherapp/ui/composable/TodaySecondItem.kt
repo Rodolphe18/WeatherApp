@@ -60,11 +60,11 @@ fun TodayWeatherSecondItem(
         ) {
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 Metric(R.drawable.ic_ph_thermometer, ThermoTint, stringResource(R.string.apparent_temperature), "${currentWeatherData.apparentTemperature}°C", isDay)
-                Metric(R.drawable.ic_ph_wind, WindTint, stringResource(R.string.wind_speed), "${currentWeatherData.windSpeed} km/h", isDay)
+                Metric(R.drawable.ic_ph_compass, CompassTint, stringResource(R.string.wind_direction), currentWeatherData.windDirection.windDirection(), isDay)
                 Metric(R.drawable.ic_ph_sun_horizon, SunriseTint, stringResource(R.string.sunrise), DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunrise), isDay)
             }
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Metric(R.drawable.ic_ph_compass, CompassTint, stringResource(R.string.wind_direction), currentWeatherData.windDirection.windDirection(), isDay)
+                Metric(R.drawable.ic_ph_wind, WindTint, stringResource(R.string.wind_speed), "${currentWeatherData.windSpeed} km/h", isDay)
                 Metric(R.drawable.ic_ph_drop, DropTint, stringResource(R.string.precipitation), "${currentWeatherData.precipitation.roundToInt()}%", isDay)
                 Metric(R.drawable.ic_ph_sun_horizon, SunsetTint, stringResource(R.string.sunset), DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunset), isDay)
             }
@@ -94,6 +94,7 @@ fun Metric(
                 fontFamily = Poppins,
                 fontWeight = FontWeight.Medium,
                 fontSize = 11.sp,
+                lineHeight = 12.sp,
                 color = mutedColor(isDay)
             )
             Text(

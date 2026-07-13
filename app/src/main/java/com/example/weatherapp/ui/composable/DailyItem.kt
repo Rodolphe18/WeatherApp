@@ -78,7 +78,7 @@ fun ForecastDailyItem(
             tint = visual.tint,
             modifier = Modifier.size(32.dp)
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        Column {
             Text(
                 text = "${weatherData.temperatureMax}°",
                 fontFamily = Poppins,
