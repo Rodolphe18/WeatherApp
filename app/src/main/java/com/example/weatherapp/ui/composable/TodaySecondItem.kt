@@ -1,19 +1,19 @@
 package com.example.weatherapp.ui.composable
 
-import androidx.compose.foundation.background
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -21,9 +21,16 @@ import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
 import com.example.weatherapp.domain.model.CurrentWeatherData
 import com.example.weatherapp.domain.model.DailyWeatherData
-import com.example.weatherapp.ui.theme.LocalBackgroundColor
-import com.example.weatherapp.ui.theme.darkScheme
-import com.example.weatherapp.ui.theme.lightScheme
+import com.example.weatherapp.ui.theme.CompassTint
+import com.example.weatherapp.ui.theme.DropTint
+import com.example.weatherapp.ui.theme.Poppins
+import com.example.weatherapp.ui.theme.SunriseTint
+import com.example.weatherapp.ui.theme.SunsetTint
+import com.example.weatherapp.ui.theme.ThermoTint
+import com.example.weatherapp.ui.theme.WindTint
+import com.example.weatherapp.ui.theme.glassCard
+import com.example.weatherapp.ui.theme.inkColor
+import com.example.weatherapp.ui.theme.mutedColor
 import com.example.weatherapp.util.DateTimeFormatter
 import kotlin.math.roundToInt
 
@@ -37,66 +44,66 @@ fun TodayWeatherSecondItem(
     val isDay = remember { currentWeatherData.isDay }
     Column {
         Text(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            modifier = Modifier.padding(start = 18.dp, end = 18.dp, top = 12.dp, bottom = 4.dp),
             text = stringResource(R.string.today_detail_weather_title),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.ExtraBold,
-            color = if(isDay) Color.DarkGray else Color.LightGray
+            fontFamily = Poppins,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = inkColor(isDay)
         )
         Row(
             modifier = modifier
-                .fillMaxWidth()
-                .background(color = if (isDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f))
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 18.dp, vertical = 4.dp)
+                .glassCard(isDay)
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Column(Modifier.weight(1f)) {
-                TodayItemMetaData(stringResource(R.string.apparent_temperature), "${currentWeatherData.apparentTemperature}°C",isDay)
-                TodayItemMetaData(stringResource(R.string.wind_speed), "${currentWeatherData.windSpeed} km/h", isDay)
-                TodayItemMetaData(
-                    stringResource(R.string.sunrise),
-                    DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunrise),
-                    isDay
-                )
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                Metric(R.drawable.ic_ph_thermometer, ThermoTint, stringResource(R.string.apparent_temperature), "${currentWeatherData.apparentTemperature}°C", isDay)
+                Metric(R.drawable.ic_ph_wind, WindTint, stringResource(R.string.wind_speed), "${currentWeatherData.windSpeed} km/h", isDay)
+                Metric(R.drawable.ic_ph_sun_horizon, SunriseTint, stringResource(R.string.sunrise), DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunrise), isDay)
             }
-            Column(Modifier.weight(1f)) {
-                TodayItemMetaData(
-                    stringResource(R.string.wind_direction),
-                    currentWeatherData.windDirection.windDirection(),
-                    isDay
-                )
-                TodayItemMetaData(
-                    stringResource(R.string.precipitation),
-                    "${currentWeatherData.precipitation.roundToInt()}%",
-                    isDay
-                )
-                TodayItemMetaData(
-                    stringResource(R.string.sunset),
-                    DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunset),
-                    isDay
-                )
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                Metric(R.drawable.ic_ph_compass, CompassTint, stringResource(R.string.wind_direction), currentWeatherData.windDirection.windDirection(), isDay)
+                Metric(R.drawable.ic_ph_drop, DropTint, stringResource(R.string.precipitation), "${currentWeatherData.precipitation.roundToInt()}%", isDay)
+                Metric(R.drawable.ic_ph_sun_horizon, SunsetTint, stringResource(R.string.sunset), DateTimeFormatter.getFormattedTimeForSunsetAndSunrise(dailyWeatherData.sunset), isDay)
             }
         }
     }
 }
 
 
-
 @Composable
-fun TodayItemMetaData(title: String, data: String, isDay:Boolean) {
-    Column {
-        Text(
-            text = title,
-            fontWeight = FontWeight.Medium,
-            fontSize = 14.sp,
-            color = if(isDay) Color.DarkGray else Color.LightGray
+fun Metric(
+    @DrawableRes icon: Int,
+    tint: Color,
+    title: String,
+    data: String,
+    isDay: Boolean
+) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        Icon(
+            painter = painterResource(id = icon),
+            contentDescription = null,
+            tint = tint,
+            modifier = Modifier.size(28.dp)
         )
-        Text(
-            text = data,
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            color = if(isDay) Color.DarkGray else Color.LightGray
-        )
-        Spacer(Modifier.height(8.dp))
+        Column {
+            Text(
+                text = title,
+                fontFamily = Poppins,
+                fontWeight = FontWeight.Medium,
+                fontSize = 11.sp,
+                color = mutedColor(isDay)
+            )
+            Text(
+                text = data,
+                fontFamily = Poppins,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+                color = inkColor(isDay)
+            )
+        }
     }
 }
 
