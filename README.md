@@ -4,6 +4,12 @@ An Android weather app showing current conditions, hourly forecasts, and 7-day f
 
 Built with **Jetpack Compose** and a layered **MVVM** architecture (data / domain / ui).
 
+## Screenshots
+
+| Weather detail | Cities — light | Cities — dark |
+|:---:|:---:|:---:|
+| <img src="screenshots/weather_detail.png" width="240" alt="Weather detail page"/> | <img src="screenshots/city_list_light.png" width="240" alt="City list in light theme"/> | <img src="screenshots/city_list_dark.png" width="240" alt="City list in dark theme"/> |
+
 ## Features
 
 - 🔍 City search with autocomplete (LocationIQ)
@@ -12,6 +18,8 @@ Built with **Jetpack Compose** and a layered **MVVM** architecture (data / domai
 - ⏱️ Hour-by-hour forecast
 - 📅 7-day forecast (min/max, sunrise and sunset)
 - 🎨 Dynamic day/night theme based on each city's conditions
+- 🧊 Frosted-glass UI with the Poppins typeface and Phosphor duotone icons
+- 📱 Edge-to-edge immersive layout
 - 💾 Persistence of the user's cities (DataStore Proto)
 - ⚙️ Settings screen to delete saved cities
 
@@ -39,7 +47,7 @@ Built with **Jetpack Compose** and a layered **MVVM** architecture (data / domai
 
 - Android Studio (recent version, Ladybug or newer)
 - JDK 17
-- Minimum SDK: Android 8.0 (API 26) — Target SDK: API 34
+- Minimum SDK: Android 8.0 (API 26) — Compile & Target SDK: API 35
 
 ## Installation
 
@@ -58,9 +66,13 @@ Or from the command line:
 
 ### API key configuration
 
-City autocomplete uses LocationIQ, which requires an access key. Create a free account at [locationiq.com](https://locationiq.com/) to get yours, then set it in `LOCATION_IQ_ACCESS_TOKEN` (`app/src/main/java/com/example/weatherapp/di/AppModule.kt`).
+City autocomplete uses LocationIQ, which requires an access key. Create a free account at [locationiq.com](https://locationiq.com/) to get yours, then add it to `local.properties` (which is gitignored, so the key stays out of version control):
 
-> ⚠️ The key is currently hardcoded in the source. For a public repository or a production release, it's recommended to move it into `local.properties` / `BuildConfig` so it isn't exposed in version control.
+```properties
+LOCATION_IQ_ACCESS_TOKEN=your_key_here
+```
+
+The key is read at build time and exposed through `BuildConfig.LOCATION_IQ_ACCESS_TOKEN`. Without it, city autocomplete returns no results.
 
 ## Project structure
 
