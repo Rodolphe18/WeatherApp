@@ -17,6 +17,7 @@
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="true"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.WeatherApp.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

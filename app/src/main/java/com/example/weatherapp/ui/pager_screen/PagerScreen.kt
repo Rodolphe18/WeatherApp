@@ -4,6 +4,7 @@ import WeatherTopAppBar
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
@@ -71,7 +72,8 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(skyBrush(isDay)),
+                            .background(skyBrush(isDay))
+                            .consumeWindowInsets(padding),
                         contentPadding = padding,
                         state = rememberLazyListState()
                     ) {
