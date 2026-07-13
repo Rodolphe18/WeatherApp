@@ -1,5 +1,13 @@
+import java.util.Properties
 import org.gradle.internal.extensions.stdlib.capitalized
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { load(it) }
+    }
+}
 
 plugins {
     alias(libs.plugins.kotlin.android)
@@ -23,6 +31,12 @@ android {
         versionName = "1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "LOCATION_IQ_ACCESS_TOKEN",
+            "\"${localProperties.getProperty("LOCATION_IQ_ACCESS_TOKEN", "")}\""
+        )
     }
 
     buildTypes {
@@ -43,6 +57,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

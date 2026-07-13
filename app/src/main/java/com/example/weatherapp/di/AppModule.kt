@@ -55,5 +55,4 @@ object AppModule {
 
 const val OPEN_METEO_BASE_URL = "https://api.open-meteo.com/v1/"
 const val LOCATION_IQ = "https://api.locationiq.com/v1/"
-const val LOCATION_IQ_ACCESS_TOKEN = "pk.2b70389e06988dd76200f790facbca1b"
 
