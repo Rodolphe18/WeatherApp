@@ -28,8 +28,7 @@ import com.example.weatherapp.ui.composable.ForecastHourlyList
 import com.example.weatherapp.ui.composable.LoadingScreen
 import com.example.weatherapp.ui.composable.TodayWeatherFirstItem
 import com.example.weatherapp.ui.composable.TodayWeatherSecondItem
-import com.example.weatherapp.ui.theme.darkScheme
-import com.example.weatherapp.ui.theme.lightScheme
+import com.example.weatherapp.ui.theme.skyBrush
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,7 +71,7 @@ fun PagerScreen(viewmodel: PagerViewmodel = hiltViewModel(), onNavigationClick: 
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(if(isDay) lightScheme.onPrimary.copy(0.6f)  else darkScheme.onPrimary.copy(0.6f)),
+                            .background(skyBrush(isDay)),
                         contentPadding = padding,
                         state = rememberLazyListState()
                     ) {
